@@ -1,0 +1,17 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.sqlite"
+}
+
+model DbSize {
+  id          Int      @id @default(autoincrement())
+  dbName      String
+  size        Int
+  date        DateTime @default(now())
+  dbSizeGroup String
+
+}

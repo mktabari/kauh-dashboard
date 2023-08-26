@@ -1,0 +1,16 @@
+import { redirect } from '@sveltejs/kit';
+
+export const handle = async ({ event, resolve }) => {
+	const { cookies } = event;
+	const user = cookies.get('auth');
+	event.locals.user = user;
+
+	if (event.url.pathname !== '/login') {
+		if (!event.locals.user) {
+			throw redirect(303, '/login');
+		}
+	}
+	const response = await resolve(event);
+
+	return response;
+};

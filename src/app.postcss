@@ -1,0 +1,85 @@
+/* Write your global styles here, in PostCSS syntax */
+@import url('https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&display=swap');
+@tailwind base;
+
+@tailwind components;
+@tailwind utilities;
+
+body {
+	@apply h-screen overflow-hidden bg-white dark:bg-gray-800;
+}
+@font-face {
+	font-family: 'digital';
+	src: url('/fonts/digital-7.mono.ttf');
+}
+@font-face {
+	font-family: 'Roboto';
+	src: url('/fonts/RobotoMono-VariableFont_wght.ttf');
+}
+
+@layer utilities {
+	*::-webkit-scrollbar {
+		width: 8px;
+		height: 8px;
+	}
+	*::-webkit-scrollbar-track {
+		border-radius: 100vh;
+	}
+
+	*::-webkit-scrollbar-thumb {
+		background: #d1d5db;
+		border-radius: 100vh;
+	}
+
+	*::-webkit-scrollbar-thumb:hover {
+		background: #9ca3af;
+	}
+}
+.material-symbols-outlined {
+	font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' -25, 'opsz' 80;
+}
+
+/* Rules for sizing the icon. */
+.material-symbols-outlined.md-18 {
+	font-size: 18px;
+}
+.material-symbols-outlined.md-24 {
+	font-size: 24px;
+}
+.material-symbols-outlined.md-36 {
+	font-size: 36px;
+}
+.material-symbols-outlined.md-48 {
+	font-size: 48px;
+}
+
+/* Rules for using icons as black on a light background. */
+.material-symbols-outlined.md-dark {
+	color: rgba(0, 0, 0, 0.54);
+}
+.material-symbols-outlined.md-dark.md-inactive {
+	color: rgba(0, 0, 0, 0.26);
+}
+
+/* Rules for using icons as white on a dark background. */
+.material-symbols-outlined.md-light {
+	color: rgba(255, 255, 255, 1);
+}
+.material-symbols-outlined.md-light.md-inactive {
+	color: rgba(255, 255, 255, 0.3);
+}
+.font-Bruno {
+	font-family: 'Bruno Ace SC', cursive;
+}
+.font-Ubuntu {
+	font-family: 'Ubuntu', sans-serif;
+}
+.font-Orbitron {
+	font-family: 'Orbitron', sans-serif;
+}
+.font-digital {
+	font-family: 'digital', monospace;
+}
+* {
+	font-family: 'Roboto', sans-serif;
+}
