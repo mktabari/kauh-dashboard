@@ -21,7 +21,8 @@
 		Accordion,
 		AccordionItem,
 		Toast,
-		Toggle
+		Toggle,
+		Checkbox
 	} from 'flowbite-svelte';
 	import { v4 as uuid } from 'uuid';
 	import BackupLogList from '$lib/cards/BackupLogList.svelte';
@@ -166,12 +167,16 @@
 	let months6Color = 'blue';
 	let monthColor = 'blue';
 	let periodGrowthRate = 0;
+	let growthRate;
+	let showDBSize = true;
+	let showDBGrowth = true;
+	let dbname;
 	const chartDB = async () => {
 		if (chart) chart.destroy();
 
-		let dbname = serverChartData[0].dbName;
+		dbname = serverChartData[0].dbName;
 		let multiplier = serverChartData[0].size > 1000 ? 1000 : 1;
-		let growthRate = multiplier === 1000 ? 'growth rate in MB' : 'growth rate in GB';
+		growthRate = multiplier === 1000 ? 'growth rate in MB' : 'growth rate in GB';
 		periodGrowthRate =
 			serverChartData[serverChartData.length - 1].size -
 			serverChartData[0].size /
@@ -181,29 +186,33 @@
 		chart = new Chart(charCanvas, {
 			data: {
 				labels: serverChartData.map((row) => new Date(row.date).toLocaleDateString()),
-				datasets: [
-					{
-						type: 'line',
-						label: `${dbname} size (GB)`,
-						data: serverChartData.map((row) => row.size)
-					},
-					{
-						type: 'bar',
-						label: growthRate,
-						data: serverChartData
-							.map((row) => row.size)
-							.map(
-								(row, i) =>
-									multiplier *
-									(row -
-										(i === 0
-											? serverChartData.map((row) => row.size)[i]
-											: serverChartData.map((row) => row.size)[i - 1]))
-							)
-					}
-				]
+				datasets: []
 			}
 		});
+		if (showDBSize) {
+			chart.data.datasets.push({
+				type: 'line',
+				label: `${dbname} size (GB)`,
+				data: serverChartData.map((row) => row.size)
+			});
+		}
+		if (showDBGrowth) {
+			chart.data.datasets.push({
+				type: 'bar',
+				label: growthRate,
+				data: serverChartData
+					.map((row) => row.size)
+					.map(
+						(row, i) =>
+							multiplier *
+							(row -
+								(i === 0
+									? serverChartData.map((row) => row.size)[i]
+									: serverChartData.map((row) => row.size)[i - 1]))
+					)
+			});
+		}
+		chart.update();
 	};
 
 	const updateChart = () => {
@@ -222,11 +231,27 @@
 			}
 			data = serverChartData.filter((row) => new Date(row.date) >= refrenceDate);
 			chart.config.data.labels = data.map((row) => new Date(row.date).toLocaleDateString());
-			chart.data.datasets[0].data = data.map((row) => row.size);
-			chart.data.datasets[1].data = chart.data.datasets[0].data.map(
-				(row, i) =>
-					row - (i === 0 ? chart.data.datasets[0].data[i] : chart.data.datasets[0].data[i - 1])
-			);
+			chart.data.datasets = [];
+			if (showDBSize) {
+				chart.data.datasets.push({
+					type: 'line',
+					label: `${dbname} size (GB)`,
+					data: data.map((row) => row.size)
+				});
+			}
+			if (showDBGrowth) {
+				chart.data.datasets.push({
+					type: 'bar',
+					label: growthRate,
+					data: data.map((row, i) => row - (i === 0 ? data[i] : data[i - 1]))
+				});
+			}
+			// chart.data.datasets[0].data = data.map((row) => row.size);
+			// chart.data.datasets[1].data = chart.data.datasets[0].data.map(
+			// 	(row, i) =>
+			// 		row - (i === 0 ? chart.data.datasets[0].data[i] : chart.data.datasets[0].data[i - 1])
+			// );
+
 			periodGrowthRate =
 				data[data.length - 1].size -
 				data[0].size /
@@ -711,9 +736,7 @@
 					<Skeleton size="xl" class=" mb-2.5" />
 					<TextPlaceholder size="xl" class="my-8" />
 				{:else if serverChartData}
-					<ButtonGroup
-						class=" absolute right-0 top-0 z-40 -translate-x-1/4 translate-y-1/2 space-x-px"
-					>
+					<ButtonGroup class=" absolute right-0 top-0 z-40 -translate-x-1/4  space-x-px">
 						<Button
 							color={yearColor}
 							class="bg-gray-700"
@@ -751,8 +774,15 @@
 							}}>Month</Button
 						>
 					</ButtonGroup>
-					<div class=" py-2 font-bold text-gray-500">
-						Growth Rate for the period is:{periodGrowthRate} GB/Day
+					<div class=" flex flex-row gap-10">
+						<span class=" py-2 font-bold text-gray-500"
+							>Growth Rate for the period is:{periodGrowthRate} GB/Day</span
+						><Checkbox bind:checked={showDBSize} on:change={updateChart}
+							><span class=" py-2 font-bold text-gray-500">DB size</span></Checkbox
+						>
+						<Checkbox bind:checked={showDBGrowth} on:change={updateChart}
+							><span class=" py-2 font-bold text-gray-500">DB growth rate</span></Checkbox
+						>
 					</div>
 				{:else}
 					<div class="pb-10">no alert log file selected</div>
