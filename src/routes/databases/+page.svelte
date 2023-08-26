@@ -165,15 +165,19 @@
 	let yearColor = 'light';
 	let months6Color = 'blue';
 	let monthColor = 'blue';
-
+	let periodGrowthRate = 0;
 	const chartDB = async () => {
 		if (chart) chart.destroy();
 
 		let dbname = serverChartData[0].dbName;
 		let multiplier = serverChartData[0].size > 1000 ? 1000 : 1;
 		let growthRate = multiplier === 1000 ? 'growth rate in MB' : 'growth rate in GB';
-		if ((multiplier = 1000)) {
-		}
+		periodGrowthRate =
+			serverChartData[serverChartData.length - 1].size -
+			serverChartData[0].size /
+				(new Date(serverChartData[serverChartData.length - 1].date).getTime() -
+					new Date(serverChartData[0].date).getTime()) /
+				(1000 * 3600 * 24);
 		chart = new Chart(charCanvas, {
 			data: {
 				labels: serverChartData.map((row) => new Date(row.date).toLocaleDateString()),
@@ -223,7 +227,11 @@
 				(row, i) =>
 					row - (i === 0 ? chart.data.datasets[0].data[i] : chart.data.datasets[0].data[i - 1])
 			);
-			console.log(refrenceDate, data);
+			periodGrowthRate =
+				data[data.length - 1].size -
+				data[0].size /
+					(new Date(data[data.length - 1].date).getTime() - new Date(data[0].date).getTime()) /
+					(1000 * 3600 * 24);
 			chart.update();
 		}
 	};
@@ -743,6 +751,9 @@
 							}}>Month</Button
 						>
 					</ButtonGroup>
+					<div class=" py-2 font-bold text-gray-500">
+						Growth Rate for the period is:{periodGrowthRate} GB/Day
+					</div>
 				{:else}
 					<div class="pb-10">no alert log file selected</div>
 				{/if}
