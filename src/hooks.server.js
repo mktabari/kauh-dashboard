@@ -6,7 +6,7 @@ export const handle = async ({ event, resolve }) => {
 	event.locals.user = user;
 
 	if (event.url.pathname !== '/login') {
-		if (!event.locals.user) {
+		if (!event.locals.user || event.locals.user !== 'admin') {
 			throw redirect(303, '/login');
 		}
 	}

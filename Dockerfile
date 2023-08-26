@@ -39,10 +39,10 @@ COPY --from=0 --chown=node:node /app/build ./build
 COPY --from=0 --chown=node:node /app/node_modules ./node_modules
 COPY --from=0 --chown=node:node /app/pm2.config.cjs ./
 
-COPY --from=0 --chown=node:node /app/prisma/schema.prisma /app/prisma/dev.sqlite-journal ./prisma/
+COPY --from=0 --chown=node:node /app/prisma/schema.prisma ./prisma/
 COPY --from=0 --chown=node:node /app/prisma/migrations ./prisma/migrations
 
-RUN npx prisma migrate dev --name test
+RUN npx prisma migrate dev --name mg1
 
 COPY --chown=node:node package.json .
 COPY --from=0 --chown=node:node /app/src/lib/config/servers/* ./build/server/chunks/servers/
@@ -51,6 +51,6 @@ EXPOSE 3000
 
 CMD ["pm2-runtime", "pm2.config.cjs"]
 
-# docker build . -t with-pm 
-# docker run -d -p 3000:3000 -e "ORIGIN=http://localhost:3000" --name with-pm --mount source=kd-prisma,target=/app/prisma with-pm
+# docker build . -t kauhdb:v1 
+# docker run -d -p 3000:3000 -e "ORIGIN=http://localhost:3000" --name kauhdb --mount source=kd-sqlite-db,target=/app/sqliteDB kauhdb:v1
 # npx prisma migrate deploy

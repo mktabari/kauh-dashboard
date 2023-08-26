@@ -22,7 +22,6 @@
 	let:toggle
 >
 	<NavBrand navClass href="/">
-		<!-- <img alt="logo" src={code} class=" w-10" /> -->
 		<span
 			class="self-center whitespace-nowrap text-3xl font-bold text-gray-600 dark:text-white"
 			style="font-family: 'Bruno Ace SC', cursive;"
@@ -32,7 +31,7 @@
 	</NavBrand>
 	<div class="flex items-center md:order-2">
 		<button
-			on:click={() => (window.location.href = 'https://github.com/mktabari/my-js')}
+			on:click={() => (window.location.href = 'https://github.com/mktabari/kauh-dashboard')}
 			class="p=1 mr-2 rounded-md hover:bg-gray-200 hover:dark:bg-gray-700"
 			><img alt="logo" src={git} class=" w-10 opacity-60 hover:opacity-100 dark:invert" /></button
 		>
