@@ -74,6 +74,28 @@
 
 		displayItems = [...filteredItems];
 	}
+	const handelStartDRTranport = async () => {
+		if (returnedServerId) {
+			spin = true;
+			fetch(`/api/ssh/dr/start/${returnedServerId}`)
+				.then((response) => response.json())
+				.then(({ apiData }) => {
+					spin = false;
+					serverDrData = apiData;
+				});
+		}
+	};
+	const handelStopDRTranport = async () => {
+		if (returnedServerId) {
+			spin = true;
+			fetch(`/api/ssh/dr/stop/${returnedServerId}`)
+				.then((response) => response.json())
+				.then(({ apiData }) => {
+					spin = false;
+					serverDrData = apiData;
+				});
+		}
+	};
 	const handleKillSession = async (e, SID, SERIAL, INST_ID, SERVERID) => {
 		const response = await fetch(`/api/DB/locks/${SERVERID}/${SID}/${SERIAL}/${INST_ID}`);
 		if (!response.ok) {
@@ -177,12 +199,13 @@
 		dbname = serverChartData[0].dbName;
 		let multiplier = serverChartData[0].size > 1000 ? 1000 : 1;
 		growthRate = multiplier === 1000 ? 'growth rate in MB' : 'growth rate in GB';
-		periodGrowthRate =
+		periodGrowthRate = parseFloat(
 			serverChartData[serverChartData.length - 1].size -
-			serverChartData[0].size /
-				(new Date(serverChartData[serverChartData.length - 1].date).getTime() -
-					new Date(serverChartData[0].date).getTime()) /
-				(1000 * 3600 * 24);
+				serverChartData[0].size /
+					(new Date(serverChartData[serverChartData.length - 1].date).getTime() -
+						new Date(serverChartData[0].date).getTime()) /
+					(1000 * 3600 * 24)
+		).toFixed(2);
 		chart = new Chart(charCanvas, {
 			data: {
 				labels: serverChartData.map((row) => new Date(row.date).toLocaleDateString()),
@@ -252,11 +275,12 @@
 			// 		row - (i === 0 ? chart.data.datasets[0].data[i] : chart.data.datasets[0].data[i - 1])
 			// );
 
-			periodGrowthRate =
+			periodGrowthRate = parseFloat(
 				data[data.length - 1].size -
-				data[0].size /
-					(new Date(data[data.length - 1].date).getTime() - new Date(data[0].date).getTime()) /
-					(1000 * 3600 * 24);
+					data[0].size /
+						(new Date(data[data.length - 1].date).getTime() - new Date(data[0].date).getTime()) /
+						(1000 * 3600 * 24)
+			).toFixed(2);
 			chart.update();
 		}
 	};
@@ -674,26 +698,31 @@
 					label="select a server for DR commands:"
 					bind:serverData={serverDrData}
 					bind:spin
+					bind:returnedServerId
 					apiName="ssh/dr/status"
 					check="drInstance"
 				/>
 				{#if serverDrData}
 					<div class="flex flex-row items-center gap-5 pl-5 align-middle font-bold text-gray-500">
 						<span>DR transport actions:</span>
-						<span
-							style="
+						<button on:click={handelStartDRTranport}>
+							<span
+								style="
 				font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48"
-							class="material-symbols-outlined md-48 hover:cursor-pointer hover:text-green-500"
+								class="material-symbols-outlined md-48 hover:cursor-pointer hover:text-green-500"
+							>
+								play_arrow
+							</span></button
 						>
-							play_arrow
-						</span>
-						<span
-							style="
+						<button on:click={handelStopDRTranport}>
+							<span
+								style="
 				font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48"
-							class="material-symbols-outlined md-48 hover:cursor-pointer hover:text-red-500"
+								class="material-symbols-outlined md-48 hover:cursor-pointer hover:text-red-500"
+							>
+								stop
+							</span></button
 						>
-							stop
-						</span>
 					</div>
 				{/if}
 			</div>
