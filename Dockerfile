@@ -38,7 +38,8 @@ WORKDIR /app
 COPY --from=0 --chown=node:node /app/build ./build
 COPY --from=0 --chown=node:node /app/node_modules ./node_modules
 COPY --from=0 --chown=node:node /app/pm2.config.cjs ./
-
+COPY --from=0 --chown=node:node /app/src/lib/config/servers ./build/server/chunks/
+# COPY --from=0 --chown=node:node /app/src/getTime.js ./src/
 COPY --from=0 --chown=node:node /app/prisma/schema.prisma ./prisma/
 COPY --from=0 --chown=node:node /app/prisma/migrations ./prisma/migrations
 
@@ -54,3 +55,10 @@ CMD ["pm2-runtime", "pm2.config.cjs"]
 # docker build . -t kauhdb:v1 
 # docker run -d -p 3000:3000 -e "ORIGIN=http://localhost:3000" --name kauhdb --mount source=kd-sqlite-db,target=/app/sqliteDB kauhdb:v1
 # npx prisma migrate deploy
+# run this comand in the container => npx prisma migrate dev --name mg1
+#docker images
+#docker save -o C:\docker_image_tars\kauhdb_v1.tar kauhdb:v1
+# docker load -i kauhdb_v1.tar
+#scp C:\docker_image_tars\kauhdb_v1.tar root@172.30.5.190 /kauhdb_v1.tar
+#docker volume create --name kd-sqlite-db --opt type=none --opt device=/docker_volumes/sqliteDB --opt o=bind
+# docker run -d --restart unless-stopped -p 3000:3000 -e "ORIGIN=http://172.30.5.190:3000"  -e "SECRET_ADMIN_PASSWORD=" --mount source=kd-sqlite-db,target=/app/sqliteDB --name kauh-dashboard-v1  kauhdb:v1

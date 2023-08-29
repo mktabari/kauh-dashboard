@@ -189,16 +189,12 @@
 	let months6Color = 'blue';
 	let monthColor = 'blue';
 	let periodGrowthRate = 0;
-	let growthRate;
 	let showDBSize = true;
 	let showDBGrowth = true;
 	let dbname;
 	const chartDB = async () => {
 		if (chart) chart.destroy();
-
 		dbname = serverChartData[0].dbName;
-		let multiplier = serverChartData[0].size > 1000 ? 1000 : 1;
-		growthRate = multiplier === 1000 ? 'growth rate in MB' : 'growth rate in GB';
 		periodGrowthRate = parseFloat(
 			serverChartData[serverChartData.length - 1].size -
 				serverChartData[0].size /
@@ -222,12 +218,12 @@
 		if (showDBGrowth) {
 			chart.data.datasets.push({
 				type: 'bar',
-				label: growthRate,
+				label: 'growth rate (MB)',
 				data: serverChartData
 					.map((row) => row.size)
 					.map(
 						(row, i) =>
-							multiplier *
+							1024 *
 							(row -
 								(i === 0
 									? serverChartData.map((row) => row.size)[i]
@@ -265,15 +261,10 @@
 			if (showDBGrowth) {
 				chart.data.datasets.push({
 					type: 'bar',
-					label: growthRate,
-					data: data.map((row, i) => row - (i === 0 ? data[i] : data[i - 1]))
+					label: 'growth rate (MB)',
+					data: data.map((row, i) => 1024 * (row - (i === 0 ? data[i] : data[i - 1])))
 				});
 			}
-			// chart.data.datasets[0].data = data.map((row) => row.size);
-			// chart.data.datasets[1].data = chart.data.datasets[0].data.map(
-			// 	(row, i) =>
-			// 		row - (i === 0 ? chart.data.datasets[0].data[i] : chart.data.datasets[0].data[i - 1])
-			// );
 
 			periodGrowthRate = parseFloat(
 				data[data.length - 1].size -

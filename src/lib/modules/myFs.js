@@ -1,20 +1,21 @@
 import fs from 'fs';
-import { configPath } from '../config/env.js';
-
+// import { configPath } from '../config/env.js';
+const getUrl = (configName) => {
+	return new URL(`./${configName}.json`, import.meta.url);
+};
 const wrightConfig = (configName, configData) => {
 	try {
-		fs.writeFileSync(`${configPath}/${configName}.json`, JSON.stringify(configData));
+		fs.writeFileSync(getUrl(configName), JSON.stringify(configData));
 	} catch (error) {
 		console.log(error);
 	}
 };
 const readConfig = (configName) => {
 	try {
-		return JSON.parse(fs.readFileSync(`${configPath}/${configName}.json`));
+		return JSON.parse(fs.readFileSync(getUrl(configName)));
 	} catch (error) {
 		if (error.code === 'ENOENT') {
-			console.log('myFs ENOENT error');
-			return undefined;
+			return [];
 		} else {
 			console.log('myFs not ENOENT error');
 			console.log(error);
@@ -23,7 +24,7 @@ const readConfig = (configName) => {
 };
 const removeConfig = (configName) => {
 	try {
-		fs.unlinkSync(`${configPath}/${configName}.json`);
+		fs.unlinkSync(getUrl(configName));
 	} catch (error) {
 		if (error.code === 'ENOENT') {
 			console.log('config not exist');
