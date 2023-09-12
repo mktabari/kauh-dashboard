@@ -7,7 +7,7 @@
 		TableBodyRow,
 		TableHead,
 		TableHeadCell,
-		WidgetPlaceholder,
+		Spinner,
 		Pagination,
 		Modal,
 		ButtonGroup,
@@ -65,7 +65,9 @@
 <div class={aClass}>
 	<div class="pb-3 pl-5 text-2xl font-extrabold text-gray-500 dark:text-gray-400">SQL Waits</div>
 	{#if spin}
-		<WidgetPlaceholder class=" rotate-90" />
+		<div class="w-full p-10 text-center">
+			<Spinner size={8} />
+		</div>
 	{:else}
 		<div class="flex justify-between">
 			<div>
@@ -100,7 +102,7 @@
 					{#each rows as row, i}
 						{#if i >= page * 10 - 10 && i <= page * 10}
 							<TableBodyRow on:click={() => (details = row)}>
-								<TableBodyCell>{row.SQL_TEXT.substring(0, 40)}</TableBodyCell>
+								<TableBodyCell>{row.SQL_TEXT.substring(0, 150)}</TableBodyCell>
 								<TableBodyCell>{row.CALLS}</TableBodyCell>
 								<TableBodyCell>{row.TIME}</TableBodyCell>
 								<TableBodyCell>{row.HASH_VALUE}</TableBodyCell>

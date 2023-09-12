@@ -29,7 +29,7 @@
 	</div>
 	<div class=" col-span-2 flex w-full flex-row flex-wrap gap-3">
 		{#each WServers as server}
-			<div class=" w-96">
+			<div class=" w-170">
 				<DBWait {server} {aClass} />
 			</div>
 		{/each}

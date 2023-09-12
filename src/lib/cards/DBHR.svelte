@@ -1,13 +1,14 @@
 <script>
 	import { onMount } from 'svelte';
-	import { WidgetPlaceholder } from 'flowbite-svelte';
+
 	import {
 		Table,
 		TableBody,
 		TableBodyCell,
 		TableBodyRow,
 		TableHead,
-		TableHeadCell
+		TableHeadCell,
+		Spinner
 	} from 'flowbite-svelte';
 	export let aClass;
 	let spin = true;
@@ -25,7 +26,9 @@
 <div class={aClass}>
 	<div class="pb-3 pl-5 text-2xl font-extrabold text-gray-500 dark:text-gray-400">Hit Ratio</div>
 	{#if spin}
-		<WidgetPlaceholder />
+		<div class="w-full p-10 text-center">
+			<Spinner size={8} />
+		</div>
 	{:else}
 		<Table striped={true}>
 			<TableHead class="bg-gray-200 dark:bg-gray-700">
