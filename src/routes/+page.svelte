@@ -22,16 +22,18 @@
 		<DBHR {aClass} />
 	</div>
 	<div class=" col-span-2 w-full">
-		<DBSqlTime {aClass} />
-	</div>
-	<div class=" col-span-2 w-full">
 		<DBUpDown servers={UDServers} {aClass} />
 	</div>
-	{#each WServers as server}
-		<div>
-			<DBWait {server} {aClass} />
-		</div>
-	{/each}
+	<div class=" col-span-2 w-full">
+		<DBSqlTime {aClass} />
+	</div>
+	<div class=" col-span-2 flex w-full flex-row flex-wrap">
+		{#each WServers as server}
+			<div class=" w-200">
+				<DBWait {server} {aClass} />
+			</div>
+		{/each}
+	</div>
 </div>
 
 <div>

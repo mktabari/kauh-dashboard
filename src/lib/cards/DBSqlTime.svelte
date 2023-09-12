@@ -100,7 +100,7 @@
 					{#each rows as row, i}
 						{#if i >= page * 10 - 10 && i <= page * 10}
 							<TableBodyRow on:click={() => (details = row)}>
-								<TableBodyCell>{row.SQL_TEXT.substring(0, 100)}</TableBodyCell>
+								<TableBodyCell>{row.SQL_TEXT.substring(0, 40)}</TableBodyCell>
 								<TableBodyCell>{row.CALLS}</TableBodyCell>
 								<TableBodyCell>{row.TIME}</TableBodyCell>
 								<TableBodyCell>{row.HASH_VALUE}</TableBodyCell>

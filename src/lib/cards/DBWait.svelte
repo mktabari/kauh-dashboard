@@ -17,15 +17,15 @@
 						layout: {
 							padding: 0
 						},
-						plugins: { legend: { display: false } },
+						plugins: { legend: { display: true } },
 						responsive: true,
 						scales: {
 							r: {
 								pointLabels: {
-									display: true,
+									display: false,
 									centerPointLabels: true,
 									font: {
-										size: 12
+										size: 9
 									}
 								}
 							}
