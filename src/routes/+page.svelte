@@ -27,9 +27,9 @@
 	<div class=" col-span-2 w-full">
 		<DBSqlTime {aClass} />
 	</div>
-	<div class=" col-span-2 flex w-full flex-row flex-wrap">
+	<div class=" col-span-2 flex w-full flex-row flex-wrap gap-3">
 		{#each WServers as server}
-			<div class=" w-200">
+			<div class=" w-96">
 				<DBWait {server} {aClass} />
 			</div>
 		{/each}
