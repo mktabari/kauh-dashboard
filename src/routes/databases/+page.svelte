@@ -189,48 +189,75 @@
 	let months6Color = 'blue';
 	let monthColor = 'blue';
 	let periodGrowthRate = 0;
-	let showDBSize = true;
-	let showDBGrowth = true;
 	let dbname;
 	const chartDB = async () => {
 		if (chart) chart.destroy();
 		dbname = serverChartData[0].dbName;
 		periodGrowthRate = parseFloat(
-			serverChartData[serverChartData.length - 1].size -
-				serverChartData[0].size /
+			parseFloat(serverChartData[serverChartData.length - 1].size - serverChartData[0].size) /
+				parseFloat(
 					(new Date(serverChartData[serverChartData.length - 1].date).getTime() -
 						new Date(serverChartData[0].date).getTime()) /
-					(1000 * 3600 * 24)
+						(1000 * 3600 * 24)
+				)
 		).toFixed(2);
 		chart = new Chart(charCanvas, {
+			type: 'line',
 			data: {
 				labels: serverChartData.map((row) => new Date(row.date).toLocaleDateString()),
 				datasets: []
+			},
+			options: {
+				scales: {
+					y: {
+						type: 'linear',
+						display: true,
+						position: 'left',
+						title: {
+							display: true,
+							text: 'DB Size'
+						}
+					},
+					y1: {
+						type: 'linear',
+						display: true,
+						position: 'right',
+						title: {
+							display: true,
+							text: 'Growth Rate'
+						},
+						// grid line settings
+						grid: {
+							drawOnChartArea: false // only want the grid lines for one axis to show up
+						}
+					}
+				}
 			}
 		});
-		if (showDBSize) {
-			chart.data.datasets.push({
-				type: 'line',
-				label: `${dbname} size (GB)`,
-				data: serverChartData.map((row) => row.size)
-			});
-		}
-		if (showDBGrowth) {
-			chart.data.datasets.push({
-				type: 'bar',
-				label: 'growth rate (MB)',
-				data: serverChartData
-					.map((row) => row.size)
-					.map(
-						(row, i) =>
-							1024 *
-							(row -
-								(i === 0
-									? serverChartData.map((row) => row.size)[i]
-									: serverChartData.map((row) => row.size)[i - 1]))
-					)
-			});
-		}
+
+		chart.data.datasets.push({
+			type: 'line',
+			label: `${dbname} size (GB)`,
+			yAxisID: 'y',
+			data: serverChartData.map((row) => row.size)
+		});
+
+		chart.data.datasets.push({
+			type: 'bar',
+			label: 'growth rate (MB)',
+			yAxisID: 'y1',
+			data: serverChartData
+				.map((row) => row.size)
+				.map(
+					(row, i) =>
+						1024 *
+						(row -
+							(i === 0
+								? serverChartData.map((row) => row.size)[i]
+								: serverChartData.map((row) => row.size)[i - 1]))
+				)
+		});
+
 		chart.update();
 	};
 
@@ -251,20 +278,20 @@
 			data = serverChartData.filter((row) => new Date(row.date) >= refrenceDate);
 			chart.config.data.labels = data.map((row) => new Date(row.date).toLocaleDateString());
 			chart.data.datasets = [];
-			if (showDBSize) {
-				chart.data.datasets.push({
-					type: 'line',
-					label: `${dbname} size (GB)`,
-					data: data.map((row) => row.size)
-				});
-			}
-			if (showDBGrowth) {
-				chart.data.datasets.push({
-					type: 'bar',
-					label: 'growth rate (MB)',
-					data: data.map((row, i) => 1024 * (row - (i === 0 ? data[i] : data[i - 1])))
-				});
-			}
+
+			chart.data.datasets.push({
+				type: 'line',
+				label: `${dbname} size (GB)`,
+				yAxisID: 'y',
+				data: data.map((row) => row.size)
+			});
+
+			chart.data.datasets.push({
+				type: 'bar',
+				label: 'growth rate (MB)',
+				yAxisID: 'y1',
+				data: data.map((row, i) => 1024 * (row - (i === 0 ? data[i] : data[i - 1])))
+			});
 
 			periodGrowthRate = parseFloat(
 				data[data.length - 1].size -
@@ -797,11 +824,6 @@
 					<div class=" flex flex-row gap-10">
 						<span class=" py-2 font-bold text-gray-500"
 							>Growth Rate for the period is:{periodGrowthRate} GB/Day</span
-						><Checkbox bind:checked={showDBSize} on:change={updateChart}
-							><span class=" py-2 font-bold text-gray-500">DB size</span></Checkbox
-						>
-						<Checkbox bind:checked={showDBGrowth} on:change={updateChart}
-							><span class=" py-2 font-bold text-gray-500">DB growth rate</span></Checkbox
 						>
 					</div>
 				{:else}

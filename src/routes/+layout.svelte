@@ -27,7 +27,7 @@
 
 	<div class="flex h-full w-full">
 		{#if user}
-			<div class="h-full bg-gray-200 dark:bg-gray-800">
+			<div class="h-full">
 				<SideBar />
 			</div>
 		{/if}

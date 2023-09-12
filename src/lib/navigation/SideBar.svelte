@@ -9,11 +9,11 @@
 		'hover:border-r-4 hover:border-r-gray-800 flex items-center p-2 rounded-lg text-base font-semibold text-gray-100 bg-gray-500 dark:text-white hover:text-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-700';
 	let btnClass =
 		'w-full hover:border-r-4 hover:border-r-gray-800 flex items-center p-2 rounded-lg text-base font-semibold text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700 transition duration-75 group';
-	let divClass = 'overflow-y-auto py-4 px-3 bg-gray-200 dark:bg-gray-800 h-full ';
+	let divClass = 'overflow-y-auto py-4 px-3 h-full ';
 	let spanClass = 'flex-1 ml-3 whitespace-nowrap';
 </script>
 
-<div class="bg-white pt-14 dark:bg-gray-800" />
+<div class=" pt-14" />
 <Sidebar asideClass="w-48">
 	<SidebarWrapper {divClass}>
 		<SidebarGroup>

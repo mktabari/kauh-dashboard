@@ -1,12 +1,14 @@
 import { getServerConfig } from '$lib/modules/myServers.js';
 import { json } from '@sveltejs/kit';
-import { dbLocks11g } from '$lib/db/index.js';
+import { dbWait } from '$lib/db/index.js';
 import oracledb from 'oracledb';
 oracledb.initOracleClient();
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 export const GET = async (requestEvent) => {
-	const { params } = requestEvent;
+	const { params, setHeaders } = requestEvent;
 	const { serverId } = params;
+	setHeaders({ 'Cache-Control': 'public, max-age=86,400' });
+
 	try {
 		let { ip, db, dbName, dbPort, dbUser, dbPassword } = getServerConfig(serverId);
 		if (db === 'true') {
@@ -18,7 +20,7 @@ export const GET = async (requestEvent) => {
 
 			return json({
 				apiData: await new Promise(async (resolve, reject) => {
-					const result = await connection.execute(dbLocks11g.replace('server_id', serverId));
+					const result = await connection.execute(dbWait);
 					const { rows } = result;
 					await connection.close();
 					resolve(rows);
