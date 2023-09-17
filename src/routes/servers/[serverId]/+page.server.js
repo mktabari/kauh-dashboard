@@ -25,7 +25,8 @@ export const actions = {
 			bkLogDir,
 			drInstance,
 			tags,
-			dbSizeGroup
+			dbSizeGroup,
+			dbMountPoint
 		} = Object.fromEntries(await request.formData());
 
 		tags = JSON.parse(tags);
@@ -46,7 +47,8 @@ export const actions = {
 			bkLogDir,
 			drInstance,
 			tags,
-			dbSizeGroup
+			dbSizeGroup,
+			dbMountPoint
 		});
 		throw redirect(303, '/servers'); //important to use 303 to change to get
 	}

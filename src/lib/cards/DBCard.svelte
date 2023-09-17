@@ -68,7 +68,9 @@
 	};
 </script>
 
-<div class=" w-full rounded border px-5 pb-1 pt-5 shadow-md dark:border-0 dark:bg-gray-800">
+<div
+	class=" w-full rounded border bg-white px-5 pb-1 pt-5 shadow-md dark:border-gray-700 dark:bg-gray-800"
+>
 	<div class="flex flex-row justify-between dark:text-gray-200">
 		<div class="flex flex-row gap-5">
 			<span

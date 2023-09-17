@@ -114,3 +114,24 @@ export const dbWait = `select * from (
   GROUP BY event
   ORDER BY twt DESC)
   where rownum<=5`;
+
+export const dbTrans = `SELECT a.username UserName,
+  a.sid DB_Sid,
+  e.spid Unix_Pid,
+  TO_CHAR(TO_DATE(b.start_time, 'mm/dd/yy hh24:mi:ss'),
+          'yyyy/mm/dd hh24:mi:ss') Trnx_start_time,
+  ROUND(60 * 24 *
+        (sysdate - to_date(b.start_time, 'mm/dd/yy hh24:mi:ss')),
+        2) Elapsed,
+  TO_CHAR(b.used_ublk * d.value / 1024) Used_Undo_Size,
+  b.log_io * d.value / 1024 Logical_IO,
+  b.phy_io * d.value / 1024 Physical_IO,
+  a.program
+FROM v$session         a,
+  v$transaction     b,
+  v$parameter       d,
+  v$process         e
+WHERE b.ses_addr = a.saddr
+AND d.name = 'db_block_size'
+AND e.ADDR = a.PADDR
+ORDER BY 4`;

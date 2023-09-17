@@ -19,7 +19,8 @@
 		drInstance,
 		db,
 		tags,
-		dbSizeGroup
+		dbSizeGroup,
+		dbMountPoint
 	} = server;
 
 	export let form;
@@ -53,6 +54,7 @@
 				{tags}
 				{allTags}
 				{dbSizeGroup}
+				{dbMountPoint}
 			/>
 			<div class=" mt-5">
 				<Button type="submit" formaction="?/updateServer">Update Server</Button>

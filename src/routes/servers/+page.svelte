@@ -11,19 +11,10 @@
 	import { flip } from 'svelte/animate';
 	import { Tabs, TabItem, Button, Toggle, Modal, Toast } from 'flowbite-svelte';
 	import ServerForm from '$lib/forms/ServerForm.svelte';
-	//load data
 	export let data;
 
 	let { servers, allTags } = data;
-
-	//form submit data
-	//export let form;
-	//form data
-
-	//page logic
-
 	let deleteServerToggle = true;
-
 	let toastShow = false;
 	let toastCounter = 0;
 	const toastTrigger = () => {

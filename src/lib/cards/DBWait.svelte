@@ -6,7 +6,7 @@
 	let chart;
 	let charCanvas;
 
-	onMount(async () => {
+	onMount(() => {
 		fetch('/api/DB/wait/' + server.id)
 			.then((response) => response.json())
 			.then(({ apiData }) => {

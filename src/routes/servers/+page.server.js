@@ -15,19 +15,6 @@ import { error } from '@sveltejs/kit';
 // 	return { servers: servers() };
 // };
 export const load = async () => {
-	// const { depends, fetch } = LoadEvent;
-	// let sResponse = await fetch('/api/servers');
-	// let uRespons = await fetch('/api/utilities');
-	// if (!sResponse.ok || !uRespons) {
-	// 	console.log('problem');
-	// 	return;
-	// } else {
-	// 	let servers = await sResponse.json();
-	// 	let utilities = await uRespons.json();
-
-	// 	return { servers, utilities };
-	// }
-
 	return { servers: getServers(), allTags: getTags() };
 };
 
@@ -48,7 +35,8 @@ export const actions = {
 			bkLogDir,
 			drInstance,
 			tags,
-			dbSizeGroup
+			dbSizeGroup,
+			dbMountPoint
 		} = Object.fromEntries(await request.formData());
 		tags = JSON.parse(tags);
 		addServer({
@@ -66,7 +54,8 @@ export const actions = {
 			bkLogDir,
 			drInstance,
 			tags,
-			dbSizeGroup
+			dbSizeGroup,
+			dbMountPoint
 		});
 		return { message: 'Done' };
 	}

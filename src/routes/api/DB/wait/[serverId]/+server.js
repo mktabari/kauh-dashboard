@@ -7,8 +7,7 @@ oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 export const GET = async (requestEvent) => {
 	const { params, setHeaders } = requestEvent;
 	const { serverId } = params;
-	setHeaders({ 'Cache-Control': 'public, max-age=86,400' });
-
+	setHeaders({ 'Cache-Control': 'public, max-age=86400' });
 	try {
 		let { ip, db, dbName, dbPort, dbUser, dbPassword } = getServerConfig(serverId);
 		if (db === 'true') {

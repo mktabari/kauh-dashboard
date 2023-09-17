@@ -1,5 +1,6 @@
 <script>
 	/** @type {import('./$types').PageData} */
+	import { enhance } from '$app/forms';
 	import { Tabs, TabItem, Button, Badge } from 'flowbite-svelte';
 	import { invalidateAll } from '$app/navigation';
 	import {
@@ -39,13 +40,20 @@
 			}
 		}
 	};
+	const handelREfresh = async () => {
+		data = '';
+		await invalidateAll();
+		allTags = data.allTags;
+	};
 </script>
 
 <Tabs style="none" {contentClass} {inactiveClasses} {activeClasses} {defaultClass}>
 	<TabItem open>
 		<div slot="title" class="flex items-center gap-2">
-			<span class="material-symbols-outlined"> settings </span>
-			Tags List
+			<button class="flex gap-1 p-0" on:click={handelREfresh}>
+				<span class="material-symbols-outlined"> settings </span>
+				Tags List
+			</button>
 		</div>
 
 		<div class="flex flex-row flex-wrap gap-6">
@@ -60,7 +68,7 @@
 					<TableHeadCell class="text-blue-800"><span class="sr-only"> Delete </span></TableHeadCell>
 				</TableHead>
 				<TableBody>
-					{#key data}
+					{#if data}
 						{#each allTags as Tag (Tag.id)}
 							<TableBodyRow>
 								<TableBodyCell>{Tag.name}</TableBodyCell>
@@ -87,7 +95,7 @@
 						{:else}
 							<div class=" font-semibold text-2xl text-blue-700">No Tags Added!</div>
 						{/each}
-					{/key}
+					{/if}
 				</TableBody>
 			</Table>
 		</div>
@@ -98,7 +106,7 @@
 			Add Tag
 		</div>
 		<div>
-			<form method="POST">
+			<form method="POST" use:enhance>
 				<TagForm />
 				<div class=" mt-5">
 					<Button type="submit" formaction="?/createTag">Add Tag</Button>

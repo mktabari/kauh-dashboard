@@ -1,6 +1,5 @@
 <script>
 	import { onMount } from 'svelte';
-	import Copy from '$lib/component/Copy.svelte';
 	import {
 		Table,
 		TableBody,
@@ -16,6 +15,8 @@
 	} from 'flowbite-svelte';
 
 	export let aClass;
+	let root;
+	let bt = [];
 	let spin = true;
 	let data;
 	let page = 1;
@@ -23,11 +24,10 @@
 	let rows = [];
 	let server;
 	let db;
-	let details;
 	let colorList = [];
 
 	onMount(() => {
-		fetch('/api/DB/sqlTime')
+		fetch('/api/DB/trans')
 			.then((response) => response.json())
 			.then(({ apiData }) => {
 				data = apiData;
@@ -51,8 +51,8 @@
 		let temp = data.filter((row) => row.name === server && row.dbName === db);
 		if (page < Math.ceil(temp[0].rows.length / 10)) page++;
 	};
-	const handleClick = (e) => {
-		page = parseInt(e.target.innerHTML);
+	const handleClick = (x) => {
+		page = parseInt(x.target.innerHTML);
 	};
 
 	const changeServer = (_server, _db, _i) => {
@@ -72,7 +72,9 @@
 </script>
 
 <div class={aClass}>
-	<div class="pb-3 pl-5 text-2xl font-extrabold text-gray-500 dark:text-gray-400">SQL Waits</div>
+	<div class="pb-3 pl-5 text-2xl font-extrabold text-gray-500 dark:text-gray-400">
+		DB Transactions
+	</div>
 	{#if spin}
 		<div class="w-full p-10 text-center">
 			<Spinner size={8} />
@@ -92,6 +94,7 @@
 			</div>
 			<div class="flex justify-end">
 				<Pagination
+					bind:this={root}
 					{pages}
 					on:previous={previous}
 					on:next={next}
@@ -102,25 +105,30 @@
 		</div>
 		<Table striped={true} shadow>
 			<TableHead class="bg-gray-200 dark:bg-gray-700">
-				<TableHeadCell class="text-gray-800 dark:text-gray-300">SQL Text</TableHeadCell>
-				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Calls</TableHeadCell>
-				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Time/Call</TableHeadCell>
-				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Hash Value</TableHeadCell>
+				<TableHeadCell class="text-gray-800 dark:text-gray-300">User Namet</TableHeadCell>
+				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">DB Sid</TableHeadCell>
+				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Unix Pid</TableHeadCell>
+				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Trnx Start Time</TableHeadCell>
+				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Elapsed Time</TableHeadCell>
+				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Used Undo Size(Kb)</TableHeadCell>
+				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Logical I/O(Kb)</TableHeadCell>
+				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Physical I/O(Kb)</TableHeadCell>
+				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Program</TableHeadCell>
 			</TableHead>
 			<TableBody>
 				{#key rows}
 					{#each rows as row, i}
 						{#if i >= page * 10 - 10 && i <= page * 10}
 							<TableBodyRow>
-								<TableBodyCell on:click={() => (details = row)}
-									>{row.SQL_TEXT.substring(0, 130)}</TableBodyCell
-								>
-								<TableBodyCell>{row.CALLS}</TableBodyCell>
-								<TableBodyCell>{row.TIME}</TableBodyCell>
-								<TableBodyCell
-									>{row.HASH_VALUE}
-									<Copy id="hv{row.HASH_VALUE}" value={row.HASH_VALUE.toString()} name={'HV'} />
-								</TableBodyCell>
+								<TableBodyCell>{row.USERNAME}</TableBodyCell>
+								<TableBodyCell>{row.DB_SID}</TableBodyCell>
+								<TableBodyCell>{row.UNIX_PID}</TableBodyCell>
+								<TableBodyCell>{row.TRNX_START_TIME}</TableBodyCell>
+								<TableBodyCell>{parseFloat(row.ELAPSED).toFixed(2)}</TableBodyCell>
+								<TableBodyCell>{row.USED_UNDO_SIZE}</TableBodyCell>
+								<TableBodyCell>{row.LOGICAL_IO}</TableBodyCell>
+								<TableBodyCell>{row.PHYSICAL_IO}</TableBodyCell>
+								<TableBodyCell>{row.PROGRAM}</TableBodyCell>
 							</TableBodyRow>
 						{/if}
 					{:else}
@@ -129,8 +137,5 @@
 				{/key}
 			</TableBody>
 		</Table>
-		<Modal title="Complete SQL text" open={!!details} autoclose outsideclose>
-			{details.SQL_TEXT}
-		</Modal>
 	{/if}
 </div>

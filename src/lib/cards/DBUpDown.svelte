@@ -44,7 +44,7 @@
 		chart.data.datasets = datasets;
 		chart.update();
 	}
-	onMount(async () => {
+	onMount(() => {
 		if (chart) chart.destroy();
 		chart = new Chart(charCanvas, {
 			type: 'line',

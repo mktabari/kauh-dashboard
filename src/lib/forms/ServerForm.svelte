@@ -21,6 +21,7 @@
 	export let bkLogDir;
 	export let drInstance;
 	export let dbSizeGroup;
+	export let dbMountPoint;
 	export let tags = [];
 	export let allTags = [];
 
@@ -327,6 +328,15 @@
 					name="dbSizeGroup"
 					placeholder="DB Size Group Name"
 					bind:value={dbSizeGroup}
+				/>
+			</div>
+			<div class="lg:col-span-1">
+				<Label for="dbSizeGroup" class="mb-2 text-primary-800">DB Mount Point</Label>
+				<Input
+					type="text"
+					name="dbMountPoint"
+					placeholder="DB Data Files Mount Point Name"
+					bind:value={dbMountPoint}
 				/>
 			</div>
 		</div>

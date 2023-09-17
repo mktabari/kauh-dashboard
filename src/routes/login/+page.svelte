@@ -1,10 +1,11 @@
 <script>
 	import { FloatingLabelInput, Helper, Button, TextPlaceholder } from 'flowbite-svelte';
+	import { enhance } from '$app/forms';
 </script>
 
 <div class="relative h-full w-full">
 	<div class=" absolute z-50 flex h-full w-full items-center justify-center overflow-hidden">
-		<form method="POST">
+		<form method="POST" use:enhance>
 			<div
 				class=" flex h-72 w-96 flex-col items-center justify-center gap-4 rounded-3xl border-2 border-gray-900 bg-gradient-to-b from-gray-700 via-gray-900 to-gray-900 to-30% shadow-md"
 			>
