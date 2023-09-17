@@ -52,8 +52,8 @@ EXPOSE 3000
 
 CMD ["pm2-runtime", "pm2.config.cjs"]
 
-# docker build . -t kauhdb:v1.1 
-# docker run -d -p 3000:3000 -e "ORIGIN=http://localhost:3000" --name kauhdb --mount source=kd-sqlite-db,target=/app/sqliteDB kauhdb:v1.1
+# docker build . -t kauhdb:v1.2
+# docker run -d -p 3000:3000 -e "ORIGIN=http://localhost:3000" --name kauhdb --mount source=kd-sqlite-db,target=/app/sqliteDB kauhdb:v1.2
 # npx prisma migrate deploy
 # run this comand in the container => npx prisma migrate dev --name mg1
 #docker images
