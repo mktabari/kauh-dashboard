@@ -29,7 +29,7 @@ export const GET = async (requwstEvent) => {
 	const { serverId } = params;
 	let { ip, brand, username, password } = getServerConfig(serverId);
 	return json({
-		UpTime: await new Promise((resolve, reject) => {
+		UpTime: await new Promise((resolve) => {
 			const child = fork(fileURLToPath(import.meta.url), ['child', brand, ip, username, password]);
 			child.on('message', (time) => {
 				resolve(time);

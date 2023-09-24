@@ -1,11 +1,10 @@
-import { json } from '@sveltejs/kit';
-import { fork } from 'child_process';
-import { fileURLToPath } from 'url';
 import { getTagServers } from '$lib/modules/myServers.js';
+import { json } from '@sveltejs/kit';
 import { Client } from 'ssh2';
-
-if (process.argv[2] === 'child') {
+export const GET = async ({ setHeaders }) => {
+	setHeaders({ 'Cache-Control': 'public, max-age=300' });
 	let dbs = getTagServers('DB');
+
 	const checkPercent = async (dbObj) => {
 		let { ip, username, password, dbMountPoint, name } = dbObj;
 
@@ -68,16 +67,5 @@ if (process.argv[2] === 'child') {
 		if (db.dbMountPoint) myDBs.push(checkPercent(db));
 	});
 	let mySshPromis = await Promise.all(myDBs);
-	process.send(mySshPromis);
-}
-export const GET = async ({ setHeaders }) => {
-	setHeaders({ 'Cache-Control': 'public, max-age=300' });
-	return json({
-		apiData: await new Promise((resolve) => {
-			const child = fork(fileURLToPath(import.meta.url), ['child']);
-			child.on('message', (data) => {
-				resolve(data);
-			});
-		})
-	});
+	return json({ apiData: mySshPromis });
 };

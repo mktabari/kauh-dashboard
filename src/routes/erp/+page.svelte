@@ -15,7 +15,6 @@
 		Spinner
 	} from 'flowbite-svelte';
 	export let data;
-	let newContentClass;
 	let { servers } = data;
 	let spin = false;
 	let skeleton = false;
@@ -44,23 +43,20 @@
 			skeleton = true;
 			currentStep = 2;
 
-			reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
 			result += `
 
 Stop ERP APP log
 ================
 
 `;
-			scrolpre.scrollTo(0, scrolpre.scrollHeight);
 			let response = await fetch(`/api/ssh/erp/${serverId}/stopApp`);
+			reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
 			while (true) {
 				const { value, done } = await reader.read();
 				skeleton = false;
 				result += `${value}`;
-				scrolpre.scrollTo(0, scrolpre.scrollHeight);
 				if (done) break;
 			}
-			scrolpre.scrollTo(0, scrolpre.scrollHeight);
 			reader?.releaseLock();
 
 			currentStep = 3;
@@ -72,17 +68,14 @@ Stop ERP DB log
 ===============
 
 `;
-			scrolpre.scrollTo(0, scrolpre.scrollHeight);
 			intervalId = setInterval(checkActiveProcess, 350000);
 			response = await fetch(`/api/ssh/erp/${serverId}/stopDB`);
 			reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
 			while (true) {
 				const { value, done } = await reader.read();
 				result += `${value}`;
-				scrolpre.scrollTo(0, scrolpre.scrollHeight);
 				if (done) break;
 			}
-			scrolpre.scrollTo(0, scrolpre.scrollHeight);
 			reader?.releaseLock();
 			clearInterval(intervalId);
 
@@ -95,7 +88,6 @@ Rebooting Server
 ================
 
 `;
-			scrolpre.scrollTo(0, scrolpre.scrollHeight);
 			fetch(`/api/ssh/erp/${serverId}/rebootServer`);
 			waitIntervalId = setInterval(waitForMinute, 20000);
 			while (rebooting) {
@@ -116,16 +108,13 @@ Start ERP DB log
 ================
 
 `;
-			scrolpre.scrollTo(0, scrolpre.scrollHeight);
 			response = await fetch(`/api/ssh/erp/${serverId}/startDB`);
 			reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
 			while (true) {
 				const { value, done } = await reader.read();
 				result += `${value}`;
-				scrolpre.scrollTo(0, scrolpre.scrollHeight);
 				if (done) break;
 			}
-			scrolpre.scrollTo(0, scrolpre.scrollHeight);
 			reader?.releaseLock();
 
 			currentStep = 6;
@@ -136,16 +125,13 @@ Start ERP APP log
 =================
 
 `;
-			scrolpre.scrollTo(0, scrolpre.scrollHeight);
 			response = await fetch(`/api/ssh/erp/${serverId}/startApp`);
 			reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
 			while (true) {
 				const { value, done } = await reader.read();
 				result += `${value}`;
-				scrolpre.scrollTo(0, scrolpre.scrollHeight);
 				if (done) break;
 			}
-			scrolpre.scrollTo(0, scrolpre.scrollHeight);
 			reader?.releaseLock();
 
 			currentStep = 7;
@@ -155,7 +141,6 @@ Restart ERP Completed
 =====================
 
 `;
-			scrolpre.scrollTo(0, scrolpre.scrollHeight);
 			spin = false;
 		}
 	};
@@ -183,7 +168,9 @@ Restart ERP Completed
 		if (rebootIntervalId) clearInterval(rebootIntervalId);
 		if (waitIntervalId) clearInterval(waitIntervalId);
 	});
-
+	afterUpdate(() => {
+		scrolpre.scrollTo(0, scrolpre.scrollHeight);
+	});
 	const getStream1 = async (serverId) => {
 		result = '';
 		skeleton = true;

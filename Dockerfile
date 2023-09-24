@@ -21,8 +21,8 @@ RUN npm run build
 RUN npm ci --prod
 # CMD ["node", "build"]
 
-FROM node:20.4.0-buster-slim
 
+FROM node:20.4.0-buster-slim
 COPY --from=0  /usr/lib/oracle /usr/lib/oracle
 COPY --from=0  /etc/ld.so.conf.d/oracle-instantclient11.2.conf /etc/ld.so.conf.d/oracle-instantclient11.2.conf
 RUN apt-get update 
@@ -31,14 +31,12 @@ RUN apt-get -y dist-upgrade
 RUN apt-get install -y libaio1 iputils-ping openssl
 RUN ldconfig
 RUN npm install pm2 -g
-
-
 USER node:node
 WORKDIR /app
 COPY --from=0 --chown=node:node /app/build ./build
 COPY --from=0 --chown=node:node /app/node_modules ./node_modules
 COPY --from=0 --chown=node:node /app/pm2.config.cjs ./
-COPY --from=0 --chown=node:node /app/src/lib/config/servers ./build/server/chunks/
+# COPY --from=0 --chown=node:node /app/src/lib/config/servers ./build/server/chunks/
 # COPY --from=0 --chown=node:node /app/src/getTime.js ./src/
 COPY --from=0 --chown=node:node /app/prisma/schema.prisma ./prisma/
 COPY --from=0 --chown=node:node /app/prisma/migrations ./prisma/migrations
@@ -46,7 +44,7 @@ COPY --from=0 --chown=node:node /app/prisma/migrations ./prisma/migrations
 RUN npx prisma migrate dev --name mg1
 
 COPY --chown=node:node package.json .
-COPY --from=0 --chown=node:node /app/src/lib/config/servers/* ./build/server/chunks/servers/
+COPY --from=0 --chown=node:node /app/src/lib/modules/*.json ./build/server/chunks/
 
 EXPOSE 3000
 
@@ -56,9 +54,9 @@ CMD ["pm2-runtime", "pm2.config.cjs"]
 # docker run -d -p 3000:3000 -e "ORIGIN=http://localhost:3000" --name kauhdb --mount source=kd-sqlite-db,target=/app/sqliteDB kauhdb:v1.2
 # npx prisma migrate deploy
 # run this comand in the container => npx prisma migrate dev --name mg1
-#docker images
-#docker save -o C:\docker_image_tars\kauhdb_v1.1.tar kauhdb:v1.1
-# docker load -i kauhdb_v1.tar
+# docker images
+# docker save -o C:\docker_image_tars\kauhdb_v1.2.tar kauhdb:v1.2
+# docker load -i kauhdb_v1.2.tar
 #scp C:\docker_image_tars\kauhdb_v1.tar root@172.30.5.190 /kauhdb_v1.tar
 #docker volume create --name kd-sqlite-db --opt type=none --opt device=/docker_volumes/sqliteDB --opt o=bind
-# docker run -d --restart unless-stopped -p 3000:3000 -e "ORIGIN=http://172.30.5.190:3000"  -e "SECRET_ADMIN_PASSWORD=" --mount source=kd-sqlite-db,target=/app/sqliteDB --name kauh-dashboard-v1.1  kauhdb:v1.1
+# docker run -d --restart unless-stopped -p 3000:3000 -e "ORIGIN=http://172.30.5.190:3000"  -e "SECRET_ADMIN_PASSWORD=sys3211" --mount source=kd-sqlite-db,target=/app/sqliteDB --name kauh-dashboard-v1.2  kauhdb:v1.2

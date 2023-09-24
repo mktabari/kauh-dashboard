@@ -829,7 +829,7 @@
 				{:else}
 					<div class="pb-10">no alert log file selected</div>
 				{/if}
-				<canvas bind:this={charCanvas} />
+				<canvas bind:this={charCanvas} height="110" />
 			</div>
 		</div>
 	</TabItem>

@@ -12,36 +12,28 @@
 			.then(({ apiData }) => {
 				if (chart) chart.destroy();
 				chart = new Chart(charCanvas, {
-					type: 'bar',
+					type: 'polarArea',
 					options: {
+						layout: {
+							padding: 0
+						},
+						plugins: { legend: { display: true } },
 						responsive: true,
-						plugins: {
-							title: {
-								display: false
-							},
-							legend: {
-								labels: {
+						scales: {
+							y: {
+								pointLabels: {
+									display: false,
+									centerPointLabels: true,
 									font: {
-										size: 8
+										size: 9
 									}
 								}
-							}
-						},
-						scales: {
-							x: {
-								display: false
-							},
-							y: {
-								display: true,
-								type: 'logarithmic'
 							}
 						}
 					},
 					data: {
-						labels: [server.name],
-						datasets: apiData.map((row) => {
-							return { label: row.EVENT, data: [row.TWT] };
-						})
+						labels: apiData.map((row) => row.EVENT),
+						datasets: [{ data: apiData.map((row) => row.TWT) }]
 					}
 				});
 			});

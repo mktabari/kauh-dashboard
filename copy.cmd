@@ -1,0 +1,1 @@
+copy src\lib\modules\*.json build\server\chunks\
