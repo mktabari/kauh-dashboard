@@ -7,6 +7,7 @@
 	import oracle from '$lib/assets/oracle.png';
 	import linux from '$lib/assets/linux.png';
 	import windows from '$lib/assets/windows.png';
+	import emc from '$lib/assets/emc.png';
 	export let brand = 'oracle';
 	export let name;
 	export let ip;
@@ -140,6 +141,14 @@
 						<img alt="logo" src={linux} class=" h-10 w-32 object-contain" />
 					</div>
 				</Radio>
+				<Radio name="brand" custom bind:group={brand} value="emc">
+					<div
+						for="hosting-big"
+						class="inline-flex w-full cursor-pointer items-center justify-between rounded-lg border-2 border-gray-200 bg-white p-5 text-gray-500 hover:bg-gray-100 hover:text-gray-600 peer-checked:border-primary-600 peer-checked:bg-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-primary-500"
+					>
+						<img alt="logo" src={emc} class=" h-10 w-32 object-contain" />
+					</div>
+				</Radio>
 			</div>
 		</div>
 	</div>
@@ -152,7 +161,7 @@
 				Server Information
 			</div>
 			<div>
-				<Button type="submit" btnClass="hidden">Add Server</Button>
+				<button type="submit" Class="hidden">Add Server</button>
 				<Label for="name" class="mb-2 text-primary-800">Server Name</Label>
 				<Input
 					type="text"

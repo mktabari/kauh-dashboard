@@ -37,6 +37,7 @@
 			on:scroll={handleOnScroll}
 			bind:this={scrolDiv}
 		>
+			<div class="pt-2" />
 			<slot />
 		</div>
 	</div>

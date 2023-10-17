@@ -96,14 +96,19 @@
 				});
 		}
 	};
+	let killToastShow = false;
+	let killToastCounter = 0;
 	const handleKillSession = async (e, SID, SERIAL, INST_ID, SERVERID) => {
 		const response = await fetch(`/api/DB/locks/${SERVERID}/${SID}/${SERIAL}/${INST_ID}`);
-		if (!response.ok) {
-			console.log('problem');
+		const data = await response.json();
+
+		if (!(data.apiData === 'ok')) {
+			console.log('Error');
+			killToastTrigger();
 			return;
 		} else {
-			e.currentTarget.disabled = true;
-			e.currentTarget.parentElement.parentElement.classList.add(
+			e.target.disabled = true;
+			e.target.parentElement.parentElement.classList.add(
 				'line-through',
 				'text-red-600',
 				'decoration-2'
@@ -111,8 +116,6 @@
 		}
 	};
 	const handleAddDatafile = async (ts, SERVERID) => {
-		// console.log(`/api/DB/ts/${SERVERID}/${ts}`);
-		// const response = { ok: true };
 		const response = await fetch(`/api/DB/ts/${SERVERID}/${ts}`);
 		if (!response.ok) {
 			console.log('problem');
@@ -134,12 +137,19 @@
 		toastCounter = 6;
 		toastTimeout();
 	};
-
+	const killToastTrigger = () => {
+		killToastShow = true;
+		killToastCounter = 6;
+		killToastTimeout();
+	};
 	const toastTimeout = () => {
 		if (--toastCounter > 0) return setTimeout(toastTimeout, 1000);
 		toastShow = false;
 	};
-
+	const killToastTimeout = () => {
+		if (--killToastCounter > 0) return setTimeout(killToastTimeout, 1000);
+		killToastShow = false;
+	};
 	const sortTable = (key) => {
 		if (sortKey === key) {
 			sortDirection = -sortDirection;
@@ -305,6 +315,31 @@
 	$: if (serverChartData) chartDB();
 </script>
 
+<Toast
+	class="z-50"
+	transition={fly}
+	params={{ y: 200 }}
+	color="red"
+	position="bottom-right"
+	bind:open={killToastShow}
+>
+	<svelte:fragment slot="icon">
+		<svg
+			aria-hidden="true"
+			class="h-5 w-5"
+			fill="currentColor"
+			viewBox="0 0 20 20"
+			xmlns="http://www.w3.org/2000/svg"
+			><path
+				fill-rule="evenodd"
+				d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+				clip-rule="evenodd"
+			/></svg
+		>
+		<span class="sr-only">Warning icon</span>
+	</svelte:fragment>
+	Unable to kill session.
+</Toast>
 <Toast
 	class="z-50"
 	transition={fly}

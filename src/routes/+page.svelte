@@ -5,13 +5,14 @@
 	import DBWait from '$lib/cards/DBWait.svelte';
 	import DBSqlTime from '$lib/cards/DBSqlTime.svelte';
 	import DBTrans from '$lib/cards/DBTrans.svelte';
-	import DBMount from '../lib/cards/DBMount.svelte';
+	import DBMount from '$lib/cards/DBMount.svelte';
+	import SANAlert from '$lib/cards/SANAlert.svelte';
+	import DBMountNew from '$lib/cards/DBMountNew.svelte';
+
 	export let data;
 
-	let { UDServers, WServers, DBServers } = data;
+	let { UDServers, WServers } = data;
 
-	let aClassold =
-		'py-3shadow-md h-full rounded-xl border bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-900';
 	let aClass = 'h-full rounded-xl bg-gray-100 p-3 dark:border-gray-700 dark:bg-gray-900';
 </script>
 
@@ -25,6 +26,9 @@
 	</div>
 	<div class=" col-span-2 w-full">
 		<DBUpDown servers={UDServers} {aClass} />
+	</div>
+	<div class=" col-span-2 w-full">
+		<SANAlert {aClass} />
 	</div>
 	<div class=" col-span-2 w-full">
 		<DBSqlTime {aClass} />
@@ -41,3 +45,6 @@
 		{/each}
 	</div>
 </div>
+<!-- <div class=" h-full w-full">
+	<DBMountNew {aClass} />
+</div>  -->

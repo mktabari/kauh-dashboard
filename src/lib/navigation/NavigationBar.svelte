@@ -15,9 +15,10 @@
 </script>
 
 <Navbar
+	let:NavContainer
 	fluid={true}
 	color="none"
-	navClass="py-2 px-2 sm:px-4 absolute w-full z-50 top-0 left-0 backdrop-blur-sm"
+	class="absolute left-0 top-0 z-50 w-full px-2 py-2 backdrop-blur-sm sm:px-4"
 	let:hidden
 	let:toggle
 >
@@ -26,7 +27,7 @@
 			class="self-center whitespace-nowrap text-3xl font-bold text-gray-600 dark:text-white"
 			style="font-family: 'Bruno Ace SC', cursive;"
 		>
-			KAUH Severs Dashboard <span class="text-lg italic text-indigo-700">V:1.3</span>
+			KAUH Severs Dashboard <span class="text-lg italic text-indigo-700">V:1.4</span>
 		</span>
 	</NavBrand>
 	<div class="flex items-center md:order-2">

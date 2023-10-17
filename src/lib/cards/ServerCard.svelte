@@ -5,6 +5,7 @@
 	import oracle from '$lib/assets/oracle.png';
 	import linux from '$lib/assets/linux.png';
 	import windows from '$lib/assets/windows.png';
+	import emc from '$lib/assets/emc.png';
 	export let server;
 	export let deleteServerToggle;
 
@@ -35,14 +36,22 @@
 		}
 	});
 	const getMemory = async () => {
-		let response = await fetch(`/api/ssh/mem/${server.id}`);
-		let { mem } = await response.json();
-		server.memory = mem + 'GB';
+		if (server.brand === 'emc') {
+			server.memory = ' ';
+		} else {
+			let response = await fetch(`/api/ssh/mem/${server.id}`);
+			let { mem } = await response.json();
+			server.memory = mem + 'GB';
+		}
 	};
 	const getCpu = async () => {
-		let response = await fetch(`/api/ssh/cpu/${server.id}`);
-		let { cpu } = await response.json();
-		server.cpu = cpu;
+		if (server.brand === 'emc') {
+			server.cpu = ' ';
+		} else {
+			let response = await fetch(`/api/ssh/cpu/${server.id}`);
+			let { cpu } = await response.json();
+			server.cpu = cpu;
+		}
 	};
 	const updateServer = async () => {
 		const res = await fetch(`/api/servers/${server.id}`, {
@@ -98,6 +107,8 @@
 				<img alt="logo" src={windows} class=" h-10 w-24 object-contain dark:invert" />
 			{:else if server.brand === 'linux'}
 				<img alt="logo" src={linux} class=" h-10 w-24 object-contain dark:invert" />
+			{:else if server.brand === 'emc'}
+				<img alt="logo" src={emc} class=" h-10 w-24 object-contain dark:invert" />
 			{:else}
 				<span class="material-symbols-outlined md-48 md-dark dark:text-blue-200">computer</span>
 			{/if}
@@ -116,35 +127,36 @@
 			IP: {server.ip}
 			<Copy id="ip{server.id}" value={server.ip} name="IP" />
 		</div>
-		<div class="relative flex flex-row pt-2 font-semibold">
-			<div class=" h-6 w-6">
-				<span class="material-symbols-outlined absolute"> memory </span>
-			</div>
-			{#if memorySpinner}
-				<div class=" h-4 w-4">
-					<Spinner size="small" />
+		{#if server.brand !== 'emc'}
+			<div class="relative flex flex-row pt-2 font-semibold">
+				<div class=" h-6 w-6">
+					<span class="material-symbols-outlined absolute"> memory </span>
 				</div>
-			{:else}
-				{server.memory}
-			{/if}
-		</div>
-
-		<div class="relative flex flex-row pt-2 font-semibold">
-			<div class=" h-6 w-6">
-				<span class="material-symbols-outlined absolute"> memory_alt </span>
+				{#if memorySpinner}
+					<div class=" h-4 w-4">
+						<Spinner size="small" />
+					</div>
+				{:else}
+					{server.memory}
+				{/if}
 			</div>
-			{#if cpuSpinner}
-				<div class=" h-4 w-4">
-					<Spinner size="small" />
-				</div>
-			{:else}
-				{server.cpu}
-			{/if}
-		</div>
 
-		<Button btnClass=" pt-3 " on:click={refreshServer}>
-			<span class="material-symbols-outlined md-18 text-gray-500 hover:text-red-500"> sync </span>
-		</Button>
+			<div class="relative flex flex-row pt-2 font-semibold">
+				<div class=" h-6 w-6">
+					<span class="material-symbols-outlined absolute"> memory_alt </span>
+				</div>
+				{#if cpuSpinner}
+					<div class=" h-4 w-4">
+						<Spinner size="small" />
+					</div>
+				{:else}
+					{server.cpu}
+				{/if}
+			</div>
+			<button Class=" pt-3 " on:click={refreshServer}>
+				<span class="material-symbols-outlined md-18 text-gray-500 hover:text-red-500"> sync </span>
+			</button>
+		{/if}
 	</div>
 
 	<A

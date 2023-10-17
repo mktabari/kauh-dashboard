@@ -15,7 +15,7 @@
 	});
 </script>
 
-<div class=" h-18 mt-2 flex w-full flex-row gap-4 py-3">
+<div class=" h-18 -mt-3 flex w-full flex-row gap-4 py-3">
 	{#if !spin}
 		{#each data as db, i (db.id)}
 			<div

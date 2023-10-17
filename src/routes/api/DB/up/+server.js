@@ -7,7 +7,6 @@ import oracledb from 'oracledb';
 oracledb.initOracleClient();
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 if (process.argv[2] === 'child') {
-	let dbs = getTagServers('DB');
 	const checkDB = async (dbObj) => {
 		let { ip, dbName, dbUser, dbPassword } = dbObj;
 		try {
@@ -34,6 +33,7 @@ if (process.argv[2] === 'child') {
 			return { id: uuid(), dbName, INSTANCE_NAME: '', STATUS: 'DOWN' };
 		}
 	};
+	let dbs = getTagServers('DB');
 	let myDBs = dbs.map((db) => checkDB(db));
 	let mySshPromis = await Promise.all(myDBs);
 	process.send(mySshPromis);

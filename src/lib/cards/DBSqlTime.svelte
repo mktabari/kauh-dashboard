@@ -35,7 +35,11 @@
 				server = data[0].name;
 				db = data[0].dbName;
 				for (let i = 1; i <= Math.ceil(rows.length / 10); i++) {
-					pages.push({ name: i });
+					if (i === 1) {
+						pages.push({ name: i, active: true });
+					} else {
+						pages.push({ name: i, active: false });
+					}
 				}
 				spin = false;
 				data.forEach((element, i) => {
@@ -44,15 +48,25 @@
 				});
 			});
 	});
+	const setActivePage = () => {
+		pages.forEach((element, i) => {
+			if (page === i + 1) element.active = true;
+			else element.active = false;
+		});
+		pages = pages;
+	};
 	const previous = () => {
 		if (page !== 1) page--;
+		setActivePage();
 	};
 	const next = () => {
 		let temp = data.filter((row) => row.name === server && row.dbName === db);
 		if (page < Math.ceil(temp[0].rows.length / 10)) page++;
+		setActivePage();
 	};
 	const handleClick = (e) => {
 		page = parseInt(e.target.innerHTML);
+		setActivePage();
 	};
 
 	const changeServer = (_server, _db, _i) => {
@@ -61,13 +75,18 @@
 		rows = data.filter((row) => row.name === server && row.dbName === db)[0].rows;
 		pages = [];
 		for (let i = 1; i <= Math.ceil(rows.length / 10); i++) {
-			pages.push({ name: i });
+			if (i === 1) {
+				pages.push({ name: i, active: true });
+			} else {
+				pages.push({ name: i, active: false });
+			}
 		}
 		page = 1;
 		colorList = colorList.map((element, i) => {
 			if (i === _i) return 'dark';
 			else return 'light';
 		});
+		setActivePage();
 	};
 </script>
 
@@ -79,7 +98,7 @@
 		</div>
 	{:else}
 		<div class="flex justify-between">
-			<div>
+			<div class=" pb-2">
 				<ButtonGroup>
 					{#each data as server, i}
 						<Button
@@ -97,6 +116,8 @@
 					on:next={next}
 					on:click={handleClick}
 					class="pb-1 "
+					activeClass="text-gray-100 border border-gray-300 bg-gray-700 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+					normalClass="text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
 				/>
 			</div>
 		</div>

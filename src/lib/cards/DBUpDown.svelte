@@ -118,60 +118,64 @@
 	</div>
 
 	<canvas bind:this={charCanvas} height="50" />
-	<div>
-		<Label>Start Date</Label>
-		<Range
-			size="sm"
-			id="start_date"
-			min="0"
-			max="1000"
-			bind:value={startRange}
-			class="w-1/3"
-			on:change={() => {
-				enabled = true;
-				startRangeFine = 0;
-				endRangeFine = 1000;
-				if (startDate > endDate) startRange = endRange - 1;
-			}}
-		/>
-		<Label>End Date</Label>
-		<Range
-			size="sm"
-			id="end_date"
-			min="0"
-			max="1000"
-			bind:value={endRange}
-			class="w-1/3"
-			on:change={() => {
-				enabled = true;
-				startRangeFine = 0;
-				endRangeFine = 1000;
-				if (startDate > endDate) endRange = startRange + 1;
-			}}
-		/>
-		<Label>Start Date Fine</Label>
-		<Range
-			size="sm"
-			id="start_date"
-			min="0"
-			max="1000"
-			bind:value={startRangeFine}
-			class="w-1/3"
-			on:change={() => {
-				enabled = true;
-			}}
-		/>
-		<Label>End Date Fine</Label>
-		<Range
-			size="sm"
-			id="end_date_fine"
-			min="0"
-			max="1000"
-			bind:value={endRangeFine}
-			class="w-1/3"
-			on:change={() => {
-				enabled = true;
-			}}
-		/>
+	<div class="grid grid-cols-2">
+		<div>
+			<Label>Start Date</Label>
+			<Range
+				size="sm"
+				id="start_date"
+				min="0"
+				max="1000"
+				bind:value={startRange}
+				on:change={() => {
+					enabled = true;
+					startRangeFine = 0;
+					endRangeFine = 1000;
+					if (startDate > endDate) startRange = endRange - 1;
+				}}
+			/>
+		</div>
+		<div>
+			<Label>End Date</Label>
+			<Range
+				size="sm"
+				id="end_date"
+				min="0"
+				max="1000"
+				bind:value={endRange}
+				on:change={() => {
+					enabled = true;
+					startRangeFine = 0;
+					endRangeFine = 1000;
+					if (startDate > endDate) endRange = startRange + 1;
+				}}
+			/>
+		</div>
+		<div>
+			<Label>Start Date Fine</Label>
+			<Range
+				size="sm"
+				id="start_date"
+				min="0"
+				max="1000"
+				bind:value={startRangeFine}
+				on:change={() => {
+					enabled = true;
+				}}
+			/>
+		</div>
+		<div>
+			<Label>End Date Fine</Label>
+			<Range
+				size="sm"
+				id="end_date_fine"
+				min="0"
+				max="1000"
+				bind:value={endRangeFine}
+				on:change={() => {
+					enabled = true;
+				}}
+			/>
+		</div>
 	</div>
 </div>

@@ -10,7 +10,8 @@
 		Spinner,
 		Pagination,
 		ButtonGroup,
-		Button
+		Button,
+		Badge
 	} from 'flowbite-svelte';
 
 	export let aClass;
@@ -19,19 +20,19 @@
 	let data;
 	let page = 1;
 	let pages = [];
+	let alert;
 	let rows = [];
-	let server;
-	let db;
+	let san;
 	let colorList = [];
 
-	onMount(() => {
-		fetch('/api/DB/trans')
+	onMount(async () => {
+		fetch('/api/SAN/alert')
 			.then((response) => response.json())
 			.then(({ apiData }) => {
 				data = apiData;
-				rows = data[0].rows;
-				server = data[0].name;
-				db = data[0].dbName;
+				san = data[0].name;
+				// alert = data[0].alert;
+				rows = data[0].alert;
 				for (let i = 1; i <= Math.ceil(rows.length / 10); i++) {
 					if (i === 1) {
 						pages.push({ name: i, active: true });
@@ -49,11 +50,10 @@
 	const previous = () => {
 		if (page !== 1) page--;
 		setActivePage();
-		s;
 	};
 	const next = () => {
-		let temp = data.filter((row) => row.name === server && row.dbName === db);
-		if (page < Math.ceil(temp[0].rows.length / 10)) page++;
+		let temp = data.filter((row) => row.name === san);
+		if (page < Math.ceil(temp[0].alert.length / 10)) page++;
 		setActivePage();
 	};
 	const handleClick = (x) => {
@@ -67,10 +67,9 @@
 		});
 		pages = pages;
 	};
-	const changeServer = (_server, _db, _i) => {
-		server = _server;
-		db = _db;
-		rows = data.filter((row) => row.name === server && row.dbName === db)[0].rows;
+	const changeSan = (_san, _i) => {
+		san = _san;
+		rows = data.filter((row) => row.name === san)[0].alert;
 		pages = [];
 		for (let i = 1; i <= Math.ceil(rows.length / 10); i++) {
 			if (i === 1) {
@@ -88,9 +87,7 @@
 </script>
 
 <div class={aClass}>
-	<div class="pb-3 pl-5 text-2xl font-extrabold text-gray-500 dark:text-gray-400">
-		DB Transactions
-	</div>
+	<div class="pb-3 pl-5 text-2xl font-extrabold text-gray-500 dark:text-gray-400">SAN Alerts</div>
 	{#if spin}
 		<div class="w-full p-10 text-center">
 			<Spinner size={8} />
@@ -99,12 +96,8 @@
 		<div class="flex justify-between">
 			<div class=" pb-2">
 				<ButtonGroup>
-					{#each data as server, i}
-						<Button
-							color={colorList[i]}
-							on:click={() => changeServer(server.name, server.dbName, i)}
-							>{server.name}({server.dbName})</Button
-						>
+					{#each data as san, i}
+						<Button color={colorList[i]} on:click={() => changeSan(san.name, i)}>{san.name}</Button>
 					{/each}</ButtonGroup
 				>
 			</div>
@@ -121,36 +114,40 @@
 				/>
 			</div>
 		</div>
-		<Table striped={true} shadow>
+		<Table striped={true} shadow class="w-full">
 			<TableHead class="bg-gray-200 dark:bg-gray-700">
-				<TableHeadCell class="text-gray-800 dark:text-gray-300">User Namet</TableHeadCell>
-				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">DB Sid</TableHeadCell>
-				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Unix Pid</TableHeadCell>
-				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Trnx Start Time</TableHeadCell>
-				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Elapsed Time</TableHeadCell>
-				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Used Undo Size(Kb)</TableHeadCell>
-				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Logical I/O(Kb)</TableHeadCell>
-				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Physical I/O(Kb)</TableHeadCell>
-				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Program</TableHeadCell>
+				<TableHeadCell class="text-gray-800 dark:text-gray-300">Alert Serverity</TableHeadCell>
+				<TableHeadCell class="text-gray-800 dark:text-gray-300">Date</TableHeadCell>
+				<TableHeadCell class="text-gray-800 dark:text-gray-300">Alert Component</TableHeadCell>
+				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Message</TableHeadCell>
+				<!-- <TableHeadCell class="text-gray-800 dark:text-gray-300 ">Description</TableHeadCell> -->
 			</TableHead>
 			<TableBody>
 				{#key rows}
 					{#each rows as row, i}
 						{#if i >= page * 10 - 10 && i <= page * 10}
 							<TableBodyRow>
-								<TableBodyCell>{row.USERNAME}</TableBodyCell>
-								<TableBodyCell>{row.DB_SID}</TableBodyCell>
-								<TableBodyCell>{row.UNIX_PID}</TableBodyCell>
-								<TableBodyCell>{row.TRNX_START_TIME}</TableBodyCell>
-								<TableBodyCell>{parseFloat(row.ELAPSED).toFixed(2)}</TableBodyCell>
-								<TableBodyCell>{row.USED_UNDO_SIZE}</TableBodyCell>
-								<TableBodyCell>{row.LOGICAL_IO}</TableBodyCell>
-								<TableBodyCell>{row.PHYSICAL_IO}</TableBodyCell>
-								<TableBodyCell>{row.PROGRAM}</TableBodyCell>
+								<TableBodyCell>
+									{#if row.content.severity == '1' || row.content.severity == '2'}
+										<Badge color="red" border large>{row.content.severity}</Badge>
+									{:else if row.content.severity == '3' || row.content.severity == '4'}
+										<Badge color="yellow" border large>{row.content.severity}</Badge>
+									{:else}
+										<Badge color="green" border large>{row.content.severity}</Badge>
+									{/if}
+								</TableBodyCell>
+								<TableBodyCell>{new Date(row.content.timestamp).toLocaleString()}</TableBodyCell>
+								<TableBodyCell>{row.content.component.id}</TableBodyCell>
+								<TableBodyCell tdClass="px-6 py-4 font-medium "
+									><p>{row.content.message}</p></TableBodyCell
+								>
+								<!-- <TableBodyCell tdClass="px-6 py-4 font-medium "
+									><p>{row.content.description}</p></TableBodyCell
+								> -->
 							</TableBodyRow>
 						{/if}
 					{:else}
-						<div class=" font-semibold text-2xl text-blue-700 pl-5 pt-3 pb-2">No Data!</div>
+						<div class=" font-semibold text-xl text-blue-700 pl-5 pt-3 pb-2">No Alerts!</div>
 					{/each}
 				{/key}
 			</TableBody>

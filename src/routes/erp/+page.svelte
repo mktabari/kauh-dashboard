@@ -1,5 +1,5 @@
 <script>
-	import { onDestroy } from 'svelte';
+	import { onDestroy, afterUpdate } from 'svelte';
 	import {
 		contentClass,
 		inactiveClasses,

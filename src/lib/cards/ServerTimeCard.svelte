@@ -109,12 +109,12 @@
 			{:else}
 				<div class="flex flex-row justify-between pb-1">
 					{#if !timeEditing}
-						<Button btnClass=" " on:click={enableTimeEdit}
-							><span class="material-symbols-outlined hover:text-red-500"> edit </span></Button
+						<button on:click={enableTimeEdit}
+							><span class="material-symbols-outlined hover:text-red-500"> edit </span></button
 						>
 					{:else}
-						<Button btnClass=" " on:click={saveTimeEdit}
-							><span class="material-symbols-outlined hover:text-red-500"> save </span></Button
+						<button on:click={saveTimeEdit}
+							><span class="material-symbols-outlined hover:text-red-500"> save </span></button
 						>
 					{/if}
 					<span
@@ -125,7 +125,7 @@
 				</div>
 
 				<span
-					class=" font-digital mx-3 flex justify-center rounded bg-gray-100 bg-gradient-to-b from-transparent to-gray-100 text-5xl font-extrabold uppercase text-gray-400 shadow-inner animate-in zoom-in duration-700 dark:bg-gray-800 dark:to-gray-900"
+					class=" font-digital mx-3 flex justify-center rounded bg-gray-100 bg-gradient-to-b from-transparent to-gray-100 text-5xl font-extrabold uppercase text-gray-400 shadow-inner duration-700 animate-in zoom-in dark:bg-gray-800 dark:to-gray-900"
 					>{#if !timeEditing}
 						{hh.toString().padStart(2, '0')}:{mm.toString().padStart(2, '0')}:{ss
 							.toString()
