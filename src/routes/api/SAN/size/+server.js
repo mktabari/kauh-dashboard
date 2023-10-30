@@ -27,17 +27,17 @@ if (process.argv[2] === 'child') {
 				};
 
 				fetchCookie(
-					`https://${ip}/api/types/alert/instances?fields=severity,component,message,description,timestamp`,
+					`https://${ip}/api/types/systemCapacity/instances?fields=sizeFree,sizeTotal,id,sizeUsed`,
 					requestOptions
 				)
 					.then((response) => response.json())
-					.then((result) => resolve(result.entries))
+					.then((result) => resolve(result.entries[0].content))
 					.catch((error) => console.log('error', error));
 			});
 
-			return { name, alert: await customPromise };
+			return { name, content: await customPromise };
 		} catch (error) {
-			return { name, alert: {} };
+			return { name, content: {} };
 		}
 	};
 	let sans = getTagServers('SAN');

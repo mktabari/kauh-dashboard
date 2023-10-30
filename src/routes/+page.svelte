@@ -6,8 +6,7 @@
 	import DBSqlTime from '$lib/cards/DBSqlTime.svelte';
 	import DBTrans from '$lib/cards/DBTrans.svelte';
 	import DBMount from '$lib/cards/DBMount.svelte';
-	import SANAlert from '$lib/cards/SANAlert.svelte';
-	import DBMountNew from '$lib/cards/DBMountNew.svelte';
+	import SAN from '$lib/cards/SAN.svelte';
 
 	export let data;
 
@@ -17,18 +16,19 @@
 </script>
 
 <DBUpLine />
+
 <div class="grid grid-cols-2 gap-3 pr-3">
+	<div class=" col-span-2 w-full">
+		<DBMount {aClass} />
+	</div>
 	<div class=" h-full w-full">
 		<DBHR {aClass} />
 	</div>
 	<div class=" h-full w-full">
-		<DBMount {aClass} />
+		<SAN {aClass} />
 	</div>
 	<div class=" col-span-2 w-full">
 		<DBUpDown servers={UDServers} {aClass} />
-	</div>
-	<div class=" col-span-2 w-full">
-		<SANAlert {aClass} />
 	</div>
 	<div class=" col-span-2 w-full">
 		<DBSqlTime {aClass} />

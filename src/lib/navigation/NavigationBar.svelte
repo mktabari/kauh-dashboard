@@ -27,7 +27,7 @@
 			class="self-center whitespace-nowrap text-3xl font-bold text-gray-600 dark:text-white"
 			style="font-family: 'Bruno Ace SC', cursive;"
 		>
-			KAUH Severs Dashboard <span class="text-lg italic text-indigo-700">V:1.4</span>
+			KAUH Severs Dashboard <span class="text-lg italic text-indigo-700">V:1.5</span>
 		</span>
 	</NavBrand>
 	<div class="flex items-center md:order-2">

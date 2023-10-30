@@ -20,13 +20,12 @@
 	let data;
 	let page = 1;
 	let pages = [];
-	let alert;
 	let rows = [];
 	let san;
 	let colorList = [];
 
 	onMount(async () => {
-		fetch('/api/SAN/alert')
+		fetch('/api/san/alert')
 			.then((response) => response.json())
 			.then(({ apiData }) => {
 				data = apiData;
@@ -123,33 +122,28 @@
 				<!-- <TableHeadCell class="text-gray-800 dark:text-gray-300 ">Description</TableHeadCell> -->
 			</TableHead>
 			<TableBody>
-				{#key rows}
-					{#each rows as row, i}
-						{#if i >= page * 10 - 10 && i <= page * 10}
-							<TableBodyRow>
-								<TableBodyCell>
-									{#if row.content.severity == '1' || row.content.severity == '2'}
-										<Badge color="red" border large>{row.content.severity}</Badge>
-									{:else if row.content.severity == '3' || row.content.severity == '4'}
-										<Badge color="yellow" border large>{row.content.severity}</Badge>
-									{:else}
-										<Badge color="green" border large>{row.content.severity}</Badge>
-									{/if}
-								</TableBodyCell>
-								<TableBodyCell>{new Date(row.content.timestamp).toLocaleString()}</TableBodyCell>
-								<TableBodyCell>{row.content.component.id}</TableBodyCell>
-								<TableBodyCell tdClass="px-6 py-4 font-medium "
-									><p>{row.content.message}</p></TableBodyCell
-								>
-								<!-- <TableBodyCell tdClass="px-6 py-4 font-medium "
-									><p>{row.content.description}</p></TableBodyCell
-								> -->
-							</TableBodyRow>
-						{/if}
-					{:else}
-						<div class=" font-semibold text-xl text-blue-700 pl-5 pt-3 pb-2">No Alerts!</div>
-					{/each}
-				{/key}
+				{#each rows as row, i}
+					{#if i >= page * 10 - 10 && i <= page * 10}
+						<TableBodyRow>
+							<TableBodyCell>
+								{#if row.content.severity == '1' || row.content.severity == '2'}
+									<Badge color="red" border large>{row.content.severity}</Badge>
+								{:else if row.content.severity == '3' || row.content.severity == '4'}
+									<Badge color="yellow" border large>{row.content.severity}</Badge>
+								{:else}
+									<Badge color="green" border large>{row.content.severity}</Badge>
+								{/if}
+							</TableBodyCell>
+							<TableBodyCell>{new Date(row.content.timestamp).toLocaleString()}</TableBodyCell>
+							<TableBodyCell>{row.content.id}</TableBodyCell>
+							<TableBodyCell tdClass="px-6 py-4 font-medium "
+								><p>{row.content.message}</p></TableBodyCell
+							>
+						</TableBodyRow>
+					{/if}
+				{:else}
+					<div class=" font-semibold text-xl text-blue-700 pl-5 pt-3 pb-2">No Alerts!</div>
+				{/each}
 			</TableBody>
 		</Table>
 	{/if}
