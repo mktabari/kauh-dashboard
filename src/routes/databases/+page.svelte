@@ -194,10 +194,11 @@
 	};
 	let chart;
 	let charCanvas;
+	let colorList = ['dark', 'light', 'light'];
 	let chartPeriod = 'year';
-	let yearColor = 'light';
-	let months6Color = 'blue';
-	let monthColor = 'blue';
+	// let yearColor = 'light';
+	// let months6Color = 'blue';
+	// let monthColor = 'blue';
 	let periodGrowthRate = 0;
 	let dbname;
 	const chartDB = async () => {
@@ -295,14 +296,19 @@
 				yAxisID: 'y',
 				data: data.map((row) => row.size)
 			});
-
 			chart.data.datasets.push({
 				type: 'bar',
 				label: 'growth rate (MB)',
 				yAxisID: 'y1',
-				data: data.map((row, i) => 1024 * (row - (i === 0 ? data[i] : data[i - 1])))
+				data: data
+					.map((row) => row.size)
+					.map(
+						(row, i) =>
+							1024 *
+							(row -
+								(i === 0 ? data.map((row) => row.size)[i] : data.map((row) => row.size)[i - 1]))
+					)
 			});
-
 			periodGrowthRate = parseFloat(
 				data[data.length - 1].size -
 					data[0].size /
@@ -820,36 +826,33 @@
 				{:else if serverChartData}
 					<ButtonGroup class=" absolute right-0 top-0 z-40 -translate-x-1/4  space-x-px">
 						<Button
-							color={yearColor}
-							class="bg-gray-700"
+							color={colorList[0]}
 							on:click={() => {
-								yearColor = 'light';
-								months6Color = 'blue';
-								monthColor = 'blue';
+								colorList[0] = 'dark';
+								colorList[1] = 'light';
+								colorList[2] = 'light';
 								chartPeriod = 'year';
 								updateChart();
 								// chartDB();
 							}}>Year</Button
 						>
 						<Button
-							color={months6Color}
-							class="bg-gray-700"
+							color={colorList[1]}
 							on:click={() => {
-								yearColor = 'blue';
-								months6Color = 'light';
-								monthColor = 'blue';
+								colorList[0] = 'light';
+								colorList[1] = 'dark';
+								colorList[2] = 'light';
 								chartPeriod = '6months';
 								updateChart();
 								// chartDB();
 							}}>6 Months</Button
 						>
 						<Button
-							color={monthColor}
-							class="bg-gray-700"
+							color={colorList[2]}
 							on:click={() => {
-								yearColor = 'blue';
-								months6Color = 'blue';
-								monthColor = 'light';
+								colorList[0] = 'light';
+								colorList[1] = 'light';
+								colorList[2] = 'dark';
 								chartPeriod = 'month';
 								updateChart();
 								// chartDB();

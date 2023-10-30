@@ -23,13 +23,19 @@
 					status = false;
 				}
 			});
-		if (!server.memory) {
-			serverUpdated = true;
-			await getMemory();
-		}
-		if (!server.cpu) {
-			serverUpdated = true;
-			await getCpu();
+		if (
+			!server.tags.find((tag) => {
+				return tag.name === 'ILOM' && tag.done === true;
+			})
+		) {
+			if (!server.memory) {
+				serverUpdated = true;
+				await getMemory();
+			}
+			if (!server.cpu) {
+				serverUpdated = true;
+				await getCpu();
+			}
 		}
 		if (serverUpdated) {
 			updateServer();

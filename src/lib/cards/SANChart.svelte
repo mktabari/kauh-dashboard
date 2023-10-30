@@ -6,7 +6,7 @@
 		series: [data.content.sizeUsed, data.content.sizeFree],
 		colors: ['#7FB3D5', '#82E0AA'],
 		chart: {
-			height: 320,
+			height: 250,
 			width: '100%',
 			type: 'donut'
 		},
