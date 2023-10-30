@@ -31,7 +31,7 @@
 					class=" text-md flex flex-col overflow-hidden rounded-xl bg-gray-200 text-center font-extrabold text-gray-500 dark:bg-gray-800 dark:text-gray-400"
 					class:order-first={server.mountPints.length >= 4}
 				>
-					<div class=" bg-gray-300 pt-1">{server.name}</div>
+					<div class=" bg-gray-300 pt-1 dark:bg-gray-500 dark:text-gray-300">{server.name}</div>
 					<div class="flex flex-row gap-0">
 						{#each server.mountPints as mount}
 							<DBMountChart data={mount} />

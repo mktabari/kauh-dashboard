@@ -1,6 +1,8 @@
 <script>
 	import { Chart } from 'flowbite-svelte';
 	export let data;
+
+	const textColor = localStorage.getItem('color-theme') === 'light' ? '#373d3f' : '#f0eeeb';
 	let i = 0;
 	const options = {
 		series: [data.content.sizeUsed, data.content.sizeFree],
@@ -21,6 +23,7 @@
 						show: true,
 						name: {
 							show: true,
+							color: textColor,
 							fontFamily: 'Inter, sans-serif',
 							offsetY: 20
 						},
@@ -29,6 +32,7 @@
 							show: true,
 							label: 'Total Space',
 							fontFamily: 'Inter, sans-serif',
+							color: textColor,
 							formatter: function (w) {
 								const sum = w.globals.seriesTotals.reduce((a, b) => {
 									return a + b;
@@ -38,6 +42,7 @@
 						},
 						value: {
 							show: true,
+							color: textColor,
 							fontFamily: 'Inter, sans-serif',
 							offsetY: -20,
 							formatter: function (value) {
