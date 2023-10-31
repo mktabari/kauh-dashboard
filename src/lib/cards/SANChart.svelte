@@ -8,7 +8,7 @@
 		series: [data.content.sizeUsed, data.content.sizeFree],
 		colors: ['#7FB3D5', '#82E0AA'],
 		chart: {
-			height: 250,
+			height: 270,
 			width: '100%',
 			type: 'donut'
 		},
@@ -65,7 +65,11 @@
 		},
 		legend: {
 			position: 'bottom',
-			fontFamily: 'Inter, sans-serif'
+			fontFamily: 'Inter, sans-serif',
+			labels: {
+				colors: textColor,
+				useSeriesColors: false
+			}
 		},
 		yaxis: {
 			labels: {

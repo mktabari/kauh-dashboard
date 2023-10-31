@@ -7,6 +7,7 @@
 	import DBTrans from '$lib/cards/DBTrans.svelte';
 	import DBMount from '$lib/cards/DBMount.svelte';
 	import SAN from '$lib/cards/SAN.svelte';
+	import DBUpDownNew from '$lib/cards/DBUpDownNew.svelte';
 
 	export let data;
 
@@ -28,7 +29,7 @@
 		<SAN {aClass} />
 	</div>
 	<div class=" col-span-2 w-full">
-		<DBUpDown servers={UDServers} {aClass} />
+		<DBUpDownNew servers={UDServers} {aClass} />
 	</div>
 	<div class=" col-span-2 w-full">
 		<DBSqlTime {aClass} />

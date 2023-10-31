@@ -11,3 +11,5 @@ if (
 ) {
 	console.log(true);
 }
+const a = 'asdfgh';
+console.log(a[1]);

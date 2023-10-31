@@ -8,7 +8,8 @@
 	let charCanvas;
 	onMount(async () => {
 		if (chart) chart.destroy();
-		let bgc = '#6b7280';
+		// let bgc = '#6b7280';
+		let bgc = '#7FB3D5';
 		if (parseInt(data[2].replace('%', '')) >= 90) {
 			bgc = '#FF6384';
 		}
@@ -24,7 +25,7 @@
 					}
 				]
 			},
-			options: { plugins: { legend: { display: false } } }
+			options: { cutout: '70%', plugins: { legend: { display: false } } }
 		});
 	});
 </script>
