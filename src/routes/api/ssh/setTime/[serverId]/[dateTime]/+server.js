@@ -16,7 +16,11 @@ export const GET = async (requwstEvent) => {
 		let setDateTime;
 		switch (brand) {
 			case 'windows':
-				setDateTime = 'powershell get-date -format "{dd/MM/yyyy HH:mm:ss}"';
+				setDateTime = `c:/Windows/System32/WindowsPowerShell/v1.0/powershell Set-Date -Date "${new Date().getFullYear()}-${
+					dateTime[0]
+				}${dateTime[1]}-${dateTime[2]}${dateTime[3]}T${dateTime[4]}${dateTime[5]}:${dateTime[6]}${
+					dateTime[7]
+				}"`;
 				break;
 			default:
 				setDateTime = 'date ' + dateTime;

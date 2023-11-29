@@ -74,7 +74,7 @@ group by a.STATUS`;
 export const dbMachine = `select a.MACHINE,count(*) c
 from v$session a 
 group by a.MACHINE
-having count(*)>5
+having count(*)>10
 order by count(*) desc`;
 export const dbSize = `select round(sum(BYTES)/1024/1024/1024) BYTES
 from dba_data_files`;
@@ -135,3 +135,133 @@ WHERE b.ses_addr = a.saddr
 AND d.name = 'db_block_size'
 AND e.ADDR = a.PADDR
 ORDER BY 4`;
+
+export const dbVacXUser = `SELECT DISTINCT to_number(p.employee_number) EMPNUM,
+p.full_name FN,
+kauh_hr_pkg.JOB(a.JOB_ID) JOB,
+--to_char(s.actual_termination_date,'dd/mm/rrrr') TD,
+--a.assignment_status_type_id,
+u.appl_user_id AUI,
+u.func_role_id PI,
+(SELECT count(*)
+  FROM oa_appt@ISOFT T
+  WHERE t.practitioner_id=u.func_role_id
+  and appt_date>=trunc(sysdate)) AP,
+p.current_employee_flag F
+FROM per_all_people_f p, per_all_assignments_f a, sm_appl_user@isoft u
+where p.person_id = a.PERSON_ID
+and trunc(sysdate) between p.effective_start_date and
+p.effective_end_date
+and (((select s.actual_termination_date
+from per_periods_of_service s
+where a.PERIOD_OF_SERVICE_ID = s.period_of_service_id) between
+a.effective_start_date and a.effective_end_date and
+p.current_employee_flag IS NULL) or
+(a.assignment_status_type_id in (2095/*Vacation incubation\Unpaid Leave*/, 1095/*Unpaid Leave*/) and
+trunc(sysdate) between a.effective_start_date and
+a.effective_end_date))
+and p.employee_number = u.employee_no
+and u.eff_status = 'E'
+and u.func_role_id is not null
+--and rownum <10
+order by 6 desc, 1
+`;
+
+export const dbNotVacXUser = `SELECT DISTINCT to_number(p.employee_number) EMPNUM,
+p.full_name FN,
+kauh_hr_pkg.JOB(a.JOB_ID) JOB,
+--to_char(s.actual_termination_date,'dd/mm/rrrr') TD,
+--a.assignment_status_type_id,
+u.appl_user_id AUI,
+u.func_role_id PI
+FROM per_all_people_f p, per_all_assignments_f a, sm_appl_user@isoft u
+where p.person_id = a.PERSON_ID
+and trunc(sysdate) between p.effective_start_date and
+p.effective_end_date 
+and a.assignment_status_type_id =1 
+and trunc(sysdate) between a.effective_start_date and
+a.effective_end_date
+and p.employee_number = u.employee_no
+and u.eff_status <> 'E'
+and u.func_role_id is not null
+--and rownum <10
+order by  1
+`;
+export const srvMachine = `select count(*) c
+from v$session a where upper(a.MACHINE)=upper(:app_srv)`;
+export const smsHeat = `select trunc(sysdate - day_map.d) date_,
+to_char(trunc(sysdate - day_map.d), 'day') day,
+day_map.d d,
+day_map.h h,
+nvl(msg_log.c, 0) c
+from (select day.d d, hour.h h, trunc(sysdate - day.d) || hour.h con_code
+   from (select rownum - 1 h
+           from (select 4 a
+                   from dual
+                 union all
+                 select 3 a
+                   from dual
+                 union all
+                 select 2 a
+                   from dual
+                 union all
+                 select 1 a
+                   from dual
+                 union all
+                 select 0 a
+                   from dual),
+                (select 5 a
+                   from dual
+                 union all
+                 select 4 a
+                   from dual
+                 union all
+                 select 3 a
+                   from dual
+                 union all
+                 select 2 a
+                   from dual
+                 union all
+                 select 1 a
+                   from dual)
+          where rownum < 25) hour,
+        (select rownum  d
+           from (select 4 a
+                   from dual
+                 union all
+                 select 3 a
+                   from dual
+                 union all
+                 select 2 a
+                   from dual
+                 union all
+                 select 1 a
+                   from dual
+                 union all
+                 select 0 a
+                   from dual),
+                (select 5 a
+                   from dual
+                 union all
+                 select 4 a
+                   from dual
+                 union all
+                 select 3 a
+                   from dual
+                 union all
+                 select 2 a
+                   from dual
+                 union all
+                 select 1 a
+                   from dual)
+          where rownum < 8) day) day_map,
+(select trunc(a.request_date) d,
+        to_char(a.request_date, 'hh24') h,
+        count(*) c,
+        trunc(a.request_date) ||
+        to_number(to_char(a.request_date, 'hh24')) con_code
+   from kauh_sms_log a
+  where a.request_date > trunc(sysdate) - 7
+  group by trunc(a.request_date), to_char(a.request_date, 'hh24')) msg_log
+where day_map.con_code = msg_log.con_code(+)
+order by day_map.d, day_map.h`;

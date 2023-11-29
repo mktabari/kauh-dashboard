@@ -2,6 +2,8 @@ import { Client } from 'ssh2';
 import { getServerConfig } from '$lib/modules/myServers.js';
 import { json } from '@sveltejs/kit';
 export const GET = async (requwstEvent) => {
+	let { setHeaders } = requwstEvent;
+	setHeaders({ 'Cache-Control': 'public, max-age=86400' });
 	const { params } = requwstEvent;
 	const { serverId, mountPoint } = params;
 	try {

@@ -8,6 +8,7 @@
 	import DBMount from '$lib/cards/DBMount.svelte';
 	import SAN from '$lib/cards/SAN.svelte';
 	import DBUpDownNew from '$lib/cards/DBUpDownNew.svelte';
+	import SMSChart from '$lib/cards/SMSChart.svelte';
 
 	export let data;
 
@@ -17,7 +18,6 @@
 </script>
 
 <DBUpLine />
-
 <div class="grid grid-cols-2 gap-3 pr-3">
 	<div class=" col-span-2 w-full">
 		<DBMount {aClass} />
@@ -28,8 +28,11 @@
 	<div class=" h-full w-full">
 		<SAN {aClass} />
 	</div>
-	<div class=" col-span-2 w-full">
+	<div class=" w-full">
 		<DBUpDownNew servers={UDServers} {aClass} />
+	</div>
+	<div class=" w-full">
+		<SMSChart {aClass} />
 	</div>
 	<div class=" col-span-2 w-full">
 		<DBSqlTime {aClass} />

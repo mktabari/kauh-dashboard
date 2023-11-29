@@ -133,7 +133,9 @@
 			IP: {server.ip}
 			<Copy id="ip{server.id}" value={server.ip} name="IP" />
 		</div>
-		{#if server.brand !== 'emc'}
+		{#if server.brand !== 'emc' && !server.tags.find((s) => {
+				return s.name === 'ILOM' && s.done === true;
+			})}
 			<div class="relative flex flex-row pt-2 font-semibold">
 				<div class=" h-6 w-6">
 					<span class="material-symbols-outlined absolute"> memory </span>

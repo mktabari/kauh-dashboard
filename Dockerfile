@@ -4,7 +4,7 @@ RUN apt-get update
 RUN apt-get -y upgrade 
 RUN apt-get -y dist-upgrade
 RUN apt-get install -y alien libaio1 iputils-ping
-# lien libaio1 for oracle : iputils-ping for ping : openssl for prosma
+# alien libaio1 for oracle : iputils-ping for ping : openssl for prisma
 ADD oracle-instantclient*.rpm /tmp/
 RUN alien -i --scripts oracle-instantclient*.rpm 
 RUN rm -f oracle-instantclient*.rpm && apt-get -y autoremove && apt-get -y clean

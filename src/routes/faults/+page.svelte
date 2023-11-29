@@ -42,7 +42,6 @@
 			.then(({ apiData }) => {
 				data = apiData;
 				san = data[0].name;
-				// alert = data[0].alert;
 				rows = data[0].alert;
 				spin = false;
 				data.forEach((element, i) => {
@@ -143,7 +142,11 @@
 								{/if}
 							</TableBodyCell>
 							<TableBodyCell>{new Date(row.content.timestamp).toLocaleString()}</TableBodyCell>
-							<TableBodyCell>{row.content.component.id}</TableBodyCell>
+							{#if row.content.component}
+								<TableBodyCell>{row.content.component.id}</TableBodyCell>
+							{:else}
+								<TableBodyCell />
+							{/if}
 							<TableBodyCell tdClass="px-6 py-4 font-medium "
 								><p>{row.content.message}</p></TableBodyCell
 							>

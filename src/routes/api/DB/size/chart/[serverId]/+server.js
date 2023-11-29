@@ -9,7 +9,8 @@ export const GET = async (requwstEvent) => {
 	if (dbName && dbSizeGroup) {
 		return json({
 			apiData: await prisma.DbSize.findMany({
-				where: { dbName, dbSizeGroup }
+				where: { dbName, dbSizeGroup },
+				distinct: ['size']
 			})
 		});
 	}

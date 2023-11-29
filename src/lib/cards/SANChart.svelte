@@ -8,7 +8,7 @@
 		series: [data.content.sizeUsed, data.content.sizeFree],
 		colors: ['#7FB3D5', '#82E0AA'],
 		chart: {
-			height: 270,
+			height: 250,
 			width: '100%',
 			type: 'donut'
 		},
@@ -109,8 +109,8 @@
 	}
 </script>
 
-<div class=" rounded-xl pb-8">
+<div class=" rounded-xl pb-1">
 	<div class="relative h-full w-full">
-		<Chart {options} class="pt-10" />
+		<Chart {options} class="pt-1" />
 	</div>
 </div>

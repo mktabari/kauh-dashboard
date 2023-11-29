@@ -24,7 +24,7 @@ export const GET = async (requwstEvent) => {
 					const { rows } = result;
 					let fileId = rows[0].ID;
 					let fileName = rows[0].FILENAME;
-					console.log(fileId, fileName);
+					// console.log(fileId, fileName);
 					let pathArray = fileName.split('/');
 					let i = 1;
 					let path = '';
@@ -32,14 +32,19 @@ export const GET = async (requwstEvent) => {
 						path = path + '/' + pathArray[i];
 						i++;
 					}
-					await connection.execute(
-						`ALTER TABLESPACE ${tsName} ADD DATAFILE '${path}/${tsName}_${fileId}.dbf' SIZE 1024M autoextend on`
-					);
-					// console.log(
-					// 	`ALTER TABLESPACE ${tsName} ADD DATAFILE '${path}/${tsName}_${fileId}.dbf' SIZE 1024M autoextend on`
-					// );
-					await connection.close();
-					resolve({ status: 'ok' });
+					try {
+						await connection.execute(
+							`ALTER TABLESPACE ${tsName} ADD DATAFILE '${path}/${tsName}_${fileId}.dbf' SIZE 1024M autoextend on`
+						);
+						await connection.close();
+						resolve('ok');
+					} catch (error) {
+						// console.log(
+						// 	`ALTER TABLESPACE ${tsName} ADD DATAFILE '${path}/${tsName}_${fileId}.dbf' SIZE 1024M autoextend on`
+						// );
+						await connection.close();
+						resolve('error');
+					}
 				})
 			});
 		}

@@ -21,9 +21,9 @@
 		Accordion,
 		AccordionItem,
 		Toast,
-		Toggle,
-		Checkbox
+		Toggle
 	} from 'flowbite-svelte';
+	import { CheckCircleSolid, CloseCircleSolid } from 'flowbite-svelte-icons';
 	import { v4 as uuid } from 'uuid';
 	import BackupLogList from '$lib/cards/BackupLogList.svelte';
 	import {
@@ -32,7 +32,7 @@
 		activeClasses,
 		defaultClass
 	} from '$lib/generalsStyle/index';
-	import DbCard from '$lib/cards/DBCard.svelte';
+	import DBCardNew from '$lib/cards/DBCardNew.svelte';
 
 	import ServerBG from '$lib/buttonGroup/ServerBG.svelte';
 	export let data;
@@ -115,36 +115,42 @@
 			);
 		}
 	};
+	let ts_tost_message;
+	let ts_tost_color;
 	const handleAddDatafile = async (ts, SERVERID) => {
 		const response = await fetch(`/api/DB/ts/${SERVERID}/${ts}`);
-		if (!response.ok) {
-			console.log('problem');
-
-			return;
-		} else {
-			try {
-				toastTrigger();
-			} catch (error) {
-				console.log(error);
+		if (response.ok) {
+			const data = await response.json();
+			if (data.apiData === 'error') {
+				ts_tost_message = 'Unable To Add Data File.';
+				ts_tost_color = 'red';
+			} else {
+				ts_tost_message = 'Data File Added Successfully.';
+				ts_tost_color = 'green';
 			}
+			tsToastTrigger();
+		} else {
+			ts_tost_message = 'Error in Response.';
+			ts_tost_color = 'red';
+			tsToastTrigger();
 		}
 	};
 
-	let toastShow = false;
-	let toastCounter = 0;
-	const toastTrigger = () => {
-		toastShow = true;
-		toastCounter = 6;
-		toastTimeout();
+	let tsToastShow = false;
+	let tsToastCounter = 0;
+	const tsToastTrigger = () => {
+		tsToastShow = true;
+		tsToastCounter = 6;
+		tsToastTimeout();
 	};
 	const killToastTrigger = () => {
 		killToastShow = true;
 		killToastCounter = 6;
 		killToastTimeout();
 	};
-	const toastTimeout = () => {
-		if (--toastCounter > 0) return setTimeout(toastTimeout, 1000);
-		toastShow = false;
+	const tsToastTimeout = () => {
+		if (--tsToastCounter > 0) return setTimeout(tsToastTimeout, 1000);
+		tsToastShow = false;
 	};
 	const killToastTimeout = () => {
 		if (--killToastCounter > 0) return setTimeout(killToastTimeout, 1000);
@@ -330,46 +336,26 @@
 	bind:open={killToastShow}
 >
 	<svelte:fragment slot="icon">
-		<svg
-			aria-hidden="true"
-			class="h-5 w-5"
-			fill="currentColor"
-			viewBox="0 0 20 20"
-			xmlns="http://www.w3.org/2000/svg"
-			><path
-				fill-rule="evenodd"
-				d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-				clip-rule="evenodd"
-			/></svg
-		>
-		<span class="sr-only">Warning icon</span>
+		<CloseCircleSolid class="h-5 w-5" />
 	</svelte:fragment>
 	Unable to kill session.
 </Toast>
+
 <Toast
 	class="z-50"
 	transition={fly}
 	params={{ y: 200 }}
-	color="green"
+	color={ts_tost_color}
 	position="bottom-right"
-	bind:open={toastShow}
->
-	<svelte:fragment slot="icon">
-		<svg
-			aria-hidden="true"
-			class="h-5 w-5"
-			fill="currentColor"
-			viewBox="0 0 20 20"
-			xmlns="http://www.w3.org/2000/svg"
-			><path
-				fill-rule="evenodd"
-				d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-				clip-rule="evenodd"
-			/></svg
-		>
-		<span class="sr-only">Check icon</span>
+	bind:open={tsToastShow}
+	><svelte:fragment slot="icon">
+		{#if ts_tost_color === 'red'}
+			<CloseCircleSolid class="h-5 w-5" />
+			<span class="sr-only">Error icon</span>{:else}
+			<CheckCircleSolid class="h-5 w-5" />
+			<span class="sr-only">Check icon</span>{/if}
 	</svelte:fragment>
-	Data File Added successfully.
+	{ts_tost_message}
 </Toast>
 <Tabs style="none" {contentClass} {inactiveClasses} {activeClasses} {defaultClass}>
 	<TabItem open>
@@ -380,7 +366,7 @@
 		<div class="flex w-full flex-row flex-wrap gap-2">
 			{#each servers as server, i}
 				<div class="w-full" in:fly={{ x: 500, easing: circInOut, delay: 150 * i }}>
-					<DbCard {server} />
+					<DBCardNew {server} />
 				</div>
 			{/each}
 		</div>
@@ -610,8 +596,8 @@
 												labelInsideClass="bg-blue-600 text-blue-100 text-base font-medium text-center p-1 leading-none rounded-full w-96"
 											/></TableBodyCell
 										>
-										<TableBodyCell
-											>{#if row.REMAINING < 3}
+										<TableBodyCell>
+											{#if row.REMAINING < 3}
 												<button
 													disabled={!tableSpaceAdd ||
 														tablespaceButtonClicked.filter((item) => {
@@ -627,8 +613,8 @@
 													}}
 													>Add Data File
 												</button>
-											{/if}</TableBodyCell
-										>
+											{/if}
+										</TableBodyCell>
 									</TableBodyRow>
 								{:else}
 									<div class=" font-semibold text-blue-700 p-5 w-full">No Match!</div>

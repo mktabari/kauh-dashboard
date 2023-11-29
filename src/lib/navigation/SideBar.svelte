@@ -41,12 +41,7 @@
 			></SidebarGroup
 		>
 		<SidebarGroup border {borderClass}>
-			<SidebarItem label="Servers" href="/servers">
-				<svelte:fragment slot="icon"
-					><span class="material-symbols-outlined"> computer </span></svelte:fragment
-				>
-			</SidebarItem>
-			<SidebarItem label="DB" href="/databases">
+			<SidebarItem label="Databases" href="/databases">
 				<svelte:fragment slot="icon"
 					><span class="material-symbols-outlined"> database </span></svelte:fragment
 				>
@@ -65,6 +60,11 @@
 			<SidebarItem label="ERP" href="/erp">
 				<svelte:fragment slot="icon"
 					><span class="material-symbols-outlined"> apps </span></svelte:fragment
+				>
+			</SidebarItem>
+			<SidebarItem label="APP SRV" href="/apps">
+				<svelte:fragment slot="icon"
+					><span class="material-symbols-outlined"> dns </span></svelte:fragment
 				>
 			</SidebarItem>
 		</SidebarGroup>
@@ -88,9 +88,21 @@
 			</div>
 		</SidebarGroup>
 		<SidebarGroup border {borderClass}>
+			<SidebarItem label="Servers" href="/servers">
+				<svelte:fragment slot="icon"
+					><span class="material-symbols-outlined"> computer </span></svelte:fragment
+				>
+			</SidebarItem>
 			<SidebarItem label="Tags" href="/tags">
 				<svelte:fragment slot="icon">
 					<span class="material-symbols-outlined"> label </span>
+				</svelte:fragment>
+			</SidebarItem>
+		</SidebarGroup>
+		<SidebarGroup border {borderClass}>
+			<SidebarItem label="Users" href="/users">
+				<svelte:fragment slot="icon">
+					<span class="material-symbols-outlined"> person </span>
 				</svelte:fragment>
 			</SidebarItem>
 		</SidebarGroup>

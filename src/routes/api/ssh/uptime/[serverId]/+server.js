@@ -13,7 +13,8 @@ if (process.argv[2] === 'child') {
 	let getDateTime;
 	switch (process.argv[3]) {
 		case 'windows':
-			getDateTime = 'powershell get-date -format "{dd/MM/yyyy HH:mm:ss}"';
+			getDateTime =
+				'c:/Windows/System32/WindowsPowerShell/v1.0/powershell get-date -format "{dd/MM/yyyy HH:mm:ss}"';
 			break;
 		default:
 			getDateTime = "date '+%d/%m/%Y %H:%M:%S'";

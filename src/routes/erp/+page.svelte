@@ -12,12 +12,15 @@
 		Skeleton,
 		TextPlaceholder,
 		StepIndicator,
-		Spinner
+		Spinner,
+		Modal,
+		Button
 	} from 'flowbite-svelte';
 	export let data;
 	let { servers } = data;
 	let spin = false;
 	let skeleton = false;
+	let popupModal = false;
 	let currentStep = 1;
 	let steps = [
 		'Waiting for Restart',
@@ -61,7 +64,6 @@ Stop ERP APP log
 
 			currentStep = 3;
 
-			gServerId = serverId;
 			result += `
 
 Stop ERP DB log
@@ -171,70 +173,26 @@ Restart ERP Completed
 	afterUpdate(() => {
 		scrolpre.scrollTo(0, scrolpre.scrollHeight);
 	});
-	const getStream1 = async (serverId) => {
-		result = '';
-		skeleton = true;
-		spin = true;
-
-		currentStep = 2;
-		let response = await fetch(`/api/ssh/erp/${serverId}/stopApp`)
-			.then((response) => response.json())
-			.then(({ apiData }) => {
-				skeleton = false;
-				result = `Stop ERP APP log
-`;
-				result += `================
-				
-`;
-				result += apiData;
-			});
-
-		currentStep = 3;
-		response = await fetch(`/api/ssh/erp/${serverId}/stopDB`)
-			.then((response) => response.json())
-			.then(({ apiData }) => {
-				result += `
-
-Stop ERP DB log
-`;
-				result += `===============
-
-`;
-				result += apiData;
-			});
-
-		currentStep = 4;
-		response = await fetch(`/api/ssh/erp/${serverId}/startDB`)
-			.then((response) => response.json())
-			.then(({ apiData }) => {
-				result += `
-
-Start ERP DB log
-`;
-				result += `================
-
-`;
-				result += apiData;
-			});
-
-		currentStep = 5;
-		response = await fetch(`/api/ssh/erp/${serverId}/startApp`)
-			.then((response) => response.json())
-			.then(({ apiData }) => {
-				result += `
-
-Start ERP APP log
-`;
-				result += `=================
-
-`;
-				result += apiData;
-			});
-		currentStep = 6;
-		spin = false;
-	};
 </script>
 
+<Modal bind:open={popupModal} size="xs" autoclose color="blue">
+	<div class="text-center">
+		<span class="material-symbols-outlined md-48 font-extrabold text-gray-500 dark:text-gray-400">
+			error
+		</span>
+		<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+			Are you sure you want to restart ERP?
+		</h3>
+		<Button
+			color="blue"
+			class="mr-2"
+			on:click={() => {
+				getStream(gServerId);
+			}}>Yes, I'm sure</Button
+		>
+		<Button color="alternative">No, cancel</Button>
+	</div>
+</Modal>
 <Tabs
 	style="none"
 	contentClass={contentClass + ' h-full'}
@@ -244,7 +202,7 @@ Start ERP APP log
 >
 	<TabItem open>
 		<div slot="title" class="flex items-center gap-2">
-			<span class="material-symbols-outlined"> extension </span>
+			<span class="material-symbols-outlined"> apps </span>
 			ERP Servers
 		</div>
 		<div class=" h-200">
@@ -253,7 +211,8 @@ Start ERP APP log
 				{#each servers as server (server.id)}
 					<button
 						on:click={() => {
-							getStream(server.id);
+							gServerId = server.id;
+							popupModal = true;
 						}}
 						class=" font-Bruno rounded bg-gray-200 px-5 py-2 text-center font-extrabold uppercase tracking-widest text-red-600 underline ring-1 hover:cursor-pointer hover:bg-gray-300 hover:text-gray-700"
 					>

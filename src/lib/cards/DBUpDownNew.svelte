@@ -5,38 +5,7 @@
 	export let aClass;
 	let datasets = [];
 	let s = false;
-	$: options = {
-		series: datasets,
-		xaxis: {
-			type: 'datetime'
-		},
-		yaxis: {
-			labels: {
-				formatter: (value) => {
-					if (value === 1) {
-						return 'Up';
-					} else if (value === 0) {
-						return 'Down';
-					} else return '';
-				}
-			}
-		},
-		chart: {
-			type: 'line',
-			height: 270
-		},
-		stroke: {
-			curve: 'stepline'
-		},
-		dataLabels: {
-			enabled: false
-		},
-		markers: {
-			hover: {
-				sizeOffset: 4
-			}
-		}
-	};
+	let options;
 	onMount(async () => {
 		servers.forEach((element) => {
 			fetch('/api/DB/ud/' + element.id)
@@ -56,10 +25,47 @@
 							{ x: new Date(), y: 1 }
 						]
 					});
+					options = {
+						series: datasets,
+						xaxis: {
+							type: 'datetime'
+						},
+						yaxis: {
+							labels: {
+								formatter: (value) => {
+									if (value === 1) {
+										return 'Up';
+									} else if (value === 0) {
+										return 'Down';
+									} else return '';
+								}
+							}
+						},
+						chart: {
+							type: 'line',
+							height: 270
+						},
+						grid: {
+							show: false
+						},
+						stroke: {
+							curve: 'stepline'
+						},
+						dataLabels: {
+							enabled: false
+						},
+						markers: {
+							hover: {
+								sizeOffset: 4
+							}
+						},
+						legend: {
+							fontSize: '16px'
+						}
+					};
+					s = true;
 				});
 		});
-		console.log(datasets);
-		s = true;
 	});
 </script>
 
