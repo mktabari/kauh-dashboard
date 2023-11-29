@@ -54,6 +54,7 @@
 		color = serverStatus ? '#0ab23d' : '#FF3E00';
 		spin = true;
 		disabled = true;
+		count = 0;
 		let action = serverStatus ? 'start' : 'stop';
 		fetch(`/api/ssh/app/${server.id}/${action}`)
 			.then((response) => response.json())
