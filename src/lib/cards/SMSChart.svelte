@@ -92,8 +92,12 @@
 						position: 'bottom',
 						fontSize: '16px'
 					},
+					grid: {
+						show: false
+					},
 					plotOptions: {
 						heatmap: {
+							useFillColorAsStroke: localStorage.getItem('color-theme') !== 'light',
 							colorScale: {
 								ranges: [
 									{
@@ -132,7 +136,7 @@
 
 <div class={aClass}>
 	<div
-		class="flex flex-row justify-between bg-gray-100 pl-5 text-2xl font-extrabold text-gray-500 dark:text-gray-400"
+		class="flex flex-row justify-between bg-gray-100 bg-transparent pl-5 text-2xl font-extrabold text-gray-500 dark:text-gray-400"
 	>
 		<span>SMS HeatMap</span>
 		<span class="pr-5 text-sm">Total number of SMS is {total}</span>
