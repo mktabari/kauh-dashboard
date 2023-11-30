@@ -6,7 +6,7 @@ oracledb.initOracleClient();
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 export const GET = async (requwstEvent) => {
 	const { params, setHeaders } = requwstEvent;
-	setHeaders({ 'Cache-Control': 'public, max-age=86400' });
+	setHeaders({ 'Cache-Control': 'public, max-age=43200' });
 	const { serverId } = params;
 	try {
 		let { ip, db, dbName, dbPort, dbUser, dbPassword } = getServerConfig(serverId);

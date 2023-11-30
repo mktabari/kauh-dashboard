@@ -1,7 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 	import { Spinner, Chart } from 'flowbite-svelte';
-	export let aClass;
+	let aClass = 'h-full rounded-xl bg-gray-100 px-3 pt-3 dark:border-gray-700 dark:bg-gray-900';
 	let data = [];
 	let spin = true;
 	let options;
@@ -88,7 +88,7 @@
 						]
 					},
 					legend: {
-						show: true,
+						show: false,
 						position: 'bottom',
 						fontSize: '16px'
 					},
@@ -132,7 +132,7 @@
 
 <div class={aClass}>
 	<div
-		class="flex flex-row justify-between bg-gray-100 pb-3 pl-5 text-2xl font-extrabold text-gray-500 dark:text-gray-400"
+		class="flex flex-row justify-between bg-gray-100 pl-5 text-2xl font-extrabold text-gray-500 dark:text-gray-400"
 	>
 		<span>SMS HeatMap</span>
 		<span class="pr-5 text-sm">Total number of SMS is {total}</span>
@@ -143,7 +143,7 @@
 				<Spinner size={8} />
 			</div>
 		{:else}
-			<Chart {options} class="pt-1" />
+			<Chart {options} />
 		{/if}
 	</div>
 </div>

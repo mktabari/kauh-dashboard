@@ -3,7 +3,7 @@ import { json } from '@sveltejs/kit';
 import { prisma } from '$lib/server/prisma';
 export const GET = async (requwstEvent) => {
 	const { params, setHeaders } = requwstEvent;
-	setHeaders({ 'Cache-Control': 'public, max-age=86400' });
+	setHeaders({ 'Cache-Control': 'public, max-age=43200' });
 	const { serverId } = params;
 	let { dbName, dbSizeGroup } = getServerConfig(serverId);
 	if (dbName && dbSizeGroup) {

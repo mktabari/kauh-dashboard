@@ -4,9 +4,9 @@ import { dbVersion } from '$lib/db/index.js';
 import oracledb from 'oracledb';
 oracledb.initOracleClient();
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
-export const GET = async (requwstEvent) => {
-	const { params } = requwstEvent;
+export const GET = async ({ params, setHeaders }) => {
 	const { serverId } = params;
+	setHeaders({ 'Cache-Control': 'public, max-age=604800' });
 	try {
 		let { ip, db, dbName, dbPort, dbUser, dbPassword } = getServerConfig(serverId);
 		if (db === 'true') {

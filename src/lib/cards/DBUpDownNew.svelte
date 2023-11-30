@@ -2,7 +2,7 @@
 	import { Chart } from 'flowbite-svelte';
 	import { onMount } from 'svelte';
 	export let servers;
-	export let aClass;
+	let aClass = 'h-full rounded-xl bg-gray-100 px-3 pt-3 p dark:border-gray-700 dark:bg-gray-900';
 	let datasets = [];
 	let s = false;
 	let options;
@@ -43,7 +43,7 @@
 						},
 						chart: {
 							type: 'line',
-							height: 270
+							height: 265
 						},
 						grid: {
 							show: false
@@ -60,7 +60,7 @@
 							}
 						},
 						legend: {
-							fontSize: '16px'
+							fontSize: '12px'
 						}
 					};
 					s = true;
@@ -70,12 +70,12 @@
 </script>
 
 <div class={aClass}>
-	<div class="pb-3 pl-5 text-2xl font-extrabold text-gray-500 dark:text-gray-400">
+	<div class=" pl-5 text-2xl font-extrabold text-gray-500 dark:text-gray-400">
 		Database Availability
 	</div>
 	<div class="w-full">
 		{#if s}
-			<Chart {options} class="pt-1" />
+			<Chart {options} />
 		{/if}
 	</div>
 </div>

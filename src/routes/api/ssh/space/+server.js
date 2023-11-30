@@ -71,7 +71,7 @@ if (process.argv[2] === 'child') {
 	process.send(mySshPromis);
 }
 export const GET = async ({ setHeaders }) => {
-	setHeaders({ 'Cache-Control': 'public, max-age=300' });
+	setHeaders({ 'Cache-Control': 'public, max-age=43200' });
 	return json({
 		apiData: await new Promise((resolve) => {
 			const child = fork(fileURLToPath(import.meta.url), ['child']);

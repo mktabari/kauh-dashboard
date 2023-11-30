@@ -1,10 +1,8 @@
 import { Client } from 'ssh2';
 import { getServerConfig } from '$lib/modules/myServers.js';
 import { json } from '@sveltejs/kit';
-export const GET = async (requwstEvent) => {
-	let { setHeaders } = requwstEvent;
-	setHeaders({ 'Cache-Control': 'public, max-age=86400' });
-	const { params } = requwstEvent;
+export const GET = async ({ setHeaders, params }) => {
+	setHeaders({ 'Cache-Control': 'public, max-age=43200' });
 	const { serverId, mountPoint } = params;
 	try {
 		let { ip, username, password } = getServerConfig(serverId);

@@ -21,7 +21,7 @@ if (process.argv[2] === 'child') {
 	}
 }
 export const GET = async ({ params, setHeaders }) => {
-	setHeaders({ 'Cache-Control': 'public, max-age=86400' });
+	setHeaders({ 'Cache-Control': 'public, max-age=43200' });
 	const { serverId } = params;
 	let { ip, db, dbName, dbUser, dbPassword } = getServerConfig(serverId);
 	return json({

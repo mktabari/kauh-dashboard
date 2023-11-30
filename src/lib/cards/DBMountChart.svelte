@@ -12,8 +12,11 @@
 		let bgc = '#7FB3D5';
 		let rbgc = '#82E0AA';
 		if (parseInt(data[2].replace('%', '')) >= 90) {
-			bgc = '#de7c9f';
-			rbgc = '#F9FAFB';
+			// bgc = '#de7c9f';
+			// bgc = '#FF8370';
+			bgc = '#f58b7a';
+			// rbgc = '#F9FAFB';
+			rbgc = '#f7ee65';
 		}
 		chart = new Chart(charCanvas, {
 			type: 'doughnut',
@@ -32,10 +35,10 @@
 	});
 </script>
 
-<div class=" h-28 w-28 rounded-xl pb-8 text-sm">
+<div class=" h-24 w-24 rounded-xl pb-8 text-xs">
 	{data[3].toUpperCase()}
 	<div class="relative h-full w-full">
-		<span class="absolute -translate-x-1/2 translate-y-7">{data[2]}</span>
+		<span class="absolute -translate-x-1/2 translate-y-6">{data[2]}</span>
 		<canvas bind:this={charCanvas} class="mb-1 ml-4" />
 	</div>
 </div>
