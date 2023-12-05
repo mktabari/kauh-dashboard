@@ -265,3 +265,10 @@ from (select day.d d, hour.h h, trunc(sysdate - day.d) || hour.h con_code
   group by trunc(a.request_date), to_char(a.request_date, 'hh24')) msg_log
 where day_map.con_code = msg_log.con_code(+)
 order by day_map.d, day_map.h`;
+
+export const dbAwrSnapId = `select snap_id SNAPID,
+to_char(begin_interval_time, 'rrrr/mm/dd hh24:mi:ss') BEGIN
+from dba_hist_snapshot a,v$instance i
+where i.INSTANCE_NUMBER=a.instance_number
+and begin_interval_time>sysdate-1
+order by to_char(begin_interval_time, 'rr/mm/dd hh24:mi:ss') desc`;

@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-	import { Button, Toggle, Badge, Indicator, Spinner } from 'flowbite-svelte';
+	import { Toggle, Badge } from 'flowbite-svelte';
 	import { BarLoader } from 'svelte-loading-spinners';
 	export let server;
 	let pingStatus = false;

@@ -22,11 +22,18 @@
 // 	console.log('error');
 // }
 
-(async () => {
-	try {
-		let response = await fetch(`http://172.30.5.113/HIS`);
-		console.log(response.status);
-	} catch (error) {
-		console.log('error');
-	}
-})();
+// (async () => {
+// 	try {
+// 		let response = await fetch(`http://172.30.5.113/HIS`);
+// 		console.log(response.status);
+// 	} catch (error) {
+// 		console.log('error');
+// 	}
+// })();
+let selected = ['1', '5'];
+const startSnapId = Math.max(
+	...selected.map((item) => {
+		return parseInt(item);
+	})
+);
+console.log(startSnapId);

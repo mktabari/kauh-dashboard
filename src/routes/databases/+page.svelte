@@ -2,6 +2,7 @@
 	import { fly } from 'svelte/transition';
 	import { circInOut } from 'svelte/easing';
 	import { onDestroy } from 'svelte';
+	import { GoogleSpin } from 'svelte-loading-spinners';
 	import Chart from 'chart.js/auto';
 	import {
 		Tabs,
@@ -21,7 +22,10 @@
 		Accordion,
 		AccordionItem,
 		Toast,
-		Toggle
+		Toggle,
+		MultiSelect,
+		Badge,
+		Spinner
 	} from 'flowbite-svelte';
 	import { CheckCircleSolid, CloseCircleSolid } from 'flowbite-svelte-icons';
 	import { v4 as uuid } from 'uuid';
@@ -44,14 +48,12 @@
 	let serverAlertData;
 	let serverDrData;
 	let serverChartData;
+	let serverAWRtData;
 	let bkLog = '';
 	let currentFile = '';
 	let spin = false;
 	let searchTerm = '';
 	let filteredItems = [];
-	let allColor = 'light';
-	let blockingColor = 'blue';
-	let userColor = 'blue';
 	let lockType = 'all';
 	let sortKey = 'SID';
 	let sortDirection = 1;
@@ -201,6 +203,7 @@
 	let chart;
 	let charCanvas;
 	let colorList = ['dark', 'light', 'light'];
+	let colorListLock = ['dark', 'light', 'light'];
 	let chartPeriod = 'year';
 	// let yearColor = 'light';
 	// let months6Color = 'blue';
@@ -325,6 +328,22 @@
 		}
 	};
 	$: if (serverChartData) chartDB();
+	let selected = [];
+	let multiSelect = [];
+	let awrSpin = false;
+	$: {
+		if (serverAWRtData) {
+			multiSelect = serverAWRtData.map((item) => {
+				return { value: item.SNAPID, name: `${item.SNAPID} - ${item.BEGIN}` };
+			});
+		}
+	}
+	$: {
+		returnedServerId ? (selected = []) : null;
+	}
+	let awrReport;
+	let startSnapId;
+	let endSnapId;
 </script>
 
 <Toast
@@ -398,32 +417,29 @@
 						class=" absolute right-0 top-0 z-40 -translate-x-1/4 translate-y-1/2 space-x-px"
 					>
 						<Button
-							color={allColor}
-							class="bg-gray-700"
+							color={colorListLock[0]}
 							on:click={() => {
-								allColor = 'light';
-								blockingColor = 'blue';
-								userColor = 'blue';
+								colorListLock[0] = 'dark';
+								colorListLock[1] = 'light';
+								colorListLock[2] = 'light';
 								lockType = 'all';
 							}}>All</Button
 						>
 						<Button
-							color={blockingColor}
-							class="bg-gray-700"
+							color={colorListLock[1]}
 							on:click={() => {
-								allColor = 'blue';
-								blockingColor = 'light';
-								userColor = 'blue';
+								colorListLock[0] = 'light';
+								colorListLock[1] = 'dark';
+								colorListLock[2] = 'light';
 								lockType = 'blocking';
 							}}>Blocking</Button
 						>
 						<Button
-							color={userColor}
-							class="bg-gray-700"
+							color={colorListLock[2]}
 							on:click={() => {
-								allColor = 'blue';
-								blockingColor = 'blue';
-								userColor = 'light';
+								colorListLock[0] = 'light';
+								colorListLock[1] = 'light';
+								colorListLock[2] = 'dark';
 								lockType = 'user';
 							}}>User</Button
 						>
@@ -850,10 +866,84 @@
 							>Growth Rate for the period is:{periodGrowthRate} GB/Day</span
 						>
 					</div>
-				{:else}
-					<div class="pb-10">no alert log file selected</div>
 				{/if}
 				<canvas bind:this={charCanvas} height="110" />
+			</div>
+		</div>
+	</TabItem>
+	<TabItem>
+		<div slot="title" class="flex items-center gap-2">
+			<span class="material-symbols-outlined"> description </span>
+			AWR Report
+		</div>
+		<div class="flex flex-col gap-2">
+			<div class="flex w-full">
+				<ServerBG
+					servers={lockServers}
+					label="select a server for AWR report:"
+					bind:serverData={serverAWRtData}
+					bind:spin
+					apiName="DB/awr"
+					bind:returnedServerId
+				/>
+			</div>
+			<div class=" relative mt-5">
+				{#if spin}
+					<div class=" flex w-full justify-center">
+						<Spinner />
+					</div>
+				{:else if serverAWRtData}
+					<div class="flex w-full flex-row gap-2">
+						<div class="grow">
+							<MultiSelect items={multiSelect} bind:value={selected} size="lg" />
+						</div>
+						<Button
+							disabled={selected.length < 2}
+							on:click={() => {
+								awrSpin = true;
+								awrReport = undefined;
+								startSnapId = Math.min(
+									...selected.map((item) => {
+										return parseInt(item);
+									})
+								);
+								endSnapId = Math.max(
+									...selected.map((item) => {
+										return parseInt(item);
+									})
+								);
+
+								fetch(`/api/ssh/awr/${returnedServerId}/${startSnapId}/${endSnapId}`)
+									.then((response) => response.json())
+									.then(({ report }) => {
+										awrSpin = false;
+										awrReport = report;
+									});
+							}}>Generate</Button
+						>
+						<Button
+							disabled={!awrReport}
+							on:click={() => {
+								let a = document.createElement('a');
+								document.body.append(a);
+								a.download = `awrReport-${startSnapId}-${endSnapId}.html`;
+								a.href = URL.createObjectURL(new Blob([awrReport], { type: 'text/html' }));
+								a.click();
+								a.remove();
+							}}>Dpwnload</Button
+						>
+					</div>
+					{#if awrSpin}
+						<div class=" mb-5 mt-10 flex w-full justify-center">
+							<GoogleSpin duration="2.5s" size="70px" />
+						</div>
+					{/if}
+					{#if awrReport}
+						<div class=" mt-5">
+							{@html awrReport}
+						</div>
+					{/if}
+				{/if}
 			</div>
 		</div>
 	</TabItem>

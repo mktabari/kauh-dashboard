@@ -5,7 +5,19 @@
 		activeClasses,
 		defaultClass
 	} from '$lib/generalsStyle/index';
-	import { Tabs, TabItem, Skeleton, TextPlaceholder } from 'flowbite-svelte';
+	import {
+		Tabs,
+		TabItem,
+		Skeleton,
+		TextPlaceholder,
+		TableBody,
+		TableBodyCell,
+		TableBodyRow,
+		TableHead,
+		TableHeadCell,
+		Table,
+		Progressbar
+	} from 'flowbite-svelte';
 	import ServerBG from '$lib/buttonGroup/ServerBG.svelte';
 	export let data;
 
@@ -31,16 +43,42 @@
 					apiName="ssh/space"
 				/>
 			</div>
-			<div class=" flex-1 overflow-x-auto overflow-y-auto rounded-lg bg-black px-4 pt-4 text-white">
+			<div>
 				{#if spin}
 					<TextPlaceholder size="xxl" class="my-8" />
 					<Skeleton size="xxl" class=" mb-2.5" />
 					<TextPlaceholder size="xxl" class="my-8" />
 					<Skeleton size="xl" class=" mb-2.5" />
 				{:else if serverData}
-					<pre>{serverData}</pre>
-				{:else}
-					<div class="pb-10">select a server</div>
+					<Table striped={true} shadow>
+						<TableHead class="bg-slate-200">
+							<TableHeadCell class="text-blue-800">Filesystem</TableHeadCell>
+							<TableHeadCell class="text-blue-800">Size</TableHeadCell>
+							<TableHeadCell class="text-blue-800">Used</TableHeadCell>
+							<TableHeadCell class="text-blue-800">Available</TableHeadCell>
+							<TableHeadCell class="text-blue-800">Capacity</TableHeadCell>
+						</TableHead>
+						<TableBody>
+							{#each serverData as row}
+								<TableBodyRow>
+									<TableBodyCell>{row[4]}</TableBodyCell>
+									<TableBodyCell>{row[0]}</TableBodyCell>
+									<TableBodyCell>{row[1]}</TableBodyCell>
+									<TableBodyCell>{row[2]}</TableBodyCell>
+									<TableBodyCell class=" w-1/2">
+										<Progressbar
+											progress={row[3].replace('%', '')}
+											size="h-6"
+											labelInside
+											labelInsideClass="bg-blue-600 text-blue-100 text-base font-medium text-center p-1 leading-none rounded-full w-96"
+										/>
+									</TableBodyCell>
+								</TableBodyRow>
+							{:else}
+								<div class=" font-semibold text-blue-700 p-5 w-full">No Match!</div>
+							{/each}
+						</TableBody>
+					</Table>
 				{/if}
 			</div>
 		</div>
