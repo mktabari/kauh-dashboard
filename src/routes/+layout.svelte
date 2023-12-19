@@ -19,7 +19,7 @@
 		}
 	}
 	export let data;
-	let { user } = data;
+	let { user, veeam } = data;
 </script>
 
 <div class="relative h-full">
@@ -28,7 +28,7 @@
 	<div class="flex h-full w-full">
 		{#if user}
 			<div class="h-full">
-				<SideBar />
+				<SideBar {veeam} />
 			</div>
 		{/if}
 		<div

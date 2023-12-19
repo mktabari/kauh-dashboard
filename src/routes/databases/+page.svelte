@@ -24,7 +24,6 @@
 		Toast,
 		Toggle,
 		MultiSelect,
-		Badge,
 		Spinner
 	} from 'flowbite-svelte';
 	import { CheckCircleSolid, CloseCircleSolid } from 'flowbite-svelte-icons';
@@ -342,6 +341,8 @@
 		returnedServerId ? (selected = []) : null;
 	}
 	let awrReport;
+	let repName;
+	let serverName;
 	let startSnapId;
 	let endSnapId;
 </script>
@@ -915,7 +916,9 @@
 
 								fetch(`/api/ssh/awr/${returnedServerId}/${startSnapId}/${endSnapId}`)
 									.then((response) => response.json())
-									.then(({ report }) => {
+									.then(({ report, dbName, name }) => {
+										repName = dbName;
+										serverName = name;
 										awrSpin = false;
 										awrReport = report;
 									});
@@ -926,7 +929,7 @@
 							on:click={() => {
 								let a = document.createElement('a');
 								document.body.append(a);
-								a.download = `awrReport-${startSnapId}-${endSnapId}.html`;
+								a.download = `${serverName}-${repName}-${startSnapId}-${endSnapId}.html`;
 								a.href = URL.createObjectURL(new Blob([awrReport], { type: 'text/html' }));
 								a.click();
 								a.remove();

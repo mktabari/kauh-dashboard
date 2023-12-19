@@ -53,16 +53,16 @@ EXPOSE 3000
 
 CMD ["pm2-runtime", "pm2.config.cjs"]
 
-# docker build . -t kauhdb:v1.6
-# docker run -d -p 3000:3000 -e "ORIGIN=http://localhost:3000" --name kauhdb --mount source=kd-sqlite-db,target=/app/sqliteDB kauhdb:v1.6
+# docker build . -t kauhdb:v1.7
+# docker run -d -p 3000:3000 -e "ORIGIN=http://localhost:3000" --name kauhdb --mount source=kd-sqlite-db,target=/app/sqliteDB kauhdb:v1.7
 # npx prisma migrate deploy
 # run this comand in the container => npx prisma migrate dev --name mg1
 # docker images
-# docker save -o C:\docker_image_tars\kauhdb_v1.6.tar kauhdb:v1.6
-# docker load -i kauhdb_v1.6.tar
+# docker save -o C:\docker_image_tars\kauhdb_v1.7.tar kauhdb:v1.7
+# docker load -i kauhdb_v1.7.tar
 #scp C:\docker_image_tars\kauhdb_v1.tar root@172.30.5.190 /kauhdb_v1.tar
 #docker volume create --name kd-sqlite-db --opt type=none --opt device=/docker_volumes/sqliteDB --opt o=bind
-# docker run -d --restart unless-stopped -p 3000:3000 -e "ORIGIN=http://172.30.5.190:3000"  -e "SECRET_ADMIN_PASSWORD=sys3211" --mount source=kd-sqlite-db,target=/app/sqliteDB --name kauh-dashboard-v1.6  kauhdb:v1.6
+# docker run -d --restart unless-stopped -p 3000:3000 -e "ORIGIN=http://172.30.5.190:3000"  -e "SECRET_ADMIN_PASSWORD=sys3211" --mount source=kd-sqlite-db,target=/app/sqliteDB --name kauh-dashboard-v1.7  kauhdb:v1.7
 
 
 

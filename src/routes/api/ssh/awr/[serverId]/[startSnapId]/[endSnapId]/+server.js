@@ -5,7 +5,7 @@ export const GET = async (requwstEvent) => {
 	const { params } = requwstEvent;
 	const { serverId, startSnapId, endSnapId } = params;
 	try {
-		let { ip, username, password } = getServerConfig(serverId);
+		let { ip, username, password, dbName, name } = getServerConfig(serverId);
 		const sshconfig = {
 			host: ip,
 			username: username,
@@ -14,6 +14,8 @@ export const GET = async (requwstEvent) => {
 		const conn = new SSH2Promise(sshconfig);
 
 		return json({
+			name,
+			dbName,
 			report: await new Promise((resolve, reject) => {
 				try {
 					conn

@@ -2,36 +2,45 @@
 	import { Sidebar, SidebarGroup, SidebarItem, SidebarWrapper, Indicator } from 'flowbite-svelte';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
+	export let veeam;
+
 	$: activeUrl = $page.url.pathname;
 	let nonActiveClass =
 		'flex items-center p-2 text-base font-semibold text-gray-800 rounded-lg dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700';
 	let activeClass =
 		'flex items-center p-2 text-base font-semibold text-gray-900 bg-gray-200 dark:bg-gray-700 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700';
 	let borderClass = 'pt-2 mt-2 border-t border-gray-200 dark:border-gray-700';
-	let data;
 	let indicator = false;
+	let veeamIndicator = false;
 	onMount(async () => {
 		fetch('/api/san/alert')
 			.then((response) => response.json())
 			.then(({ apiData }) => {
-				data = apiData;
-				data.forEach((san) => {
+				apiData.forEach((san) => {
 					if (san.alert.length > 0) indicator = true;
 				});
 			});
 		fetch('/api/servers/openProblems')
 			.then((response) => response.json())
 			.then(({ apiData }) => {
-				data = apiData;
-				data.forEach((server) => {
+				apiData.forEach((server) => {
 					if (server.alert.length > 0) indicator = true;
 				});
+			});
+		fetch(`/api/ssh/veeam/${veeam[0].id}`)
+			.then((response) => response.json())
+			.then(({ apiData }) => {
+				if (
+					apiData[0].Result !== 'Success' ||
+					(new Date() - Date.parse(apiData[0].CreationTime)) / (1000 * 3600) > 168
+				)
+					veeamIndicator = true;
 			});
 	});
 </script>
 
 <div class="pt-12" />
-<Sidebar asideClass="w-48" {activeUrl} {activeClass} {nonActiveClass}>
+<Sidebar class=" " asideClass="w-52" {activeUrl} {activeClass} {nonActiveClass}>
 	<SidebarWrapper divClass="overflow-y-auto py-4 px-3 rounded">
 		<SidebarGroup>
 			<SidebarItem label="Dashboard" href="/">
@@ -67,17 +76,14 @@
 					><span class="material-symbols-outlined"> dns </span></svelte:fragment
 				>
 			</SidebarItem>
-		</SidebarGroup>
-		<!--
-		<SidebarGroup border {borderClass}>
 			<div class="relative">
-				<SidebarItem label="Alerts" href="/alerts">
+				<SidebarItem label="Cloud Backup" href="/veeam">
 					<svelte:fragment slot="icon"
-						><span class="material-symbols-outlined"> error </span></svelte:fragment
+						><span class="material-symbols-outlined"> backup </span></svelte:fragment
 					>
-				</SidebarItem>{#if indicator}<Indicator placement="center-right" color="red" />{/if}
+				</SidebarItem>{#if veeamIndicator}<Indicator placement="center-right" color="red" />{/if}
 			</div>
-		</SidebarGroup>-->
+		</SidebarGroup>
 		<SidebarGroup border {borderClass}>
 			<div class="relative">
 				<SidebarItem label="Faults" href="/faults">
@@ -103,6 +109,13 @@
 			<SidebarItem label="Users" href="/users">
 				<svelte:fragment slot="icon">
 					<span class="material-symbols-outlined"> person </span>
+				</svelte:fragment>
+			</SidebarItem>
+		</SidebarGroup>
+		<SidebarGroup border {borderClass}>
+			<SidebarItem label="Cheatsheet" href="/cheatsheet">
+				<svelte:fragment slot="icon">
+					<span class="material-symbols-outlined"> format_list_bulleted </span>
 				</svelte:fragment>
 			</SidebarItem>
 		</SidebarGroup>
