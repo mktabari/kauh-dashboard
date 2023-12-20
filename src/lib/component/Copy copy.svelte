@@ -1,29 +1,14 @@
 <script>
 	import { Tooltip } from 'flowbite-svelte';
-
+	import { copy } from 'svelte-copy';
 	export let value, name, id;
-	const copy = async (text) => {
-		const element = document.createElement('input');
-		element.type = 'text';
-		// element.disabled = true;
-		element.style.setProperty('position', 'fixed');
-		element.style.setProperty('z-index', '-100');
-		element.style.setProperty('pointer-events', 'none');
-		element.style.setProperty('opacity', '0');
-		element.value = text;
-		document.body.appendChild(element);
-		element.focus();
-		element.select();
-		document.execCommand('copy');
-		document.body.removeChild(element);
-	};
 </script>
 
 <button
 	{id}
+	use:copy={value}
 	on:click={() => {
-		copy(value);
-		// console.log(value);
+		console.log(value);
 	}}
 >
 	<span

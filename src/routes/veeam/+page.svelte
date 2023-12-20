@@ -36,7 +36,9 @@
 			});
 	});
 	const duration = (startDate, endDate) => {
-		if (endDate) return ((Date.parse(endDate) - Date.parse(startDate)) / (1000 * 3600)).toFixed(0);
+		if (endDate !== '1/1/1900 12:00:00 AM')
+			return ((Date.parse(endDate) - Date.parse(startDate)) / (1000 * 3600)).toFixed(0);
+		return '';
 	};
 </script>
 
@@ -70,6 +72,8 @@
 									>{#if backupJob.Result === 'Success'}<Badge color="green" class="p-2"
 											>{backupJob.Result}</Badge
 										>
+									{:else if backupJob.Result === 'None'}
+										<div />
 									{:else}<Badge color="yellow" class="p-2">{backupJob.Result}</Badge>
 									{/if}</TableBodyCell
 								>

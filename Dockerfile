@@ -48,7 +48,7 @@ RUN npx prisma migrate dev --name mg1
 
 COPY --chown=node:node package.json .
 COPY --from=0 --chown=node:node /app/src/lib/modules/*.json ./build/server/chunks/
-
+ENV NODE_ENV=production
 EXPOSE 3000
 
 CMD ["pm2-runtime", "pm2.config.cjs"]

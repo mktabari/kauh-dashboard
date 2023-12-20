@@ -30,6 +30,7 @@
 		fetch(`/api/ssh/veeam/${veeam[0].id}`)
 			.then((response) => response.json())
 			.then(({ apiData }) => {
+				if (apiData[0].State === 'Working') return;
 				if (
 					apiData[0].Result !== 'Success' ||
 					(new Date() - Date.parse(apiData[0].CreationTime)) / (1000 * 3600) > 168
