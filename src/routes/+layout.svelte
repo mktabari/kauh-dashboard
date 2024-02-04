@@ -26,7 +26,7 @@
 	<NavigationBar {user} />
 
 	<div class="flex h-full w-full">
-		{#if user}
+		{#if user === 'admin'}
 			<div class="h-full">
 				<SideBar {veeam} />
 			</div>

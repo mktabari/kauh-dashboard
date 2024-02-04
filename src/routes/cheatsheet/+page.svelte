@@ -1,6 +1,8 @@
 <script>
-	import { Heading, P, List, Li, Tooltip, Kbd } from 'flowbite-svelte';
-	import { copy } from 'svelte-copy';
+	import { Heading, P, List, Li, Tooltip, Kbd, Toast } from 'flowbite-svelte';
+	// import { copy } from 'svelte-copy';
+	// import { copy } from './copy.js';
+	// import { copy } from '$lib/cards/ServerCard.svelte';
 	import { v1 as uuid } from 'uuid';
 	import { onMount } from 'svelte';
 	let codeClass =
@@ -68,8 +70,45 @@
 			observer.observe(section);
 		});
 	});
+	const copy = async (text) => {
+		const element = document.createElement('TEXTAREA');
+		const t = document.createTextNode(text);
+		element.appendChild(t);
+		element.style.setProperty('position', 'fixed');
+		element.style.setProperty('z-index', '-100');
+		element.style.setProperty('pointer-events', 'none');
+		element.style.setProperty('opacity', '0');
+		document.body.appendChild(element);
+		element.focus();
+		element.select();
+		document.execCommand('copy');
+		document.body.removeChild(element);
+	};
+	let toastShow = false;
+	let toastCounter = 0;
+	import { fly } from 'svelte/transition';
+	const toastTrigger = () => {
+		toastShow = true;
+		toastCounter = 2;
+		toastTimeout();
+	};
+	const toastTimeout = () => {
+		if (--toastCounter > 0) return setTimeout(toastTimeout, 1000);
+		toastShow = false;
+	};
 </script>
 
+<Toast
+	class="z-50"
+	transition={fly}
+	params={{ y: 200 }}
+	color="red"
+	position="bottom-right"
+	bind:open={toastShow}
+	divClass=" p-4 text-gray-800 bg-gray-200 shadow dark:text-gray-200 dark:bg-gray-900 gap-3 font-bold "
+>
+	Copied
+</Toast>
 <div class="flex flex-row">
 	<div class=" px-16">
 		<section id={uuid()} class="scroll-mt-14">
@@ -79,7 +118,24 @@
 					class="px-2 py-1 text-lg">ERP</Kbd
 				> server using <Kbd class="px-2 py-1 text-lg">ssh</Kbd> then switch user to <Kbd
 					class="px-2 py-1 text-lg">oraprod</Kbd
-				> using <Kbd class="px-2 py-1 text-lg">su - oraprod</Kbd> and execute the following commands</P
+				> using <Kbd class="relative px-2 py-1 pr-5 text-lg"
+					>su - oraprod <button
+						id="strterpdb"
+						on:click={() => {
+							copy(`su - oraprod
+`);
+							toastTrigger();
+						}}
+						class=" absolute bottom-0"
+					>
+						<span class="material-symbols-outlined md-18 rotate-180 font-semibold opacity-50">
+							content_copy
+						</span></button
+					>
+					<!-- <Tooltip type="light" trigger="click" triggeredBy="#strterpdb">
+						<span class="text-gray-800"> copied </span></Tooltip
+					> -->
+				</Kbd> and execute the following commands</P
 			>
 			<Heading tag="h6" class="mb-4 ml-4">Start ERP DB</Heading>
 			<P
@@ -88,71 +144,104 @@
 				startup_db.sh<br />
 				<button
 					id="strterpdb"
-					use:copy={`startup_db.sh
-`}
+					on:click={() => {
+						copy(`startup_db.sh
+`);
+						toastTrigger();
+					}}
 					class=" absolute right-4 top-4"
 				>
 					<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
 						content_copy
 					</span></button
-				><Tooltip type="light" trigger="click" triggeredBy="#strterpdb">
-					<span class="text-gray-800"> copied </span></Tooltip
 				>
+				<!-- <Tooltip type="light" trigger="click" triggeredBy="#strterpdb">
+					<span class="text-gray-800"> copied </span></Tooltip
+				> -->
 			</P>
 			<Heading tag="h6" class="mb-4 ml-4">Stop ERP DB</Heading>
 			<P class={codeClass}
 				>shutdown_db.sh<br />
 				<button
 					id="stperpdb"
-					use:copy={`shutdown_db.sh
-`}
+					on:click={() => {
+						copy(`shutdown_db.sh
+`);
+						toastTrigger();
+					}}
 					class=" absolute right-4 top-4"
 				>
 					<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
 						content_copy
 					</span></button
-				><Tooltip type="light" trigger="click" triggeredBy="#stperpdb">
-					<span class="text-gray-800"> copied </span></Tooltip
 				>
+				<!-- <Tooltip type="light" trigger="click" triggeredBy="#stperpdb">
+					<span class="text-gray-800"> copied </span></Tooltip
+				> -->
 			</P>
 			<P class="pb-4"
 				>Connect with <Kbd class="px-2 py-1 text-lg">root</Kbd> user to <Kbd
 					class="px-2 py-1 text-lg">ERP</Kbd
 				> server using <Kbd class="px-2 py-1 text-lg">ssh</Kbd> then switch user to <Kbd
 					class="px-2 py-1 text-lg">applprod</Kbd
-				> using <Kbd class="px-2 py-1 text-lg">su - applprod</Kbd> and execute the following commands</P
+				> using <Kbd class="relative px-2 py-1 pr-5 text-lg"
+					>su - applprod <button
+						id="strterpdb"
+						on:click={() => {
+							copy(`su - applprod
+`);
+							toastTrigger();
+						}}
+						class=" absolute bottom-0"
+					>
+						<span class="material-symbols-outlined md-18 rotate-180 font-semibold opacity-50">
+							content_copy
+						</span></button
+					>
+					<!-- <Tooltip type="light" trigger="click" triggeredBy="#strterpdb">
+					<span class="text-gray-800"> copied </span></Tooltip
+				> --></Kbd
+				> and execute the following commands</P
 			>
 			<Heading tag="h6" class="mb-4 ml-4">Start ERP Application</Heading>
 			<P class={codeClass}
 				>startup_apps.sh<br />
 				<button
 					id="strterapp"
-					use:copy={`startup_apps.sh
-`}
+					on:click={() => {
+						copy(`startup_apps.sh
+`);
+						toastTrigger();
+					}}
 					class=" absolute right-4 top-4"
 				>
 					<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
 						content_copy
 					</span></button
-				><Tooltip type="light" trigger="click" triggeredBy="#strterapp">
-					<span class="text-gray-800"> copied </span></Tooltip
 				>
+				<!-- <Tooltip type="light" trigger="click" triggeredBy="#strterapp">
+					<span class="text-gray-800"> copied </span></Tooltip
+				> -->
 			</P>
 			<Heading tag="h6" class="mb-4 ml-4">Stop ERP Application</Heading>
 			<P class={codeClass}
 				>shutdown_apps.sh.sh<br />
 				<button
 					id="stperpapp"
-					use:copy={`shutdown_apps.sh.sh
-`}
+					on:click={() => {
+						copy(`shutdown_apps.sh.sh
+`);
+						toastTrigger();
+					}}
 					class=" absolute right-4 top-4"
 				>
 					<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
 						content_copy
 					</span></button
-				><Tooltip type="light" trigger="click" triggeredBy="#stperpapp">
-					<span class="text-gray-800"> copied </span></Tooltip
 				>
+				<!-- <Tooltip type="light" trigger="click" triggeredBy="#stperpapp">
+					<span class="text-gray-800"> copied </span></Tooltip
+				> -->
 			</P>
 		</section>
 		<section id={uuid()} class="scroll-mt-14">
@@ -162,8 +251,24 @@
 					class="px-2 py-1 text-lg">ERP</Kbd
 				> server using <Kbd class="px-2 py-1 text-lg">ssh</Kbd> then switch user to <Kbd
 					class="px-2 py-1 text-lg">oraprod</Kbd
-				> using <Kbd class="px-2 py-1 text-lg">su - oraprod</Kbd> and execute the following commands,
-				ERP DB listener should be started</P
+				> using <Kbd class="relative px-2 py-1 pr-5 text-lg"
+					>su - oraprod <button
+						id="strterpdb"
+						on:click={() => {
+							copy(`su - applprod
+`);
+							toastTrigger();
+						}}
+						class=" absolute bottom-0"
+					>
+						<span class="material-symbols-outlined md-18 rotate-180 font-semibold opacity-50">
+							content_copy
+						</span></button
+					>
+					<!-- <Tooltip type="light" trigger="click" triggeredBy="#strterpdb">
+				<span class="text-gray-800"> copied </span></Tooltip
+			> --></Kbd
+				> and execute the following commands, ERP DB listener should be started</P
 			>
 			<Heading tag="h6" class="mb-4 ml-4">Startup MEDICOM DB</Heading>
 			<P class={codeClass}
@@ -175,23 +280,26 @@
 				alter database open;<br />
 				<button
 					id="strtmed"
-					use:copy={`. /u01/PROD/db/9.2.0/PROD_erp-srv.env
+					on:click={() => {
+						copy(`. /u01/PROD/db/9.2.0/PROD_erp-srv.env
 ORACLE_SID=mprod
 export ORACLE_SID
 sqlplus "/as sysdba"
 startup pfile='/mprod/mprod_pfile.ora';
 alter database open;
 exit
-
-`}
+`);
+						toastTrigger();
+					}}
 					class=" absolute right-4 top-4"
 				>
 					<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
 						content_copy
 					</span></button
-				><Tooltip type="light" trigger="click" triggeredBy="#strtmed">
-					<span class="text-gray-800"> copied </span></Tooltip
 				>
+				<!-- <Tooltip type="light" trigger="click" triggeredBy="#strtmed">
+					<span class="text-gray-800"> copied </span></Tooltip
+				> -->
 			</P>
 			<Heading tag="h6" class="mb-4 ml-4">Shutdown MEDICOM DB</Heading>
 			<P class={codeClass}
@@ -202,22 +310,25 @@ exit
 				shutdown immediate;<br />
 				<button
 					id="stpmed"
-					use:copy={`. /u01/PROD/db/9.2.0/PROD_erp-srv.env
+					on:click={() => {
+						copy(`. /u01/PROD/db/9.2.0/PROD_erp-srv.env
 ORACLE_SID=mprod
 export ORACLE_SID
 sqlplus "/as sysdba"
 shutdown immediate;
 exit
-
-`}
+`);
+						toastTrigger();
+					}}
 					class=" absolute right-4 top-4"
 				>
 					<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
 						content_copy
 					</span></button
-				><Tooltip type="light" trigger="click" triggeredBy="#stpmed">
-					<span class="text-gray-800"> copied </span></Tooltip
 				>
+				<!-- <Tooltip type="light" trigger="click" triggeredBy="#stpmed">
+					<span class="text-gray-800"> copied </span></Tooltip
+				> -->
 			</P>
 		</section>
 		<section id={uuid()} class="scroll-mt-14">
@@ -227,25 +338,46 @@ exit
 					class="px-2 py-1 text-lg">DR</Kbd
 				> server using <Kbd class="px-2 py-1 text-lg">ssh</Kbd> then switch user to <Kbd
 					class="px-2 py-1 text-lg">oracle</Kbd
-				> using <Kbd class="px-2 py-1 text-lg">su - oracle</Kbd> and execute the following commands</P
+				> using <Kbd class="relative px-2 py-1 pr-5 text-lg"
+					>su - oracle <button
+						id="strterpdb"
+						on:click={() => {
+							copy(`su - applprod
+`);
+							toastTrigger();
+						}}
+						class=" absolute bottom-0"
+					>
+						<span class="material-symbols-outlined md-18 rotate-180 font-semibold opacity-50">
+							content_copy
+						</span></button
+					>
+					<!-- <Tooltip type="light" trigger="click" triggeredBy="#strterpdb">
+				<span class="text-gray-800"> copied </span></Tooltip
+			> --></Kbd
+				> and execute the following commands</P
 			>
 			<Heading tag="h6" class="mb-4 ml-4">Show status</Heading>
 			<P class={codeClass}
 				>dgmgrl /<br /> show configuration;<br /> show database isoftstby;
 				<button
 					id="strtdg"
-					use:copy={`dgmgrl /
+					on:click={() => {
+						copy(`dgmgrl /
 show configuration;
 show database isoftstby;
-`}
+`);
+						toastTrigger();
+					}}
 					class=" absolute right-4 top-4"
 				>
 					<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
 						content_copy
 					</span></button
-				><Tooltip type="light" trigger="click" triggeredBy="#strtdg">
-					<span class="text-gray-800"> copied </span></Tooltip
 				>
+				<!-- <Tooltip type="light" trigger="click" triggeredBy="#strtdg">
+					<span class="text-gray-800"> copied </span></Tooltip
+				> -->
 			</P>
 			<Heading tag="h6" class="mb-4 ml-4">Disable transport service of the primary database</Heading
 			>
@@ -254,18 +386,22 @@ show database isoftstby;
 				<br /> show database isoftstby;
 				<button
 					id="stptrans"
-					use:copy={`dgmgrl /
+					on:click={() => {
+						copy(`dgmgrl /
 edit database 'isoft' set state='TRANSPORT-OFF';
 show database isoftstby;
-`}
+`);
+						toastTrigger();
+					}}
 					class=" absolute right-4 top-4"
 				>
 					<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
 						content_copy
 					</span></button
-				><Tooltip type="light" trigger="click" triggeredBy="#stptrans">
-					<span class="text-gray-800"> copied </span></Tooltip
 				>
+				<!-- <Tooltip type="light" trigger="click" triggeredBy="#stptrans">
+					<span class="text-gray-800"> copied </span></Tooltip
+				> -->
 			</P>
 			<Heading tag="h6" class="mb-4 ml-4">Enable transport service of the primary database</Heading>
 			<P class={codeClass}
@@ -273,18 +409,22 @@ show database isoftstby;
 				<br /> show database isoftstby;
 				<button
 					id="strttrans"
-					use:copy={`dgmgrl /
+					on:click={() => {
+						copy(`dgmgrl /
 edit database 'isoft' set state='TRANSPORT-ON';
 show database isoftstby;
-`}
+`);
+						toastTrigger();
+					}}
 					class=" absolute right-4 top-4"
 				>
 					<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
 						content_copy
 					</span></button
-				><Tooltip type="light" trigger="click" triggeredBy="#strttrans">
-					<span class="text-gray-800"> copied </span></Tooltip
 				>
+				<!-- <Tooltip type="light" trigger="click" triggeredBy="#strttrans">
+					<span class="text-gray-800"> copied </span></Tooltip
+				> -->
 			</P>
 			<Heading tag="h6" class="mb-4 ml-4">Disable apply service of the standby database</Heading>
 			<P class={codeClass}
@@ -292,18 +432,22 @@ show database isoftstby;
 				<br /> show database isoftstby;
 				<button
 					id="stpappl"
-					use:copy={`dgmgrl /
+					on:click={() => {
+						copy(`dgmgrl /
 edit database 'isoftstby' set state='APPLY-OFF';
 show database isoftstby;
-`}
+`);
+						toastTrigger();
+					}}
 					class=" absolute right-4 top-4"
 				>
 					<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
 						content_copy
 					</span></button
-				><Tooltip type="light" trigger="click" triggeredBy="#stpappl">
-					<span class="text-gray-800"> copied </span></Tooltip
 				>
+				<!-- <Tooltip type="light" trigger="click" triggeredBy="#stpappl">
+					<span class="text-gray-800"> copied </span></Tooltip
+				> -->
 			</P>
 			<Heading tag="h6" class="mb-4 ml-4">Enable apply service of the standby database</Heading>
 			<P class={codeClass}
@@ -311,18 +455,22 @@ show database isoftstby;
 				<br /> show database isoftstby;
 				<button
 					id="strtappl"
-					use:copy={`dgmgrl /
+					on:click={() => {
+						copy(`dgmgrl /
 edit database 'isoftstby' set state='APPLY-ON';
 show database isoftstby;
-`}
+`);
+						toastTrigger();
+					}}
 					class=" absolute right-4 top-4"
 				>
 					<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
 						content_copy
 					</span></button
-				><Tooltip type="light" trigger="click" triggeredBy="#strtappl">
-					<span class="text-gray-800"> copied </span></Tooltip
 				>
+				<!-- <Tooltip type="light" trigger="click" triggeredBy="#strtappl">
+					<span class="text-gray-800"> copied </span></Tooltip
+				> -->
 			</P>
 			<Heading tag="h6" class="mb-4 ml-4">Start disaster recovery database</Heading>
 			<P class={codeClass}
@@ -331,19 +479,23 @@ show database isoftstby;
 
 				<button
 					id="strtdg"
-					use:copy={`sqlplus /as sysdba
+					on:click={() => {
+						copy(`sqlplus /as sysdba
 startup nomount;
 alter database mount standby database;
 alter database recover managed standby database disconnect from session;
-`}
+`);
+						toastTrigger();
+					}}
 					class=" absolute right-4 top-4"
 				>
 					<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
 						content_copy
 					</span></button
-				><Tooltip type="light" trigger="click" triggeredBy="#strtdg">
-					<span class="text-gray-800"> copied </span></Tooltip
 				>
+				<!-- <Tooltip type="light" trigger="click" triggeredBy="#strtdg">
+					<span class="text-gray-800"> copied </span></Tooltip
+				> -->
 			</P>
 			<Heading tag="h6" class="mb-4 ml-4">Stop disaster recovery database</Heading>
 			<P class={codeClass}
@@ -352,18 +504,22 @@ alter database recover managed standby database disconnect from session;
 
 				<button
 					id="strtdg"
-					use:copy={`sqlplus /as sysdba
+					on:click={() => {
+						copy(`sqlplus /as sysdba
 alter database recover managed standby database cancel;
 shutdown immediate;
-`}
+`);
+						toastTrigger();
+					}}
 					class=" absolute right-4 top-4"
 				>
 					<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
 						content_copy
 					</span></button
-				><Tooltip type="light" trigger="click" triggeredBy="#strtdg">
-					<span class="text-gray-800"> copied </span></Tooltip
 				>
+				<!-- <Tooltip type="light" trigger="click" triggeredBy="#strtdg">
+					<span class="text-gray-800"> copied </span></Tooltip
+				> -->
 			</P>
 		</section>
 		<section id={uuid()} class="scroll-mt-14">
@@ -376,46 +532,81 @@ shutdown immediate;
 			<Heading tag="h6" class="mb-4 ml-4">Start server</Heading>
 			<P class={codeClass}
 				>start /SYS
-				<button id="strts" use:copy={'start /SYS'} class=" absolute right-4 top-4">
+				<button
+					id="strts"
+					on:click={() => {
+						copy(`start /SYS
+`);
+						toastTrigger();
+					}}
+					class=" absolute right-4 top-4"
+				>
 					<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
 						content_copy
 					</span></button
-				><Tooltip type="light" trigger="click" triggeredBy="#strts">
-					<span class="text-gray-800"> copied </span></Tooltip
 				>
+				<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
+					<span class="text-gray-800"> copied </span></Tooltip
+				> -->
 			</P>
 			<Heading tag="h6" class="mb-4 ml-4">Shutdown server</Heading>
 			<P class={codeClass}
 				>stop /SYS
-				<button id="stps" use:copy={'stop /SYS'} class=" absolute right-4 top-4">
+				<button
+					id="stps"
+					on:click={() => {
+						copy(`stop /SYS
+`);
+						toastTrigger();
+					}}
+					class=" absolute right-4 top-4"
+				>
 					<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
 						content_copy
 					</span></button
-				><Tooltip type="light" trigger="click" triggeredBy="#stps">
-					<span class="text-gray-800"> copied </span></Tooltip
 				>
+				<!-- <Tooltip type="light" trigger="click" triggeredBy="#stps">
+					<span class="text-gray-800"> copied </span></Tooltip
+				> -->
 			</P>
 			<Heading tag="h6" class="mb-4 ml-4">Show console</Heading>
 			<P class={codeClass}
 				>start /HOST/console
-				<button id="strtc" use:copy={'start /HOST/console'} class=" absolute right-4 top-4">
+				<button
+					id="strtc"
+					on:click={() => {
+						copy(`start /HOST/console
+`);
+					}}
+					class=" absolute right-4 top-4"
+				>
 					<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
 						content_copy
 					</span></button
-				><Tooltip type="light" trigger="click" triggeredBy="#strtc">
-					<span class="text-gray-800"> copied </span></Tooltip
 				>
+				<!-- <Tooltip type="light" trigger="click" triggeredBy="#strtc">
+					<span class="text-gray-800"> copied </span></Tooltip
+				> -->
 			</P>
 			<Heading tag="h6" class="mb-4 ml-4">Show faults</Heading>
 			<P class={codeClass}
 				>show faulty
-				<button id="strtc" use:copy={'show faulty'} class=" absolute right-4 top-4">
+				<button
+					id="strtc"
+					on:click={() => {
+						copy(`show faulty
+`);
+						toastTrigger();
+					}}
+					class=" absolute right-4 top-4"
+				>
 					<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
 						content_copy
 					</span></button
-				><Tooltip type="light" trigger="click" triggeredBy="#strtc">
-					<span class="text-gray-800"> copied </span></Tooltip
 				>
+				<!-- <Tooltip type="light" trigger="click" triggeredBy="#strtc">
+					<span class="text-gray-800"> copied </span></Tooltip
+				> -->
 			</P>
 		</section>
 		<section id={uuid()} class="scroll-mt-14">
@@ -437,16 +628,20 @@ shutdown immediate;
 						>zpool export mig
 						<button
 							id="strts"
-							use:copy={`zpool export mig
-`}
+							on:click={() => {
+								copy(`zpool export mig
+`);
+								toastTrigger();
+							}}
 							class=" absolute right-4 top-4"
 						>
 							<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
 								content_copy
 							</span></button
-						><Tooltip type="light" trigger="click" triggeredBy="#strts">
-							<span class="text-gray-800"> copied </span></Tooltip
 						>
+						<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
+							<span class="text-gray-800"> copied </span></Tooltip
+						> -->
 					</P>
 				</Li>
 				<Li>
@@ -460,17 +655,21 @@ shutdown immediate;
 						>ldm rm-vdisk mig ldm4<br /> ldm add-vdisk mig migration@primary-vds0 ldm1
 						<button
 							id="strts"
-							use:copy={`ldm rm-vdisk mig ldm4
+							on:click={() => {
+								copy(`ldm rm-vdisk mig ldm4
 ldm add-vdisk mig migration@primary-vds0 ldm1
-`}
+`);
+								toastTrigger();
+							}}
 							class=" absolute right-4 top-4"
 						>
 							<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
 								content_copy
 							</span></button
-						><Tooltip type="light" trigger="click" triggeredBy="#strts">
-							<span class="text-gray-800"> copied </span></Tooltip
 						>
+						<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
+							<span class="text-gray-800"> copied </span></Tooltip
+						> -->
 					</P>
 				</Li>
 				<Li>
@@ -484,16 +683,20 @@ ldm add-vdisk mig migration@primary-vds0 ldm1
 						>zpool import mig
 						<button
 							id="strts"
-							use:copy={`zpool import mig
-`}
+							on:click={() => {
+								copy(`zpool import mig
+`);
+								toastTrigger();
+							}}
 							class=" absolute right-4 top-4"
 						>
 							<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
 								content_copy
 							</span></button
-						><Tooltip type="light" trigger="click" triggeredBy="#strts">
-							<span class="text-gray-800"> copied </span></Tooltip
 						>
+						<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
+							<span class="text-gray-800"> copied </span></Tooltip
+						> -->
 					</P></Li
 				>
 			</List>
@@ -514,16 +717,20 @@ ldm add-vdisk mig migration@primary-vds0 ldm1
 						>zpool export mig
 						<button
 							id="strts"
-							use:copy={`zpool export mig
-`}
+							on:click={() => {
+								copy(`zpool export mig
+`);
+								toastTrigger();
+							}}
 							class=" absolute right-4 top-4"
 						>
 							<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
 								content_copy
 							</span></button
-						><Tooltip type="light" trigger="click" triggeredBy="#strts">
-							<span class="text-gray-800"> copied </span></Tooltip
 						>
+						<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
+							<span class="text-gray-800"> copied </span></Tooltip
+						> -->
 					</P>
 				</Li>
 				<Li>
@@ -537,17 +744,21 @@ ldm add-vdisk mig migration@primary-vds0 ldm1
 						>ldm rm-vdisk mig ldm1<br /> ldm add-vdisk mig migration@primary-vds0 ldm4
 						<button
 							id="strts"
-							use:copy={`ldm rm-vdisk mig ldm1
+							on:click={() => {
+								copy(`ldm rm-vdisk mig ldm1
 ldm add-vdisk mig migration@primary-vds0 ldm4
-`}
+`);
+								toastTrigger();
+							}}
 							class=" absolute right-4 top-4"
 						>
 							<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
 								content_copy
 							</span></button
-						><Tooltip type="light" trigger="click" triggeredBy="#strts">
-							<span class="text-gray-800"> copied </span></Tooltip
 						>
+						<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
+							<span class="text-gray-800"> copied </span></Tooltip
+						> -->
 					</P>
 				</Li>
 				<Li>
@@ -561,16 +772,20 @@ ldm add-vdisk mig migration@primary-vds0 ldm4
 						>zpool import mig
 						<button
 							id="strts"
-							use:copy={`zpool import mig
-`}
+							on:click={() => {
+								copy(`zpool import mig
+`);
+								toastTrigger();
+							}}
 							class=" absolute right-4 top-4"
 						>
 							<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
 								content_copy
 							</span></button
-						><Tooltip type="light" trigger="click" triggeredBy="#strts">
-							<span class="text-gray-800"> copied </span></Tooltip
 						>
+						<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
+							<span class="text-gray-800"> copied </span></Tooltip
+						> -->
 					</P></Li
 				>
 			</List>

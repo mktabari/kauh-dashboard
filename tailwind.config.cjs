@@ -7,6 +7,17 @@ const config = {
 
 	theme: {
 		extend: {
+			animation: {
+				wiggle: 'wiggle 2s ease-in-out 1'
+			},
+			keyframes: {
+				wiggle: {
+					'0%': { transform: 'rotate(25deg) translate(-100px, -70px)' },
+					'49%': { transform: 'rotate(25deg) translate(170px ,-70px) scaleX(2)' },
+					'50%': { transform: 'rotate(25deg) translate(-100px, -70px)' },
+					'100%': { transform: 'rotate(25deg) translate(170px ,-70px) scaleX(2)' }
+				}
+			},
 			colors: {
 				// flowbite-svelte
 				/*primary: {

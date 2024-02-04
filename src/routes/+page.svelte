@@ -1,5 +1,4 @@
 <script>
-	import DBUpDown from '$lib/cards/DBUpDown.svelte';
 	import DBUpLine from '$lib/cards/DBUpLine.svelte';
 	import DBHR from '$lib/cards/DBHR.svelte';
 	import DBWait from '$lib/cards/DBWait.svelte';
@@ -40,7 +39,6 @@
 	<div class=" col-span-2 w-full">
 		<DBTrans {aClass} />
 	</div>
-
 	<div class=" col-span-2 flex w-full flex-row flex-wrap gap-3">
 		{#each WServers as server}
 			<div class=" w-170">
@@ -48,6 +46,13 @@
 			</div>
 		{/each}
 	</div>
+	<!-- <div class=" col-span-2 flex w-full flex-row flex-wrap gap-3">
+		{#each WServers as server}
+			<div class=" w-170">
+				<DBWait {server} {aClass} />
+			</div>
+		{/each}
+	</div> -->
 </div>
 <!-- <div class=" h-full w-full">
 	<DBMountNew {aClass} />

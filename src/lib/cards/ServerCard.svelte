@@ -98,7 +98,8 @@
 		</Badge>
 	{/if}
 </div>
-<Card class="h-full px-6 pt-6 hover:shadow-lg hover:ring-1  hover:ring-gray-400" padding="none">
+
+<Card class="h-full px-6 pt-6  hover:shadow-lg hover:ring-1 hover:ring-gray-400" padding="none">
 	<div class="flex justify-between">
 		<span
 			class=" font-Bruno flex h-full w-max items-center justify-center text-xl font-extrabold uppercase text-red-600 underline"

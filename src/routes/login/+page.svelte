@@ -5,7 +5,7 @@
 
 <div class="relative h-full w-full">
 	<div class=" absolute z-50 flex h-full w-full items-center justify-center overflow-hidden">
-		<form method="POST" use:enhance>
+		<form method="POST">
 			<div
 				class=" flex h-72 w-96 flex-col items-center justify-center gap-4 rounded-3xl border-2 border-gray-900 bg-gray-900 shadow-md"
 			>

@@ -72,7 +72,7 @@
 					><span class="material-symbols-outlined"> apps </span></svelte:fragment
 				>
 			</SidebarItem>
-			<SidebarItem label="APP SRV" href="/apps">
+			<SidebarItem label="APP Servers" href="/apps">
 				<svelte:fragment slot="icon"
 					><span class="material-symbols-outlined"> dns </span></svelte:fragment
 				>

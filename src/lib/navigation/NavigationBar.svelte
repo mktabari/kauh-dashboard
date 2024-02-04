@@ -27,7 +27,7 @@
 			class="self-center whitespace-nowrap text-3xl font-bold text-gray-600 dark:text-white"
 			style="font-family: 'Bruno Ace SC', cursive;"
 		>
-			KAUH Severs Dashboard <span class="text-lg italic text-indigo-700">V:1.7</span>
+			KAUH Severs Dashboard <span class="text-lg italic text-indigo-700">V:1.8</span>
 		</span>
 	</NavBrand>
 	<div class="flex items-center md:order-2">
@@ -37,7 +37,7 @@
 			><img alt="logo" src={git} class=" w-10 opacity-60 hover:opacity-100 dark:invert" /></button
 		>
 		<div class="pr-5"><DarkMode /></div>
-		{#if user}<Avatar id="avatar-menu" />{/if}
+		{#if user === 'admin'}<Avatar id="avatar-menu" />{/if}
 		<NavHamburger on:click={toggle} class1="w-full md:flex md:w-auto md:order-1" />
 	</div>
 	<Dropdown placement="bottom" triggeredBy="#avatar-menu">
@@ -46,7 +46,7 @@
 		</DropdownHeader>
 
 		<DropdownDivider />
-		<DropdownItem href="/logout" data-sveltekit-preload-data="off"
+		<DropdownItem href="/logout" data-sveltekit-preload-data="off" data-sveltekit-reload
 			>Sign out <span class="material-symbols-outlined absolute -translate-y-1 pl-2">
 				logout
 			</span></DropdownItem

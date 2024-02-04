@@ -20,6 +20,7 @@ export const GET = async (requwstEvent) => {
 			return json({
 				apiData: await new Promise(async (resolve, reject) => {
 					await connection.execute(killCommand);
+					// console.log('killed');
 					await connection.close();
 					resolve('ok');
 				})
