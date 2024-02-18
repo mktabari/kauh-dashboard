@@ -8,6 +8,7 @@
 	import SAN from '$lib/cards/SAN.svelte';
 	import DBUpDownNew from '$lib/cards/DBUpDownNew.svelte';
 	import SMSChart from '$lib/cards/SMSChart.svelte';
+	import DBSwitch from '$lib/cards/DBSwitch.svelte';
 
 	export let data;
 
@@ -42,17 +43,17 @@
 	<div class=" col-span-2 flex w-full flex-row flex-wrap gap-3">
 		{#each WServers as server}
 			<div class=" w-170">
-				<DBWait {server} {aClass} />
+				<DBSwitch {server} {aClass} />
 			</div>
 		{/each}
 	</div>
-	<!-- <div class=" col-span-2 flex w-full flex-row flex-wrap gap-3">
+	<div class=" col-span-2 flex w-full flex-row flex-wrap gap-3">
 		{#each WServers as server}
 			<div class=" w-170">
 				<DBWait {server} {aClass} />
 			</div>
 		{/each}
-	</div> -->
+	</div>
 </div>
 <!-- <div class=" h-full w-full">
 	<DBMountNew {aClass} />

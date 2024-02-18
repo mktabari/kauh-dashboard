@@ -1,21 +1,21 @@
 <script>
 	import { onMount } from 'svelte';
 	import { Spinner, Chart } from 'flowbite-svelte';
-	let aClass = 'h-full rounded-xl bg-gray-100 px-3 pt-3 dark:border-gray-700 dark:bg-gray-900';
+	export let server;
+	export let aClass;
+	// let aClass = 'h-full rounded-xl bg-gray-100 px-3 pt-3 dark:border-gray-700 dark:bg-gray-900';
 	let data = [];
 	let spin = true;
 	let options;
-	let total;
+
 	onMount(() => {
-		fetch('/api/DB/sms')
+		fetch('/api/DB/switch/' + server.id)
 			.then((response) => response.json())
 			.then(({ apiData }) => {
 				data = apiData;
 				let temp;
 				let series;
-				total = data.reduce((p, item) => {
-					return (p += item.C);
-				}, 0);
+
 				let days = data
 					.filter((element) => {
 						if (temp !== element.DAY) {
@@ -31,17 +31,44 @@
 				series = days.map((element) => {
 					return {
 						name: element.seriesName,
-						data: data
-							.filter((item) => {
-								if (item.DAY.charAt(0).toUpperCase() + item.DAY.slice(1) === element.seriesName)
-									return true;
-							})
-							.map((item) => {
-								return item.C;
-							})
+						data:
+							// [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+							data
+								.filter((item) => {
+									if (item.DAY.charAt(0).toUpperCase() + item.DAY.slice(1) === element.seriesName)
+										return true;
+								})
+								.map((item) => {
+									return [
+										parseInt(item.h00),
+										parseInt(item.h01),
+										parseInt(item.h02),
+										parseInt(item.h03),
+										parseInt(item.h04),
+										parseInt(item.h05),
+										parseInt(item.h06),
+										parseInt(item.h07),
+										parseInt(item.h08),
+										parseInt(item.h09),
+										parseInt(item.h10),
+										parseInt(item.h11),
+										parseInt(item.h12),
+										parseInt(item.h13),
+										parseInt(item.h14),
+										parseInt(item.h15),
+										parseInt(item.h16),
+										parseInt(item.h17),
+										parseInt(item.h18),
+										parseInt(item.h19),
+										parseInt(item.h20),
+										parseInt(item.h21),
+										parseInt(item.h22),
+										parseInt(item.h23)
+									];
+								})[0]
 					};
 				});
-
+				// console.log(series);
 				options = {
 					series: series,
 					chart: {
@@ -102,24 +129,24 @@
 								ranges: [
 									{
 										from: 0,
-										to: 9,
+										to: 3,
 										color: '#128FD9',
 										name: 'LOW'
 									},
 									{
-										from: 10,
-										to: 99,
+										from: 4,
+										to: 6,
 										color: '#00A100',
 										name: 'MEDIUM'
 									},
 									{
-										from: 100,
-										to: 499,
+										from: 7,
+										to: 9,
 										color: '#FFB200',
 										name: 'HIGH'
 									},
 									{
-										from: 500,
+										from: 10,
 										to: 10000,
 										color: '#ff2200',
 										name: 'VERY HIGH'
@@ -138,8 +165,7 @@
 	<div
 		class="flex flex-row justify-between bg-gray-100 bg-transparent pl-5 text-2xl font-extrabold text-gray-500 dark:text-gray-400"
 	>
-		<span>SMS HeatMap</span>
-		<span class="pr-5 text-sm">Total number of SMS is {total}</span>
+		{server.name} ({server.dbName}) Log Switch
 	</div>
 	<div class="w-full">
 		{#if spin}

@@ -10,7 +10,7 @@
 			.then((response) => response.json())
 			.then(({ apiData }) => {
 				data = apiData;
-				console.log(data);
+				// console.log(data);
 				spin = false;
 			});
 	});

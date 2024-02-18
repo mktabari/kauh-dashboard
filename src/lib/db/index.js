@@ -273,31 +273,34 @@ where i.INSTANCE_NUMBER=a.instance_number
 and begin_interval_time>sysdate-1
 order by to_char(begin_interval_time, 'rr/mm/dd hh24:mi:ss') desc`;
 
-export const dbLogSwitch = `SELECT to_char(first_time, 'day') day,
-       to_char(sum(decode(to_char(first_time, 'HH24'), '00', 1, 0)), '99') "00",
-       to_char(sum(decode(to_char(first_time, 'HH24'), '01', 1, 0)), '99') "01",
-       to_char(sum(decode(to_char(first_time, 'HH24'), '02', 1, 0)), '99') "02",
-       to_char(sum(decode(to_char(first_time, 'HH24'), '03', 1, 0)), '99') "03",
-       to_char(sum(decode(to_char(first_time, 'HH24'), '04', 1, 0)), '99') "04",
-       to_char(sum(decode(to_char(first_time, 'HH24'), '05', 1, 0)), '99') "05",
-       to_char(sum(decode(to_char(first_time, 'HH24'), '06', 1, 0)), '99') "06",
-       to_char(sum(decode(to_char(first_time, 'HH24'), '07', 1, 0)), '99') "07",
-       to_char(sum(decode(to_char(first_time, 'HH24'), '08', 1, 0)), '99') "0",
-       to_char(sum(decode(to_char(first_time, 'HH24'), '09', 1, 0)), '99') "09",
-       to_char(sum(decode(to_char(first_time, 'HH24'), '10', 1, 0)), '99') "10",
-       to_char(sum(decode(to_char(first_time, 'HH24'), '11', 1, 0)), '99') "11",
-       to_char(sum(decode(to_char(first_time, 'HH24'), '12', 1, 0)), '99') "12",
-       to_char(sum(decode(to_char(first_time, 'HH24'), '13', 1, 0)), '99') "13",
-       to_char(sum(decode(to_char(first_time, 'HH24'), '14', 1, 0)), '99') "14",
-       to_char(sum(decode(to_char(first_time, 'HH24'), '15', 1, 0)), '99') "15",
-       to_char(sum(decode(to_char(first_time, 'HH24'), '16', 1, 0)), '99') "16",
-       to_char(sum(decode(to_char(first_time, 'HH24'), '17', 1, 0)), '99') "17",
-       to_char(sum(decode(to_char(first_time, 'HH24'), '18', 1, 0)), '99') "18",
-       to_char(sum(decode(to_char(first_time, 'HH24'), '19', 1, 0)), '99') "19",
-       to_char(sum(decode(to_char(first_time, 'HH24'), '20', 1, 0)), '99') "20",
-       to_char(sum(decode(to_char(first_time, 'HH24'), '21', 1, 0)), '99') "21",
-       to_char(sum(decode(to_char(first_time, 'HH24'), '22', 1, 0)), '99') "22",
-       to_char(sum(decode(to_char(first_time, 'HH24'), '23', 1, 0)), '99') "23"
+export const dbLogSwitch = `select to_char(a.date_,'day') day,a.* from (
+SELECT trunc(first_time) date_,
+       to_char(sum(decode(to_char(first_time, 'HH24'), '00', 1, 0)), '99') "h00",
+       to_char(sum(decode(to_char(first_time, 'HH24'), '01', 1, 0)), '99') "h01",
+       to_char(sum(decode(to_char(first_time, 'HH24'), '02', 1, 0)), '99') "h02",
+       to_char(sum(decode(to_char(first_time, 'HH24'), '03', 1, 0)), '99') "h03",
+       to_char(sum(decode(to_char(first_time, 'HH24'), '04', 1, 0)), '99') "h04",
+       to_char(sum(decode(to_char(first_time, 'HH24'), '05', 1, 0)), '99') "h05",
+       to_char(sum(decode(to_char(first_time, 'HH24'), '06', 1, 0)), '99') "h06",
+       to_char(sum(decode(to_char(first_time, 'HH24'), '07', 1, 0)), '99') "h07",
+       to_char(sum(decode(to_char(first_time, 'HH24'), '08', 1, 0)), '99') "h08",
+       to_char(sum(decode(to_char(first_time, 'HH24'), '09', 1, 0)), '99') "h09",
+       to_char(sum(decode(to_char(first_time, 'HH24'), '10', 1, 0)), '99') "h10",
+       to_char(sum(decode(to_char(first_time, 'HH24'), '11', 1, 0)), '99') "h11",
+       to_char(sum(decode(to_char(first_time, 'HH24'), '12', 1, 0)), '99') "h12",
+       to_char(sum(decode(to_char(first_time, 'HH24'), '13', 1, 0)), '99') "h13",
+       to_char(sum(decode(to_char(first_time, 'HH24'), '14', 1, 0)), '99') "h14",
+       to_char(sum(decode(to_char(first_time, 'HH24'), '15', 1, 0)), '99') "h15",
+       to_char(sum(decode(to_char(first_time, 'HH24'), '16', 1, 0)), '99') "h16",
+       to_char(sum(decode(to_char(first_time, 'HH24'), '17', 1, 0)), '99') "h17",
+       to_char(sum(decode(to_char(first_time, 'HH24'), '18', 1, 0)), '99') "h18",
+       to_char(sum(decode(to_char(first_time, 'HH24'), '19', 1, 0)), '99') "h19",
+       to_char(sum(decode(to_char(first_time, 'HH24'), '20', 1, 0)), '99') "h20",
+       to_char(sum(decode(to_char(first_time, 'HH24'), '21', 1, 0)), '99') "h21",
+       to_char(sum(decode(to_char(first_time, 'HH24'), '22', 1, 0)), '99') "h22",
+       to_char(sum(decode(to_char(first_time, 'HH24'), '23', 1, 0)), '99') "h23"
   from v$log_history
   where first_time>trunc(sysdate)-6
- GROUP by to_char(first_time, 'YYYY-MON-DD')`;
+  and  thread#=(select thread# from v$instance)
+ GROUP by trunc(first_time)) a
+ order by date_`;
