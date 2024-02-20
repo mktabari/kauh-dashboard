@@ -790,6 +790,60 @@ ldm add-vdisk mig migration@primary-vds0 ldm4
 				>
 			</List>
 		</section>
+		<section id={uuid()} class="scroll-mt-14">
+			<Heading tag="h5" class="mb-4 mt-4">Solaris Commands</Heading>
+			<Heading tag="h6" class="mb-4 ml-6">Check Free Memory</Heading>
+			<P class={codeClass}
+				>echo "::memstat" | mdb -k
+				<button
+					id="strts"
+					on:click={() => {
+						copy(`echo "::memstat" | mdb -k
+`);
+						toastTrigger();
+					}}
+					class=" absolute right-4 top-4"
+				>
+					<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
+						content_copy
+					</span></button
+				>
+				<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
+					<span class="text-gray-800"> copied </span></Tooltip
+				> -->
+			</P>
+		</section>
+		<section id={uuid()} class="scroll-mt-14">
+			
+			<Heading tag="h5" class="mb-4 mt-4">Diagnostics SQL</Heading
+			>
+			<Heading tag="h6" class="mb-4 ml-4">Block Changes</Heading>
+			<P class={codeClass}
+				><pre>SELECT s.sid, s.serial#, s.username, s.program,s.MACHINE,i.block_changes
+FROM v$session s, v$sess_io i
+WHERE s.sid = i.sid
+ORDER BY 6 desc, 1, 2, 3, 4;</pre>
+				<button
+					id="strts"
+					on:click={() => {
+						copy(`SELECT s.sid, s.serial#, s.username, s.program,s.MACHINE,i.block_changes
+FROM v$session s, v$sess_io i
+WHERE s.sid = i.sid
+ORDER BY 6 desc, 1, 2, 3, 4;
+`);
+						toastTrigger();
+					}}
+					class=" absolute right-4 top-4"
+				>
+					<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
+						content_copy
+					</span></button
+				>
+				<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
+					<span class="text-gray-800"> copied </span></Tooltip
+				> -->
+			</P>
+		</section>
 	</div>
 	<div class="w-1/2">
 		<div id="toc" class=" sticky top-0 pl-10" bind:this={tocContentRef}>
