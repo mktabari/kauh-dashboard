@@ -22,7 +22,8 @@
 				class=" flex w-60 items-center justify-between rounded-xl bg-gray-100 px-4 py-2 delay-200 hover:bg-gray-200 dark:bg-gray-900 dark:text-white hover:dark:bg-gray-700"
 				in:fly={{ x: 800, easing: circInOut, delay: 130 * i }}
 			>
-				{db.dbName} ({db.INSTANCE_NAME})
+				<!-- {db.dbName} ({db.INSTANCE_NAME}) -->
+				{db.INSTANCE_NAME}
 				{#if db.STATUS === 'OPEN'}<Badge color="green"
 						><span class="material-symbols-outlined"> arrow_upward </span></Badge
 					>

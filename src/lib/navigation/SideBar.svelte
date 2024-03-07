@@ -82,7 +82,17 @@
 					<svelte:fragment slot="icon"
 						><span class="material-symbols-outlined"> backup </span></svelte:fragment
 					>
-				</SidebarItem>{#if veeamIndicator}<Indicator placement="center-right" color="red" />{/if}
+				</SidebarItem>
+				<!-- {#if veeamIndicator}<Indicator placement="center-right" color="red" />{/if} -->
+				{#if veeamIndicator}
+					<span class="absolute right-0 -translate-y-[25px]"
+						><span class="relative flex h-3 w-3">
+							<span
+								class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"
+							/>
+							<span class="relative inline-flex h-3 w-3 rounded-full bg-red-500" />
+						</span></span
+					>{/if}
 			</div>
 		</SidebarGroup>
 		<SidebarGroup border {borderClass}>
@@ -91,7 +101,18 @@
 					<svelte:fragment slot="icon"
 						><span class="material-symbols-outlined"> error </span></svelte:fragment
 					>
-				</SidebarItem>{#if indicator}<Indicator placement="center-right" color="red" />{/if}
+				</SidebarItem>
+				<!-- {#if indicator}<Indicator placement="center-right" color="red" />{/if} -->
+				{#if indicator}
+					<span class="absolute right-0 -translate-y-[25px]"
+						><span class="relative flex h-3 w-3">
+							<span
+								class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"
+							/>
+							<span class="relative inline-flex h-3 w-3 rounded-full bg-red-500" />
+						</span>
+					</span>
+				{/if}
 			</div>
 		</SidebarGroup>
 		<SidebarGroup border {borderClass}>

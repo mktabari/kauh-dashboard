@@ -6,7 +6,7 @@
 	import { v1 as uuid } from 'uuid';
 	import { onMount } from 'svelte';
 	let codeClass =
-		'relative mx-4 mb-10 mt-4 rounded-md border border-gray-300 bg-gray-100 py-4 pl-4 text-gray-500';
+		'relative mx-4 mb-10 mt-4 rounded-md border border-gray-300 bg-gray-100 py-4 pl-4 text-gray-500 dark:border-gray-600 dark:bg-gray-700';
 	let id;
 	let tocContentRef;
 	onMount(() => {
@@ -47,7 +47,9 @@
 							'text-gray-800',
 							'font-bold',
 							'border-red-500',
-							'bg-gray-100'
+							'bg-gray-100',
+							'dark:bg-gray-700',
+							'dark:text-gray-400'
 						);
 				} else {
 					document
@@ -56,7 +58,9 @@
 							'text-gray-800',
 							'font-bold',
 							'border-red-500',
-							'bg-gray-100'
+							'bg-gray-100',
+							'dark:bg-gray-700',
+							'dark:text-gray-400'
 						);
 					document
 						.querySelector(`li a[href="#${id}"]`)
@@ -139,7 +143,7 @@
 			>
 			<Heading tag="h6" class="mb-4 ml-4">Start ERP DB</Heading>
 			<P
-				class="relative mx-4 mb-8 mt-4 rounded-md border border-gray-300 bg-gray-100 py-4 pl-4 text-gray-500"
+				class="relative mx-4 mb-8 mt-4 rounded-md border border-gray-300 bg-gray-100 py-4 pl-4 text-gray-500 dark:border-gray-600 dark:bg-gray-700"
 			>
 				startup_db.sh<br />
 				<button
@@ -615,180 +619,183 @@ shutdown immediate;
 				>Transfering <Kbd class="px-2 py-1 text-lg">MIG</Kbd> lun from <Kbd
 					class="px-2 py-1 text-lg">testisoft67</Kbd
 				> to <Kbd class="px-2 py-1 text-lg">testisoft66</Kbd></Heading
-			>
-			<List tag="ol" class="ml-4">
-				<Li>
-					<span
-						>Connect with the <Kbd class="px-2 py-1 text-lg">root</Kbd> user to <Kbd
-							class="px-2 py-1 text-lg">ldm4</Kbd
-						> on <Kbd class="px-2 py-1 text-lg">OVS4</Kbd> server using
-						<Kbd class="px-2 py-1 text-lg">ssh</Kbd> and execute the following command</span
-					>
-					<P class={codeClass}
-						>zpool export mig
-						<button
-							id="strts"
-							on:click={() => {
-								copy(`zpool export mig
+			><P>
+				<List tag="ol" class="ml-4">
+					<Li>
+						<span
+							>Connect with the <Kbd class="px-2 py-1 text-lg">root</Kbd> user to <Kbd
+								class="px-2 py-1 text-lg">ldm4</Kbd
+							> on <Kbd class="px-2 py-1 text-lg">OVS4</Kbd> server using
+							<Kbd class="px-2 py-1 text-lg">ssh</Kbd> and execute the following command</span
+						>
+						<P class={codeClass}
+							>zpool export mig
+							<button
+								id="strts"
+								on:click={() => {
+									copy(`zpool export mig
 `);
-								toastTrigger();
-							}}
-							class=" absolute right-4 top-4"
-						>
-							<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
-								content_copy
-							</span></button
-						>
-						<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
+									toastTrigger();
+								}}
+								class=" absolute right-4 top-4"
+							>
+								<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
+									content_copy
+								</span></button
+							>
+							<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
 							<span class="text-gray-800"> copied </span></Tooltip
 						> -->
-					</P>
-				</Li>
-				<Li>
-					<span
-						>Connect with the <Kbd class="px-2 py-1 text-lg">root</Kbd> user to <Kbd
-							class="px-2 py-1 text-lg">OVS4</Kbd
-						> server using
-						<Kbd class="px-2 py-1 text-lg">ssh</Kbd> and execute the following commands</span
-					>
-					<P class={codeClass}
-						>ldm rm-vdisk mig ldm4<br /> ldm add-vdisk mig migration@primary-vds0 ldm1
-						<button
-							id="strts"
-							on:click={() => {
-								copy(`ldm rm-vdisk mig ldm4
+						</P>
+					</Li>
+					<Li>
+						<span
+							>Connect with the <Kbd class="px-2 py-1 text-lg">root</Kbd> user to <Kbd
+								class="px-2 py-1 text-lg">OVS4</Kbd
+							> server using
+							<Kbd class="px-2 py-1 text-lg">ssh</Kbd> and execute the following commands</span
+						>
+						<P class={codeClass}
+							>ldm rm-vdisk mig ldm4<br /> ldm add-vdisk mig migration@primary-vds0 ldm1
+							<button
+								id="strts"
+								on:click={() => {
+									copy(`ldm rm-vdisk mig ldm4
 ldm add-vdisk mig migration@primary-vds0 ldm1
 `);
-								toastTrigger();
-							}}
-							class=" absolute right-4 top-4"
-						>
-							<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
-								content_copy
-							</span></button
-						>
-						<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
+									toastTrigger();
+								}}
+								class=" absolute right-4 top-4"
+							>
+								<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
+									content_copy
+								</span></button
+							>
+							<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
 							<span class="text-gray-800"> copied </span></Tooltip
 						> -->
-					</P>
-				</Li>
-				<Li>
-					<span
-						>Connect with the <Kbd class="px-2 py-1 text-lg">root</Kbd> user to <Kbd
-							class="px-2 py-1 text-lg">ldm1</Kbd
-						> on <Kbd class="px-2 py-1 text-lg">OVS4</Kbd> server using
-						<Kbd class="px-2 py-1 text-lg">ssh</Kbd> and execute the following command</span
-					>
-					<P class={codeClass}
-						>zpool import mig
-						<button
-							id="strts"
-							on:click={() => {
-								copy(`zpool import mig
+						</P>
+					</Li>
+					<Li>
+						<span
+							>Connect with the <Kbd class="px-2 py-1 text-lg">root</Kbd> user to <Kbd
+								class="px-2 py-1 text-lg">ldm1</Kbd
+							> on <Kbd class="px-2 py-1 text-lg">OVS4</Kbd> server using
+							<Kbd class="px-2 py-1 text-lg">ssh</Kbd> and execute the following command</span
+						>
+						<P class={codeClass}
+							>zpool import mig
+							<button
+								id="strts"
+								on:click={() => {
+									copy(`zpool import mig
 `);
-								toastTrigger();
-							}}
-							class=" absolute right-4 top-4"
-						>
-							<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
-								content_copy
-							</span></button
-						>
-						<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
+									toastTrigger();
+								}}
+								class=" absolute right-4 top-4"
+							>
+								<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
+									content_copy
+								</span></button
+							>
+							<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
 							<span class="text-gray-800"> copied </span></Tooltip
 						> -->
-					</P></Li
-				>
-			</List>
+						</P></Li
+					>
+				</List></P
+			>
 			<Heading tag="h6" class="mb-4 ml-4"
 				>Transfering <Kbd class="px-2 py-1 text-lg">MIG</Kbd> lun from <Kbd
 					class="px-2 py-1 text-lg">testisoft66</Kbd
 				> to <Kbd class="px-2 py-1 text-lg">testisoft67</Kbd></Heading
 			>
-			<List tag="ol" class="ml-4">
-				<Li>
-					<span
-						>Connect with the <Kbd class="px-2 py-1 text-lg">root</Kbd> user to <Kbd
-							class="px-2 py-1 text-lg">ldm1</Kbd
-						> on <Kbd class="px-2 py-1 text-lg">OVS4</Kbd> server using
-						<Kbd class="px-2 py-1 text-lg">ssh</Kbd> and execute the following command</span
-					>
-					<P class={codeClass}
-						>zpool export mig
-						<button
-							id="strts"
-							on:click={() => {
-								copy(`zpool export mig
+			<P>
+				<List tag="ol" class="ml-4">
+					<Li>
+						<span
+							>Connect with the <Kbd class="px-2 py-1 text-lg">root</Kbd> user to <Kbd
+								class="px-2 py-1 text-lg">ldm1</Kbd
+							> on <Kbd class="px-2 py-1 text-lg">OVS4</Kbd> server using
+							<Kbd class="px-2 py-1 text-lg">ssh</Kbd> and execute the following command</span
+						>
+						<P class={codeClass}
+							>zpool export mig
+							<button
+								id="strts"
+								on:click={() => {
+									copy(`zpool export mig
 `);
-								toastTrigger();
-							}}
-							class=" absolute right-4 top-4"
-						>
-							<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
-								content_copy
-							</span></button
-						>
-						<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
+									toastTrigger();
+								}}
+								class=" absolute right-4 top-4"
+							>
+								<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
+									content_copy
+								</span></button
+							>
+							<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
 							<span class="text-gray-800"> copied </span></Tooltip
 						> -->
-					</P>
-				</Li>
-				<Li>
-					<span
-						>Connect with the <Kbd class="px-2 py-1 text-lg">root</Kbd> user to <Kbd
-							class="px-2 py-1 text-lg">OVS4</Kbd
-						> server using
-						<Kbd class="px-2 py-1 text-lg">ssh</Kbd> and execute the following commands</span
-					>
-					<P class={codeClass}
-						>ldm rm-vdisk mig ldm1<br /> ldm add-vdisk mig migration@primary-vds0 ldm4
-						<button
-							id="strts"
-							on:click={() => {
-								copy(`ldm rm-vdisk mig ldm1
+						</P>
+					</Li>
+					<Li>
+						<span
+							>Connect with the <Kbd class="px-2 py-1 text-lg">root</Kbd> user to <Kbd
+								class="px-2 py-1 text-lg">OVS4</Kbd
+							> server using
+							<Kbd class="px-2 py-1 text-lg">ssh</Kbd> and execute the following commands</span
+						>
+						<P class={codeClass}
+							>ldm rm-vdisk mig ldm1<br /> ldm add-vdisk mig migration@primary-vds0 ldm4
+							<button
+								id="strts"
+								on:click={() => {
+									copy(`ldm rm-vdisk mig ldm1
 ldm add-vdisk mig migration@primary-vds0 ldm4
 `);
-								toastTrigger();
-							}}
-							class=" absolute right-4 top-4"
-						>
-							<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
-								content_copy
-							</span></button
-						>
-						<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
+									toastTrigger();
+								}}
+								class=" absolute right-4 top-4"
+							>
+								<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
+									content_copy
+								</span></button
+							>
+							<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
 							<span class="text-gray-800"> copied </span></Tooltip
 						> -->
-					</P>
-				</Li>
-				<Li>
-					<span
-						>Connect with the <Kbd class="px-2 py-1 text-lg">root</Kbd> user to <Kbd
-							class="px-2 py-1 text-lg">ldm4</Kbd
-						> on <Kbd class="px-2 py-1 text-lg">OVS4</Kbd> server using
-						<Kbd class="px-2 py-1 text-lg">ssh</Kbd> and execute the following command</span
-					>
-					<P class={codeClass}
-						>zpool import mig
-						<button
-							id="strts"
-							on:click={() => {
-								copy(`zpool import mig
+						</P>
+					</Li>
+					<Li>
+						<span
+							>Connect with the <Kbd class="px-2 py-1 text-lg">root</Kbd> user to <Kbd
+								class="px-2 py-1 text-lg">ldm4</Kbd
+							> on <Kbd class="px-2 py-1 text-lg">OVS4</Kbd> server using
+							<Kbd class="px-2 py-1 text-lg">ssh</Kbd> and execute the following command</span
+						>
+						<P class={codeClass}
+							>zpool import mig
+							<button
+								id="strts"
+								on:click={() => {
+									copy(`zpool import mig
 `);
-								toastTrigger();
-							}}
-							class=" absolute right-4 top-4"
-						>
-							<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
-								content_copy
-							</span></button
-						>
-						<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
+									toastTrigger();
+								}}
+								class=" absolute right-4 top-4"
+							>
+								<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
+									content_copy
+								</span></button
+							>
+							<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
 							<span class="text-gray-800"> copied </span></Tooltip
 						> -->
-					</P></Li
-				>
-			</List>
+						</P></Li
+					>
+				</List></P
+			>
 		</section>
 		<section id={uuid()} class="scroll-mt-14">
 			<Heading tag="h5" class="mb-4 mt-4">Solaris Commands</Heading>
@@ -812,11 +819,67 @@ ldm add-vdisk mig migration@primary-vds0 ldm4
 					<span class="text-gray-800"> copied </span></Tooltip
 				> -->
 			</P>
+			<Heading tag="h6" class="mb-4 ml-6">Check Network</Heading>
+			<P class={codeClass}
+				>dladm show-phys
+				<button
+					id="strts"
+					on:click={() => {
+						copy(`dladm show-phys
+`);
+						toastTrigger();
+					}}
+					class=" absolute right-4 top-4"
+				>
+					<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
+						content_copy
+					</span></button
+				>
+				<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
+					<span class="text-gray-800"> copied </span></Tooltip
+				> -->
+			</P>
+			<P class={codeClass}
+				>ipadm show-if
+				<button
+					id="strts"
+					on:click={() => {
+						copy(`ipadm show-if
+`);
+						toastTrigger();
+					}}
+					class=" absolute right-4 top-4"
+				>
+					<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
+						content_copy
+					</span></button
+				>
+				<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
+					<span class="text-gray-800"> copied </span></Tooltip
+				> -->
+			</P>
+			<P class={codeClass}
+				>ipadm show-addr
+				<button
+					id="strts"
+					on:click={() => {
+						copy(`ipadm show-addr
+`);
+						toastTrigger();
+					}}
+					class=" absolute right-4 top-4"
+				>
+					<span class="material-symbols-outlined md-24 rotate-180 font-semibold opacity-50">
+						content_copy
+					</span></button
+				>
+				<!-- <Tooltip type="light" trigger="click" triggeredBy="#strts">
+					<span class="text-gray-800"> copied </span></Tooltip
+				> -->
+			</P>
 		</section>
 		<section id={uuid()} class="scroll-mt-14">
-			
-			<Heading tag="h5" class="mb-4 mt-4">Diagnostics SQL</Heading
-			>
+			<Heading tag="h5" class="mb-4 mt-4">Diagnostics SQL</Heading>
 			<Heading tag="h6" class="mb-4 ml-4">Block Changes</Heading>
 			<P class={codeClass}
 				><pre>SELECT s.sid, s.serial#, s.username, s.program,s.MACHINE,i.block_changes
