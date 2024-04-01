@@ -8,7 +8,8 @@
 		DropdownItem,
 		DropdownHeader,
 		DropdownDivider,
-		DarkMode
+		DarkMode,
+		Badge
 	} from 'flowbite-svelte';
 	import git from '$lib/assets/gitIcon.png';
 	export let user;
@@ -27,7 +28,9 @@
 			class="self-center whitespace-nowrap text-3xl font-bold text-gray-600 dark:text-white"
 			style="font-family: 'Bruno Ace SC', cursive;"
 		>
-			KAUH Severs Dashboard <span class="text-lg italic text-indigo-700">V:1.8</span>
+			KAUH Severs Dashboard <Badge color="indigo" rounded class="-translate-y-1"
+				><span class=" px-1 text-lg font-bold italic text-indigo-500">V# 1.9</span></Badge
+			>
 		</span>
 	</NavBrand>
 	<div class="flex items-center md:order-2">

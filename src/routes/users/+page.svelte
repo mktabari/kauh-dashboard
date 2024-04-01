@@ -31,6 +31,8 @@
 	let practitionerToastShow = false;
 	let userToastShow = false;
 	let ts_tost_message;
+	let disabledButtons = [];
+	let disabledButtons2 = [];
 	onMount(() => {
 		fetch('/api/DB/users')
 			.then((response) => response.json())
@@ -56,18 +58,24 @@
 		if (--toastCounter > 0) return setTimeout(toastTimeout, 1000);
 		toastShow = false;
 	};
-	let deactivatedUsers = [];
-	const deactivateUser = (UI, PI, AC) => {
+
+	const deactivateUser = (UI, PI, AC, i) => {
+		// console.log('start');
 		fetch(`/api/DB/users/${PI}/am_practitioner/${AC}`)
 			.then((response) => response.json())
 			.then(({ status }) => {
+				// console.log(status);
 				if (status === 'ok') {
 					fetch(`/api/DB/users/${UI}/sm_appl_user/${AC}`)
 						.then((response) => response.json())
 						.then(({ status }) => {
+							// console.log(status);
 							if (status === 'ok') {
-								deactivatedUsers.push(UI);
-								deactivatedUsers = [...deactivatedUsers];
+								if (AC === 'D') {
+									disabledButtons[i] = true;
+								} else {
+									disabledButtons2[i] = true;
+								}
 							} else {
 								if (AC === 'D') {
 									ts_tost_message = 'Unable To Diactivate User.';
@@ -156,7 +164,7 @@
 	<TabItem open>
 		<div slot="title" class="flex items-center gap-2">
 			<span class="material-symbols-outlined"> person </span>
-			Active Users
+			Diactivate Users
 		</div>
 
 		<div class="flex flex-row flex-wrap gap-6">
@@ -176,7 +184,7 @@
 						<TextPlaceholder size="xxl" class="my-8" />
 						<TextPlaceholder size="xxl" class="my-8" />
 					{:else if users}
-						{#each users as user}
+						{#each users as user, i}
 							<TableBodyRow>
 								<TableBodyCell class="text-center">{user.EMPNUM}</TableBodyCell>
 								<TableBodyCell class=" text-right text-lg ">{user.FN}</TableBodyCell>
@@ -192,14 +200,11 @@
 
 								<TableBodyCell
 									><Button
-										disabled={user.AP > 0 ||
-											deactivatedUsers.filter((item) => {
-												return item === user.AUI;
-											}).length > 0}
+										disabled={disabledButtons[i]}
 										size="xs"
 										class=" bg-red-500 hover:bg-red-800 dark:bg-red-500 dark:hover:bg-red-700  "
 										on:click={() => {
-											deactivateUser(user.AUI, user.PI, 'D');
+											deactivateUser(user.AUI, user.PI, 'D', i);
 										}}>Deactivate</Button
 									></TableBodyCell
 								>
@@ -215,7 +220,7 @@
 	<TabItem>
 		<div slot="title" class="flex items-center gap-2">
 			<span class="material-symbols-outlined"> person_add </span>
-			Inactive Users
+			Activate Users
 		</div>
 		<div class="flex flex-row flex-wrap gap-6">
 			<Table striped={true} shadow>
@@ -234,7 +239,7 @@
 						<TextPlaceholder size="xxl" class="my-8" />
 						<TextPlaceholder size="xxl" class="my-8" />
 					{:else if usersInactive}
-						{#each usersInactive as user}
+						{#each usersInactive as user, i}
 							<TableBodyRow>
 								<TableBodyCell class="text-center">{user.EMPNUM}</TableBodyCell>
 								<TableBodyCell class=" text-right text-lg ">{user.FN}</TableBodyCell>
@@ -250,13 +255,11 @@
 
 								<TableBodyCell
 									><Button
-										disabled={deactivatedUsers.filter((item) => {
-											return item === user.AUI;
-										}).length > 0}
+										disabled={disabledButtons2[i]}
 										size="xs"
 										class=" bg-green-500 hover:bg-green-800 dark:bg-green-500 dark:hover:bg-green-700  "
 										on:click={() => {
-											deactivateUser(user.AUI, user.PI, 'E');
+											deactivateUser(user.AUI, user.PI, 'E', i);
 										}}>Activate</Button
 									></TableBodyCell
 								>

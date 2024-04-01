@@ -126,6 +126,7 @@
 				<TableHeadCell class="text-gray-800 dark:text-gray-300">SQL Text</TableHeadCell>
 				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Calls</TableHeadCell>
 				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Time/Call</TableHeadCell>
+				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Cost</TableHeadCell>
 				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Hash Value</TableHeadCell>
 			</TableHead>
 			<TableBody>
@@ -138,6 +139,7 @@
 								>
 								<TableBodyCell>{row.CALLS}</TableBodyCell>
 								<TableBodyCell>{row.TIME}</TableBodyCell>
+								<TableBodyCell>{row.COST}</TableBodyCell>
 								<TableBodyCell
 									>{row.HASH_VALUE}
 									<Copy id="hv{row.HASH_VALUE}" value={row.HASH_VALUE.toString()} name={'HV'} />

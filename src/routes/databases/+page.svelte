@@ -101,7 +101,7 @@
 	let killToastShow = false;
 	let killToastCounter = 0;
 	let killedSids = [];
-	const handleKillSession = async (e, SID, SERIAL, INST_ID, SERVERID) => {
+	const handleKillSession = async (SID, SERIAL, INST_ID, SERVERID) => {
 		const response = await fetch(`/api/DB/locks/${SERVERID}/${SID}/${SERIAL}/${INST_ID}`);
 		const data = await response.json();
 
@@ -110,15 +110,7 @@
 			killToastTrigger();
 			return;
 		} else {
-			killedSids.push(SID);
-
-			displayItems = [...displayItems];
-			// e.target.disabled = true;
-			// e.target.parentElement.parentElement.classList.add(
-			// 	'line-through',
-			// 	'text-red-600',
-			// 	'decoration-2'
-			// );
+			killedSids[SID] = true;
 		}
 	};
 	let ts_tost_message;
@@ -515,81 +507,48 @@
 						</TableHead>
 						<TableBody>
 							{#key serverLockData}
-								{#each displayItems as row (uuid())}
+								{#each displayItems as row, i (uuid())}
 									<!-- <div
 										class="line-through"
 										class:line-through={killedSids.filter((item) => {
 											item === row.SID ? true : false;
 										}).length > 0}
 									> -->
-									{#if killedSids.filter((item) => {
-										return item === row.SID;
-									}).length > 0}
-										<TableBodyRow class="text-red-600 line-through decoration-2">
-											<TableBodyCell>{row.USERNAME}</TableBodyCell>
-											<TableBodyCell>{row.SID}</TableBodyCell>
-											<TableBodyCell>{row.SERIAL}</TableBodyCell>
-											<TableBodyCell
-												>{row.OBJECT_NAME === null ? '' : row.OBJECT_NAME}</TableBodyCell
-											>
-											<TableBodyCell>{row.SECONDS_IN_WAIT}</TableBodyCell>
-											<TableBodyCell>{row.TYPE}</TableBodyCell>
-											<TableBodyCell>{row.LOCK_MODE}</TableBodyCell>
-											<TableBodyCell>{row.INSTANCE}</TableBodyCell>
-											<TableBodyCell>{row.MACHINE.replace('\x00', '')}</TableBodyCell>
-											<TableBodyCell
-												>{row.BLOCKED_INSTANCE === null ? '' : row.BLOCKED_INSTANCE}</TableBodyCell
-											>
-											<TableBodyCell
-												>{row.BLOCKED_USERNAME === null ? '' : row.BLOCKED_USERNAME}</TableBodyCell
-											>
-											<TableBodyCell
-												>{row.SECONDS_BLOCKED === null ? '' : row.SECONDS_BLOCKED}</TableBodyCell
-											>
-											<TableBodyCell
-												><Button
-													size="xs"
-													disabled
-													class=" bg-red-600 hover:bg-red-800 disabled:bg-gray-500 dark:bg-red-500  dark:hover:bg-red-700  disabled:dark:bg-cyan-500"
-													on:click={(e) => {
-														handleKillSession(e, row.SID, row.SERIAL, row.INST_ID, row.SERVERID);
-													}}>Kill</Button
-												></TableBodyCell
-											>
-										</TableBodyRow>
-									{:else}
-										<TableBodyRow>
-											<TableBodyCell>{row.USERNAME}</TableBodyCell>
-											<TableBodyCell>{row.SID}</TableBodyCell>
-											<TableBodyCell>{row.SERIAL}</TableBodyCell>
-											<TableBodyCell
-												>{row.OBJECT_NAME === null ? '' : row.OBJECT_NAME}</TableBodyCell
-											>
-											<TableBodyCell>{row.SECONDS_IN_WAIT}</TableBodyCell>
-											<TableBodyCell>{row.TYPE}</TableBodyCell>
-											<TableBodyCell>{row.LOCK_MODE}</TableBodyCell>
-											<TableBodyCell>{row.INSTANCE}</TableBodyCell>
-											<TableBodyCell>{row.MACHINE.replace('\x00', '')}</TableBodyCell>
-											<TableBodyCell
-												>{row.BLOCKED_INSTANCE === null ? '' : row.BLOCKED_INSTANCE}</TableBodyCell
-											>
-											<TableBodyCell
-												>{row.BLOCKED_USERNAME === null ? '' : row.BLOCKED_USERNAME}</TableBodyCell
-											>
-											<TableBodyCell
-												>{row.SECONDS_BLOCKED === null ? '' : row.SECONDS_BLOCKED}</TableBodyCell
-											>
-											<TableBodyCell
-												><Button
-													size="xs"
-													class=" bg-red-600 hover:bg-red-800 disabled:bg-gray-500 dark:bg-red-500  dark:hover:bg-red-700  disabled:dark:bg-cyan-500"
-													on:click={(e) => {
-														handleKillSession(e, row.SID, row.SERIAL, row.INST_ID, row.SERVERID);
-													}}>Kill</Button
-												></TableBodyCell
-											>
-										</TableBodyRow>
-									{/if}
+
+									<TableBodyRow
+										class={killedSids[row.SID] === true
+											? 'text-red-600 line-through decoration-2'
+											: ''}
+									>
+										<TableBodyCell>{row.USERNAME}</TableBodyCell>
+										<TableBodyCell>{row.SID}</TableBodyCell>
+										<TableBodyCell>{row.SERIAL}</TableBodyCell>
+										<TableBodyCell>{row.OBJECT_NAME === null ? '' : row.OBJECT_NAME}</TableBodyCell>
+										<TableBodyCell>{row.SECONDS_IN_WAIT}</TableBodyCell>
+										<TableBodyCell>{row.TYPE}</TableBodyCell>
+										<TableBodyCell>{row.LOCK_MODE}</TableBodyCell>
+										<TableBodyCell>{row.INSTANCE}</TableBodyCell>
+										<TableBodyCell>{row.MACHINE.replace('\x00', '')}</TableBodyCell>
+										<TableBodyCell
+											>{row.BLOCKED_INSTANCE === null ? '' : row.BLOCKED_INSTANCE}</TableBodyCell
+										>
+										<TableBodyCell
+											>{row.BLOCKED_USERNAME === null ? '' : row.BLOCKED_USERNAME}</TableBodyCell
+										>
+										<TableBodyCell
+											>{row.SECONDS_BLOCKED === null ? '' : row.SECONDS_BLOCKED}</TableBodyCell
+										>
+										<TableBodyCell
+											><Button
+												disabled={killedSids[row.SID] === true}
+												size="xs"
+												class=" bg-red-600 hover:bg-red-800 disabled:bg-gray-500 dark:bg-red-500  dark:hover:bg-red-700  "
+												on:click={() => {
+													handleKillSession(row.SID, row.SERIAL, row.INST_ID, row.SERVERID);
+												}}>Kill</Button
+											></TableBodyCell
+										>
+									</TableBodyRow>
 
 									<!-- </div> -->
 								{:else}

@@ -99,11 +99,11 @@ round((P1.value + P2.value - P3.value) /
   AND    P2.name = 'consistent gets'
   AND    P3.name = 'physical reads'
 `;
-export const dbSQLTime = `select a.SQL_TEXT,a.EXECUTIONS+a.FETCHES+a.PARSE_CALLS CALLS,round(a.CPU_TIME/(a.EXECUTIONS+a.FETCHES+a.PARSE_CALLS)/1000000) TIME,a.HASH_VALUE
+export const dbSQLTime = `select a.SQL_TEXT,a.EXECUTIONS CALLS,round(a.CPU_TIME/(a.EXECUTIONS)/1000000) TIME,a.HASH_VALUE,a.optimizer_cost COST
 from v$sqlarea a 
-where a.EXECUTIONS+a.FETCHES>0
-and (a.CPU_TIME/(a.EXECUTIONS+a.FETCHES+a.PARSE_CALLS))>1000000
-order by a.CPU_TIME/(a.EXECUTIONS+a.FETCHES+a.PARSE_CALLS) desc`;
+where a.EXECUTIONS>0
+and (a.CPU_TIME/(a.EXECUTIONS))>1000000
+order by 3 desc`;
 
 export const dbWait = `select * from (
   SELECT event,
