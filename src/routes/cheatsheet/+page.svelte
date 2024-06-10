@@ -538,6 +538,32 @@ ORDER BY 6 desc, 1, 2, 3, 4;
 					/>
 				</div>
 			</P>
+			<Heading tag="h6" class="mb-4 ml-4">Current Sql Load</Heading>
+			<P class={codeClass}
+				><pre>select a.sql_id,
+s.SQL_TEXT,
+count(*) ex,
+AVG(a.cpu_time * power(10, -6)) avg_time,
+count(*) * AVG(a.cpu_time * power(10, -6)) tot_time
+from v$sql_monitor a, v$sql s
+where a.SQL_ID = s.SQL_ID
+group by a.sql_id, s.SQL_TEXT
+order by 5 desc;</pre>
+				<div class=" absolute right-4 top-4">
+					<Copy
+						value="select a.sql_id,
+s.SQL_TEXT,
+count(*) ex,
+AVG(a.cpu_time * power(10, -6)) avg_time,
+count(*) * AVG(a.cpu_time * power(10, -6)) tot_time
+from v$sql_monitor a, v$sql s
+where a.SQL_ID = s.SQL_ID
+group by a.sql_id, s.SQL_TEXT
+order by 5 desc;
+"
+					/>
+				</div>
+			</P>
 		</section>
 	</div>
 	<div class="w-1/2">

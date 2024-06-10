@@ -9,6 +9,7 @@
 	import DBUpDownNew from '$lib/cards/DBUpDownNew.svelte';
 	import SMSChart from '$lib/cards/SMSChart.svelte';
 	import DBSwitch from '$lib/cards/DBSwitch.svelte';
+	import DBCurrentSql from '$lib/cards/DBCurrentSql.svelte';
 
 	export let data;
 
@@ -33,6 +34,9 @@
 	</div>
 	<div class=" w-full">
 		<SMSChart {aClass} />
+	</div>
+	<div class=" col-span-2 w-full">
+		<DBCurrentSql {aClass} />
 	</div>
 	<div class=" col-span-2 w-full">
 		<DBSqlTime {aClass} />

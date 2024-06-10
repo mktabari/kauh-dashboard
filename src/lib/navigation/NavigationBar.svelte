@@ -28,8 +28,8 @@
 			class="self-center whitespace-nowrap text-3xl font-bold text-gray-600 dark:text-white"
 			style="font-family: 'Bruno Ace SC', cursive;"
 		>
-			KAUH Severs Dashboard <Badge color="indigo" rounded class="-translate-y-1"
-				><span class=" px-1 text-lg font-bold italic text-indigo-500">V# 1.9</span></Badge
+			KAUH Severs Dashboard <Badge color="indigo" rounded class="-translate-y-1 opacity-70"
+				><span class=" px-1 text-lg font-bold italic text-indigo-500">V# 2.0</span></Badge
 			>
 		</span>
 	</NavBrand>

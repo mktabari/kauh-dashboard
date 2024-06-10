@@ -99,8 +99,20 @@ round((P1.value + P2.value - P3.value) /
   AND    P2.name = 'consistent gets'
   AND    P3.name = 'physical reads'
 `;
+export const dbCurrentSQLTime = `select a.SQL_ID,t.SQL_TEXT,count(*) EXE,
+round(avg(a.CPU_TIME*power(10,-6)),2) CPU_AVG,
+round(sum(a.CPU_TIME*power(10,-6)),2) CPU_TOT,
+round(avg(a.USER_IO_WAIT_TIME*power(10,-6)),2) IO_AVG,
+round(sum(a.USER_IO_WAIT_TIME*power(10,-6)),2) IO_TOT,
+round(avg(a.ELAPSED_TIME *power(10,-6)),2) ELA_AVG,
+round(sum(a.ELAPSED_TIME*power(10,-6)),2) ELA_TOT
+from V$SQL_MONITOR a ,v$sqlarea t
+where a.SQL_ID=t.SQL_ID
+group by a.SQL_ID,t.sql_text
+--having sum(a.ELAPSED_TIME*power(10,-6))>=1
+order by 9 desc`;
 export const dbSQLTime = `select a.SQL_TEXT,a.EXECUTIONS CALLS,round(a.CPU_TIME/(a.EXECUTIONS)/1000000) TIME,a.HASH_VALUE,a.optimizer_cost COST
-from v$sqlarea a 
+from v$sqlarea a
 where a.EXECUTIONS>0
 and (a.CPU_TIME/(a.EXECUTIONS))>1000000
 order by 3 desc`;
