@@ -56,6 +56,11 @@
 					><span class="material-symbols-outlined"> database </span></svelte:fragment
 				>
 			</SidebarItem>
+			<SidebarItem label="SQL Diagnosis" href="/SqlDiagnosis">
+				<svelte:fragment slot="icon"
+					><span class="material-symbols-outlined"> article_shortcut </span></svelte:fragment
+				>
+			</SidebarItem>
 			<SidebarItem label="Time / Date" href="/time">
 				<svelte:fragment slot="icon"
 					><span class="material-symbols-outlined"> schedule </span></svelte:fragment

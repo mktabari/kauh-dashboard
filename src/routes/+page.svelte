@@ -35,7 +35,7 @@
 	<div class=" w-full">
 		<SMSChart {aClass} />
 	</div>
-	<div class=" col-span-2 w-full">
+	<!-- <div class=" col-span-2 w-full">
 		<DBCurrentSql {aClass} />
 	</div>
 	<div class=" col-span-2 w-full">
@@ -43,7 +43,7 @@
 	</div>
 	<div class=" col-span-2 w-full">
 		<DBTrans {aClass} />
-	</div>
+	</div> -->
 	<div class=" col-span-2 flex w-full flex-row flex-wrap gap-3">
 		{#each WServers as server}
 			<div class=" w-170">

@@ -88,9 +88,9 @@
 </script>
 
 <div class={aClass}>
-	<div class="pb-3 pl-5 text-2xl font-extrabold text-gray-500 dark:text-gray-400">
+	<!-- <div class="pb-3 pl-5 text-2xl font-extrabold text-gray-500 dark:text-gray-400">
 		DB Transactions
-	</div>
+	</div> -->
 	{#if spin}
 		<div class="w-full p-10 text-center">
 			<Spinner size={8} />

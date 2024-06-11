@@ -36,6 +36,7 @@
 		fetch('/api/DB/sqlCurrent')
 			.then((response) => response.json())
 			.then(({ apiData }) => {
+				pages = [];
 				data = apiData;
 				rows = data[0].rows;
 				server = data[0].name;
@@ -97,7 +98,7 @@
 </script>
 
 <div class={aClass}>
-	<div class="pb-3 pl-5 text-2xl font-extrabold text-gray-500 dark:text-gray-400">Current SQLs</div>
+	<!-- <div class="pb-3 pl-5 text-2xl font-extrabold text-gray-500 dark:text-gray-400">Current SQLs</div> -->
 	{#if spin}
 		<div class="w-full p-10 text-center">
 			<Spinner size={8} />
