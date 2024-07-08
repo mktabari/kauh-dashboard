@@ -29,7 +29,7 @@
 			style="font-family: 'Bruno Ace SC', cursive;"
 		>
 			KAUH Severs Dashboard <Badge color="indigo" rounded class="-translate-y-1 opacity-70"
-				><span class=" px-1 text-lg font-bold italic text-indigo-500">V# 2.0</span></Badge
+				><span class=" px-1 text-lg font-bold italic text-indigo-500">V# 2.1</span></Badge
 			>
 		</span>
 	</NavBrand>

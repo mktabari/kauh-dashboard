@@ -139,7 +139,7 @@
 			})}
 			<div class="relative flex flex-row pt-2 font-semibold">
 				<div class=" h-6 w-6">
-					<span class="material-symbols-outlined absolute"> memory </span>
+					<span class="material-symbols-outlined absolute"> memory_alt </span>
 				</div>
 				{#if memorySpinner}
 					<div class=" h-4 w-4">
@@ -152,7 +152,7 @@
 
 			<div class="relative flex flex-row pt-2 font-semibold">
 				<div class=" h-6 w-6">
-					<span class="material-symbols-outlined absolute"> memory_alt </span>
+					<span class="material-symbols-outlined absolute"> memory </span>
 				</div>
 				{#if cpuSpinner}
 					<div class=" h-4 w-4">

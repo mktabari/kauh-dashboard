@@ -2,7 +2,6 @@
 	import { fly } from 'svelte/transition';
 	import { circInOut } from 'svelte/easing';
 	import { onDestroy } from 'svelte';
-	import { GoogleSpin } from 'svelte-loading-spinners';
 	import Chart from 'chart.js/auto';
 	import {
 		Tabs,
@@ -22,10 +21,7 @@
 		Accordion,
 		AccordionItem,
 		Toast,
-		Toggle,
-		MultiSelect,
-		Spinner,
-		Radio
+		Toggle
 	} from 'flowbite-svelte';
 	import { CheckCircleSolid, CloseCircleSolid } from 'flowbite-svelte-icons';
 	import { v4 as uuid } from 'uuid';
@@ -48,7 +44,7 @@
 	let serverAlertData;
 	let serverDrData;
 	let serverChartData;
-	let serverAWRtData;
+
 	let bkLog = '';
 	let currentFile = '';
 	let spin = false;
@@ -324,26 +320,6 @@
 		}
 	};
 	$: if (serverChartData) chartDB();
-	let selected = [];
-	let multiSelect = [];
-	let awrSpin = false;
-	$: {
-		if (serverAWRtData) {
-			multiSelect = serverAWRtData.map((item) => {
-				return { value: item.SNAPID, name: `${item.SNAPID} - ${item.BEGIN}` };
-			});
-		}
-	}
-	$: {
-		returnedServerId ? (selected = []) : null;
-	}
-	let awrReport;
-	let repName;
-	let serverName;
-	let startSnapId;
-	let endSnapId;
-	let repType = 'awr';
-	$: if (repType) awrReport = '';
 </script>
 
 <Toast
@@ -882,111 +858,6 @@
 					</div>
 				{/if}
 				<canvas bind:this={charCanvas} height="110" />
-			</div>
-		</div>
-	</TabItem>
-	<TabItem>
-		<div slot="title" class="flex items-center gap-2">
-			<span class="material-symbols-outlined"> description </span>
-			AWR Report
-		</div>
-		<div class="flex flex-col gap-2">
-			<div class="flex w-full">
-				<ServerBG
-					servers={lockServers}
-					label="select a server for AWR report:"
-					bind:serverData={serverAWRtData}
-					bind:spin
-					apiName="DB/awr"
-					bind:returnedServerId
-				/>
-			</div>
-			<div class=" relative mt-5">
-				{#if spin}
-					<div class=" flex w-full justify-center">
-						<Spinner />
-					</div>
-				{:else if serverAWRtData}
-					<div class="flex w-full flex-row gap-2">
-						<div class="grow">
-							<MultiSelect items={multiSelect} bind:value={selected} size="lg" />
-						</div>
-						<Radio name="repType" custom value="awr" bind:group={repType}>
-							<div
-								class="inline-flex cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-white p-3 text-gray-500 hover:bg-gray-100 hover:text-gray-600 peer-checked:border-primary-600 peer-checked:text-primary-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:border-primary-300 dark:peer-checked:text-primary-300"
-							>
-								<div class=" text-lg font-semibold">AWR</div>
-							</div>
-						</Radio>
-						<Radio name="repType" custom value="addm" bind:group={repType}>
-							<div
-								class="inline-flex cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-white p-3 text-gray-500 hover:bg-gray-100 hover:text-gray-600 peer-checked:border-primary-600 peer-checked:text-primary-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:border-primary-300 dark:peer-checked:text-primary-300"
-							>
-								<div class=" text-lg font-semibold">ADDM</div>
-							</div>
-						</Radio>
-						<Button
-							disabled={selected.length < 2}
-							on:click={() => {
-								awrSpin = true;
-								awrReport = undefined;
-								startSnapId = Math.min(
-									...selected.map((item) => {
-										return parseInt(item);
-									})
-								);
-								endSnapId = Math.max(
-									...selected.map((item) => {
-										return parseInt(item);
-									})
-								);
-
-								fetch(`/api/ssh/${repType}/${returnedServerId}/${startSnapId}/${endSnapId}`)
-									.then((response) => response.json())
-									.then(({ report, dbName, name }) => {
-										repName = dbName;
-										serverName = name;
-										awrSpin = false;
-										awrReport = report;
-									});
-							}}>Generate</Button
-						>
-						<Button
-							disabled={!awrReport}
-							on:click={() => {
-								let a = document.createElement('a');
-								document.body.append(a);
-								if (repType === 'awr') {
-									a.download = `${serverName}-${repName}-${startSnapId}-${endSnapId}.html`;
-									a.href = URL.createObjectURL(new Blob([awrReport], { type: 'text/html' }));
-								} else {
-									a.download = `${serverName}-${repName}-${startSnapId}-${endSnapId}.txt`;
-									a.href = URL.createObjectURL(new Blob([awrReport], { type: 'text/text' }));
-								}
-								a.click();
-								a.remove();
-							}}>Dpwnload</Button
-						>
-					</div>
-					{#if awrSpin}
-						<div class=" mb-5 mt-10 flex w-full justify-center">
-							<GoogleSpin duration="2.5s" size="70px" />
-						</div>
-					{/if}
-					{#if awrReport}
-						{#if repType === 'awr'}
-							<div class=" mt-5">
-								{@html awrReport}
-							</div>
-						{:else}
-							<div class=" mt-5 w-full">
-								<pre class="w-full">
-{awrReport}
-</pre>
-							</div>
-						{/if}
-					{/if}
-				{/if}
 			</div>
 		</div>
 	</TabItem>

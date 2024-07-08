@@ -1,6 +1,8 @@
 <script>
 	import { onMount } from 'svelte';
 	import Copy from '$lib/component/Copy.svelte';
+	import DBSqlPlan from '$lib/cards/DBSqlPLan.svelte';
+	import { slide } from 'svelte/transition';
 	import {
 		Table,
 		TableBody,
@@ -14,7 +16,7 @@
 		ButtonGroup,
 		Button,
 		Badge,
-		P
+		Popover
 	} from 'flowbite-svelte';
 
 	export let aClass;
@@ -24,6 +26,7 @@
 	let pages = [];
 	let rows = [];
 	let server;
+	let serverId;
 	let db;
 	let details;
 	let colorList = [];
@@ -33,6 +36,7 @@
 	});
 	const getData = () => {
 		spin = true;
+		details = null;
 		fetch('/api/DB/sqlCurrent')
 			.then((response) => response.json())
 			.then(({ apiData }) => {
@@ -40,6 +44,7 @@
 				data = apiData;
 				rows = data[0].rows;
 				server = data[0].name;
+				serverId = data[0].id;
 				db = data[0].dbName;
 				for (let i = 1; i <= Math.ceil(rows.length / 10); i++) {
 					if (i === 1) {
@@ -80,6 +85,7 @@
 		server = _server;
 		db = _db;
 		rows = data.filter((row) => row.name === server && row.dbName === db)[0].rows;
+		serverId = data.filter((row) => row.name === server && row.dbName === db)[0].id;
 		pages = [];
 		for (let i = 1; i <= Math.ceil(rows.length / 10); i++) {
 			if (i === 1) {
@@ -94,6 +100,10 @@
 			else return 'light';
 		});
 		setActivePage();
+	};
+	let openRow;
+	const toggleRow = (i) => {
+		openRow = openRow === i ? null : i;
 	};
 </script>
 
@@ -137,7 +147,7 @@
 		</div>
 		<Table striped={true} shadow>
 			<TableHead class="bg-gray-200 dark:bg-gray-700">
-				<TableHeadCell colspan="2" />
+				<TableHeadCell colspan="3" />
 				<TableHeadCell colspan="2" class=" pb-0 text-center"
 					><div class="mx-1 border-b border-gray-700">CPU</div></TableHeadCell
 				>
@@ -150,6 +160,7 @@
 				<TableHeadCell />
 			</TableHead>
 			<TableHead class="bg-gray-200 dark:bg-gray-700">
+				<TableHeadCell class=" pt-0 text-gray-800 dark:text-gray-300">Plan</TableHeadCell>
 				<TableHeadCell class="w-1/2 pt-0 text-gray-800 dark:text-gray-300">SQL Text</TableHeadCell>
 				<TableHeadCell class=" pt-0   text-center text-gray-800 dark:text-gray-300"
 					>Calls</TableHeadCell
@@ -179,13 +190,34 @@
 					{#each rows as row, i}
 						{#if i >= page * 10 - 10 && i <= page * 10}
 							<TableBodyRow>
+								<TableBodyCell class="text-center">
+									<button on:click={() => toggleRow(i)}>
+										<span class="material-symbols-outlined"> article_shortcut </span>
+									</button>
+								</TableBodyCell>
 								<TableBodyCell
 									tdClass="w-1/2 px-6 py-4 font-medium"
 									on:click={() => (details = row)}
 									><p class="line-clamp-1 w-full overflow-hidden" style="word-break: break-all;">
 										{row.SQL_TEXT}
-									</p></TableBodyCell
-								>
+									</p>
+									<Popover
+										class=" w-88 text-sm text-gray-700 "
+										title="Statistics for sql_id: {row.SQL_ID}"
+										><div class="grid grid-cols-[auto_auto_1fr] gap-2">
+											<span>First Load Date</span><span>:</span><span>{row.FIRST_LOAD_TIME}</span
+											><span> Last Active Time</span><span>:</span><span>
+												{row.LAST_ACTIVE_TIME}</span
+											>
+											<span># of Executions</span><span>:</span><span>
+												{new Intl.NumberFormat('en-GB').format(row.EXECUTIONS)}</span
+											>
+											<span>Executions / Day</span><span>:</span><span>
+												{new Intl.NumberFormat('en-GB').format(row.PD.toFixed(0))}</span
+											>
+										</div></Popover
+									>
+								</TableBodyCell>
 								<TableBodyCell class="text-center">{row.EXE}</TableBodyCell>
 								<TableBodyCell class="text-center"
 									>{#if row.CPU_AVG > 60}
@@ -215,6 +247,18 @@
 									<Copy id="hv{row.SQL_ID}" value={row.SQL_ID.toString()} name={'HV'} />
 								</TableBodyCell>
 							</TableBodyRow>
+							{#if openRow === i}
+								<TableBodyRow>
+									<TableBodyCell colspan="10" class="p-0">
+										<div
+											class=" w-full overflow-auto"
+											transition:slide={{ duration: 300, axis: 'y' }}
+										>
+											<DBSqlPlan {serverId} sqlID={row.SQL_ID} />
+										</div>
+									</TableBodyCell>
+								</TableBodyRow>
+							{/if}
 						{/if}
 					{:else}
 						<div class=" font-semibold text-2xl text-blue-700 pl-5 pt-3 pb-2">No Data!</div>

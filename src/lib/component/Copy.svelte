@@ -1,6 +1,6 @@
 <script>
-	import { Tooltip } from 'flowbite-svelte';
-	export let value, name, id;
+	// import { Tooltip } from 'flowbite-svelte';
+	export let value, id;
 	let copied = false,
 		intervalId;
 	const copy = async (text) => {

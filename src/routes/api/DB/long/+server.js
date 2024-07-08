@@ -2,7 +2,7 @@ import { json } from '@sveltejs/kit';
 import { fork } from 'child_process';
 import { fileURLToPath } from 'url';
 import { getTagServers } from '$lib/modules/myServers.js';
-import { dbCurrentSQLTime } from '$lib/db/index.js';
+import { dbLong } from '$lib/db/index.js';
 import oracledb from 'oracledb';
 oracledb.initOracleClient();
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
@@ -19,7 +19,7 @@ if (process.argv[2] === 'child') {
 
 			const customPromise = new Promise(async (resolve) => {
 				try {
-					const result = await connection.execute(dbCurrentSQLTime);
+					const result = await connection.execute(dbLong);
 					const { rows } = result;
 					await connection.close();
 					resolve(rows);

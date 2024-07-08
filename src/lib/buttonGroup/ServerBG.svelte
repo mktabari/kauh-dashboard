@@ -22,6 +22,9 @@
 					returnedServerId = serverId;
 					serverData = apiData;
 				});
+		} else {
+			spin = false;
+			returnedServerId = serverId;
 		}
 	};
 </script>

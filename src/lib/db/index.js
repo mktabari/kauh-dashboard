@@ -90,7 +90,27 @@ or message_text LIKE 'Starting ORACLE instance%'
 or message_text LIKE '%terminating the instance%') 
 and to_char(originating_timestamp,'rrrrmmdd')>to_char(sysdate-365,'rrrrmmdd')
 `;
-
+export const dbLong = `select 
+       l.sid||'-'||l.serial#  id,
+       l.SID,s.SQL_ID,
+       s.username,
+       l.OPNAME,
+       l.SOFAR,
+       l.TARGET,
+       l.TOTALWORK,
+       round(100 * l.SOFAR / l.TOTALWORK)  Percent,
+       SUBSTR('0' || TRUNC(MOD(l.TIME_REMAINING, 86400) / 3600), -2, 2) || ':' ||
+       SUBSTR('0' || TRUNC(MOD(MOD(l.TIME_REMAINING, 86400), 3600) / 60),
+              -2,
+              2) || ':' ||
+       SUBSTR('0' || MOD(MOD(MOD(l.TIME_REMAINING, 86400), 3600), 60),
+              -2,
+              2) Time_Remaining
+  from v$session_longops l,v$session s
+ where l.SOFAR <> l.TOTALWORK
+ and   s.SID=l.SID
+ and TOTALWORK<>0
+`;
 export const dbHitRatio = `SELECT P1.value+P2.value "LR",P3.value "PR", 
 round((P1.value + P2.value - P3.value) / 
 (P1.value + P2.value)*100,2) "HR"
@@ -99,23 +119,42 @@ round((P1.value + P2.value - P3.value) /
   AND    P2.name = 'consistent gets'
   AND    P3.name = 'physical reads'
 `;
-export const dbCurrentSQLTime = `select a.SQL_ID,t.SQL_TEXT,count(*) EXE,
-round(avg(a.CPU_TIME*power(10,-6)),2) CPU_AVG,
-round(sum(a.CPU_TIME*power(10,-6)),2) CPU_TOT,
-round(avg(a.USER_IO_WAIT_TIME*power(10,-6)),2) IO_AVG,
-round(sum(a.USER_IO_WAIT_TIME*power(10,-6)),2) IO_TOT,
-round(avg(a.ELAPSED_TIME *power(10,-6)),2) ELA_AVG,
-round(sum(a.ELAPSED_TIME*power(10,-6)),2) ELA_TOT
-from V$SQL_MONITOR a ,v$sqlarea t
-where a.SQL_ID=t.SQL_ID
-group by a.SQL_ID,t.sql_text
---having sum(a.ELAPSED_TIME*power(10,-6))>=1
-order by 9 desc`;
-export const dbSQLTime = `select a.SQL_TEXT,a.EXECUTIONS CALLS,round(a.CPU_TIME/(a.EXECUTIONS)/1000000) TIME,a.HASH_VALUE,a.optimizer_cost COST
-from v$sqlarea a
-where a.EXECUTIONS>0
-and (a.CPU_TIME/(a.EXECUTIONS))>1000000
-order by 3 desc`;
+export const dbCurrentSQLTime = `select d.*,
+       s.SQL_TEXT,
+       to_char(s.last_active_time, 'rrrr-mm-dd/HH24:mi:ss') last_active_time,
+       s.EXECUTIONS,
+       s.FIRST_LOAD_TIME,
+       decode(trunc(s.last_active_time -
+                    to_date(s.FIRST_LOAD_TIME, 'rrrr-mm-dd/hh24:mi:ss')),
+              0,
+              s.EXECUTIONS,
+              s.EXECUTIONS /
+              (s.last_active_time -
+              to_date(s.FIRST_LOAD_TIME, 'rrrr-mm-dd/hh24:mi:ss'))) PD
+  from v$sqlarea s,
+       (select a.SQL_ID,
+               count(*) EXE,
+               round(avg(a.CPU_TIME * power(10, -6)), 2) CPU_AVG,
+               round(sum(a.CPU_TIME * power(10, -6)), 2) CPU_TOT,
+               round(avg(a.USER_IO_WAIT_TIME * power(10, -6)), 2) IO_AVG,
+               round(sum(a.USER_IO_WAIT_TIME * power(10, -6)), 2) IO_TOT,
+               round(avg(a.ELAPSED_TIME * power(10, -6)), 2) ELA_AVG,
+               round(sum(a.ELAPSED_TIME * power(10, -6)), 2) ELA_TOT
+          from V$SQL_MONITOR a
+         group by a.SQL_ID) d
+ where d.SQL_ID = s.SQL_ID
+ order by 8 desc
+`;
+export const dbSQLTime = `select a.SQL_TEXT,
+       a.EXECUTIONS CALLS,
+      round((a.ELAPSED_TIME)*power(10,-6) / (a.EXECUTIONS) ) ELAPSED_TIME,
+      round((a.CPU_TIME)*power(10,-6) / (a.EXECUTIONS) ) CPU_TIME,
+      round((a.USER_IO_WAIT_TIME)*power(10,-6) / (a.EXECUTIONS) ) USER_IO_WAIT_TIME,
+       a.optimizer_cost
+  from v$sqlarea a
+ where a.EXECUTIONS > 0
+   and (a.CPU_TIME / (a.EXECUTIONS)) > 1000000
+ order by 3 desc`;
 
 export const dbWait = `select * from (
   SELECT event,

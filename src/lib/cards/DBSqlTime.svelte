@@ -123,27 +123,30 @@
 		</div>
 		<Table striped={true} shadow>
 			<TableHead class="bg-gray-200 dark:bg-gray-700">
-				<TableHeadCell class="text-gray-800 dark:text-gray-300">SQL Text</TableHeadCell>
-				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Calls</TableHeadCell>
-				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Time/Call</TableHeadCell>
-				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Cost</TableHeadCell>
-				<TableHeadCell class="text-gray-800 dark:text-gray-300 ">Hash Value</TableHeadCell>
+				<TableHeadCell class="w-2/3 text-gray-800 dark:text-gray-300">SQL Text</TableHeadCell>
+				<TableHeadCell class="text-center text-gray-800 dark:text-gray-300 ">Calls</TableHeadCell>
+				<TableHeadCell class="text-center text-gray-800 dark:text-gray-300 ">Time</TableHeadCell>
+				<TableHeadCell class="text-center text-gray-800 dark:text-gray-300 ">CPU</TableHeadCell>
+				<TableHeadCell class="text-center text-gray-800 dark:text-gray-300 ">IO</TableHeadCell>
+				<TableHeadCell class="text-center text-gray-800 dark:text-gray-300 ">COST</TableHeadCell>
 			</TableHead>
 			<TableBody>
 				{#key rows}
 					{#each rows as row, i}
 						{#if i >= page * 10 - 10 && i <= page * 10}
 							<TableBodyRow>
-								<TableBodyCell on:click={() => (details = row)}
-									>{row.SQL_TEXT.substring(0, 130)}</TableBodyCell
-								>
-								<TableBodyCell>{row.CALLS}</TableBodyCell>
-								<TableBodyCell>{row.TIME}</TableBodyCell>
-								<TableBodyCell>{row.COST}</TableBodyCell>
 								<TableBodyCell
-									>{row.HASH_VALUE}
-									<Copy id="hv{row.HASH_VALUE}" value={row.HASH_VALUE.toString()} name={'HV'} />
-								</TableBodyCell>
+									tdClass="w-2/3 px-6 py-4 font-medium"
+									on:click={() => (details = row)}
+									><p class="line-clamp-1 w-full overflow-hidden" style="word-break: break-all;">
+										{row.SQL_TEXT}
+									</p></TableBodyCell
+								>
+								<TableBodyCell class="text-center">{row.CALLS}</TableBodyCell>
+								<TableBodyCell class="text-center">{row.ELAPSED_TIME}</TableBodyCell>
+								<TableBodyCell class="text-center">{row.CPU_TIME}</TableBodyCell>
+								<TableBodyCell class="text-center">{row.USER_IO_WAIT_TIME}</TableBodyCell>
+								<TableBodyCell class="text-center">{row.OPTIMIZER_COST}</TableBodyCell>
 							</TableBodyRow>
 						{/if}
 					{:else}
