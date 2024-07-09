@@ -15,15 +15,15 @@
 	export let aClass;
 	let spin = true;
 	let data;
-	let page = 1;
-	let details;
+
 	let exists = false;
 	onMount(() => {
 		getData();
 	});
 	const getData = () => {
 		spin = true;
-		details = null;
+
+		exists = false;
 		fetch('/api/DB/long')
 			.then((response) => response.json())
 			.then(({ apiData }) => {
@@ -42,6 +42,8 @@
 		<div class="w-full p-10 text-center">
 			<Spinner size={8} />
 		</div>
+	{:else if !exists}
+		<span class=" pb-2 pl-5 pt-3 text-2xl font-semibold text-blue-700">No Long Operations!</span>
 	{:else}
 		<div class="flex justify-between">
 			<div class="pb-2">
@@ -69,7 +71,7 @@
 					{#each data as server}
 						{#each server.rows as row}
 							<TableBodyRow>
-								<TableBodyCell>{server.NAME} - {server.DBNAME}</TableBodyCell>
+								<TableBodyCell>{server.name} - {server.dbName}</TableBodyCell>
 
 								<TableBodyCell>{row.SID}</TableBodyCell>
 								<TableBodyCell>{row.USERNAME}</TableBodyCell>
@@ -95,13 +97,6 @@
 						{/each}
 					{/each}
 				{/key}
-				{#if !exists}
-					<TableBodyRow>
-						<TableBodyCell colspan="8" class=" pb-2 pl-5 pt-3 text-2xl font-semibold text-blue-700"
-							>No Long Operations!</TableBodyCell
-						></TableBodyRow
-					>
-				{/if}
 			</TableBody>
 		</Table>
 	{/if}
