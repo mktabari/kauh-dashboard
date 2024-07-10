@@ -1,4 +1,5 @@
 <script>
+	import { format } from 'sql-formatter';
 	import {
 		Tabs,
 		TabItem,
@@ -12,9 +13,10 @@
 		TableBodyCell,
 		TableBodyRow,
 		TableHead,
-		TableHeadCell
+		TableHeadCell,
+		P
 	} from 'flowbite-svelte';
-
+	import Copy from '$lib/component/Copy.svelte';
 	import {
 		contentClass,
 		inactiveClasses,
@@ -58,7 +60,11 @@
 	let sqlID;
 	let planSpin = false;
 	let planData;
-	let serverLongOps;
+	let sql;
+	let codeClass =
+		'w-full overflow-auto relative rounded-md border border-gray-300 bg-gray-100 py-4 px-4 text-gray-500 dark:border-gray-600 dark:bg-gray-700';
+
+	let sqlFormated = '';
 </script>
 
 <Tabs style="none" {contentClass} {inactiveClasses} {activeClasses} {defaultClass}>
@@ -116,18 +122,32 @@
 							disabled={!sqlID || !returnedServerId}
 							on:click={() => {
 								planSpin = true;
-								planData = undefined;
+								planData = null;
+								sql = null;
 								fetch(`/api/DB/sqlPlan/${returnedServerId}/${sqlID}`)
 									.then((response) => response.json())
 									.then(({ apiData }) => {
-										planData = apiData;
+										planData = apiData[0];
+										sql = apiData[1].sqlText;
+										try {
+											sqlFormated = format(sql, { language: 'plsql', useTabs: true });
+										} catch (error) {
+											try {
+												sqlFormated = format(sql.replaceAll('+.', '+0.'), {
+													language: 'plsql',
+													useTabs: true
+												});
+											} catch (error) {
+												sqlFormated = sql;
+											}
+										}
 										planSpin = false;
 									});
 							}}>Show</Button
 						>
 					</div>
 					{#if planSpin}
-						<div class=" mb-5 mt-10 flex w-full justify-center">
+						<div class=" mb-5 mt-5 flex w-full justify-center">
 							<GoogleSpin duration="2.5s" size="70px" />
 						</div>
 					{/if}
@@ -220,6 +240,18 @@
 							</Table>
 
 							<pre class="w-full" />
+						</div>
+					{/if}
+					{#if sql}
+						<div class=" mt-5 flex w-full justify-center">
+							<P class={codeClass}>
+								<pre>
+{sqlFormated}
+							</pre>
+								<div class=" absolute right-4 top-4">
+									<Copy value={sql} />
+								</div>
+							</P>
 						</div>
 					{/if}
 				{/if}

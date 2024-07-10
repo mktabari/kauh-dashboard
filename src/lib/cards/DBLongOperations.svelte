@@ -60,10 +60,10 @@
 				<TableHeadCell class="bg-slate-200 text-blue-800">SID</TableHeadCell>
 				<TableHeadCell class="text-blue-800">User Name</TableHeadCell>
 				<TableHeadCell class="text-blue-800">Operation</TableHeadCell>
-				<TableHeadCell class="text-blue-800">Target</TableHeadCell>
+				<TableHeadCell class="text-blue-800">MACHINE</TableHeadCell>
 				<TableHeadCell class="text-blue-800">Percent</TableHeadCell>
-				<TableHeadCell class="text-blue-800">Time REMAINING</TableHeadCell>
-				<TableHeadCell class="text-blue-800">ID</TableHeadCell>
+				<TableHeadCell class="text-center text-blue-800">Time REMAINING</TableHeadCell>
+				<TableHeadCell class="text-center text-blue-800">ID</TableHeadCell>
 			</TableHead>
 
 			<TableBody>
@@ -76,7 +76,7 @@
 								<TableBodyCell>{row.SID}</TableBodyCell>
 								<TableBodyCell>{row.USERNAME}</TableBodyCell>
 								<TableBodyCell>{row.OPNAME}</TableBodyCell>
-								<TableBodyCell>{row.TARGET}</TableBodyCell>
+								<TableBodyCell>{row.MACHINE}</TableBodyCell>
 								<TableBodyCell class="w-96"
 									><Progressbar
 										progress={row.PERCENT}
@@ -85,7 +85,7 @@
 										labelInsideClass="bg-blue-600 text-blue-100 text-base font-medium text-center p-1 leading-none rounded-full w-96"
 									/></TableBodyCell
 								>
-								<TableBodyCell>
+								<TableBodyCell class="text-center">
 									{row.TIME_REMAINING}
 								</TableBodyCell>
 								<TableBodyCell class="text-center">

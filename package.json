@@ -44,6 +44,7 @@
 		"moment": "^2.29.4",
 		"oracledb": "^6.0.0",
 		"ping": "^0.4.4",
+		"sql-formatter": "^15.3.2",
 		"ssh2": "^1.14.0",
 		"ssh2-promise": "^1.0.3",
 		"svelte-copy": "^1.4.1",

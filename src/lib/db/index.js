@@ -95,8 +95,7 @@ export const dbLong = `select
        l.SID,s.SQL_ID,
        s.username,
        l.OPNAME,
-       l.SOFAR,
-       l.TARGET,
+       s.machine,
        l.TOTALWORK,
        round(100 * l.SOFAR / l.TOTALWORK)  Percent,
        SUBSTR('0' || TRUNC(MOD(l.TIME_REMAINING, 86400) / 3600), -2, 2) || ':' ||

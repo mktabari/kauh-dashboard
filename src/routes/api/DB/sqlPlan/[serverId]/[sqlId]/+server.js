@@ -7,7 +7,7 @@ oracledb.initOracleClient();
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 if (process.argv[2] === 'child') {
 	let db = getServer(process.argv[3]);
-	const checkSql = async (dbObj, sqlId) => {
+	const sqlPlan = async (dbObj, sqlId) => {
 		let { ip, dbName, dbUser, dbPassword } = dbObj;
 		try {
 			const connection = await oracledb.getConnection({
@@ -24,10 +24,10 @@ if (process.argv[2] === 'child') {
                            WHERE 
                            a.SQL_ID='${sqlId}'`);
 					const { rows } = result;
-					await connection.close();
+					connection.close();
 					resolve(rows);
 				} catch (error) {
-					await connection.close();
+					connection.close();
 					resolve([]);
 				}
 			});
@@ -36,8 +36,41 @@ if (process.argv[2] === 'child') {
 			return [];
 		}
 	};
-	let sqlPlan = await checkSql(db, process.argv[4]);
-	process.send(sqlPlan);
+	const sqlText = async (dbObj, sqlId) => {
+		let { ip, dbName, dbUser, dbPassword } = dbObj;
+		try {
+			const connection = await oracledb.getConnection({
+				user: dbUser,
+				password: dbPassword,
+				connectString: `${ip}/${dbName}`
+			});
+
+			const customPromise = new Promise(async (resolve) => {
+				try {
+					const result = await connection.execute(`SELECT a.sql_text
+                           FROM V$SQLTEXT a 
+                           WHERE 
+                           a.SQL_ID='${sqlId}'
+						   order by a.piece asc`);
+					const { rows } = result;
+					connection.close();
+					let sqlText = '';
+					for (let i = 0; i < rows.length; i++) {
+						sqlText += rows[i].SQL_TEXT;
+					}
+					resolve({ sqlText });
+				} catch (error) {
+					connection.close();
+					resolve({ sqlText: '' });
+				}
+			});
+			return await customPromise;
+		} catch (error) {
+			return [];
+		}
+	};
+	let sqlTextPlan = await Promise.all([sqlPlan(db, process.argv[4]), sqlText(db, process.argv[4])]);
+	process.send(sqlTextPlan);
 }
 export const GET = async (requwstEvent) => {
 	const { params } = requwstEvent;
