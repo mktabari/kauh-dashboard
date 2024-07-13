@@ -21,7 +21,7 @@
 			.then((response) => response.json())
 			.then(({ apiData }) => {
 				planSpin = false;
-				planData = apiData;
+				planData = apiData[0];
 			});
 	});
 </script>

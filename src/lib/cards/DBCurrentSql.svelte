@@ -251,7 +251,7 @@
 								<TableBodyRow>
 									<TableBodyCell colspan="10" class="p-0">
 										<div
-											class=" w-full overflow-auto"
+											class="max-h-[1000px] w-[2000px] overflow-auto border-4 border-gray-700"
 											transition:slide={{ duration: 300, axis: 'y' }}
 										>
 											<DBSqlPlan {serverId} sqlID={row.SQL_ID} />
